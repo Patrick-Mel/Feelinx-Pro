@@ -1,0 +1,57 @@
+{
+  "app_name": "Feelinx",
+  "tagline": "Des liens qui se ressentent.",
+  "onboarding": {
+    "slide1_title": "Rencontres Authentiques",
+    "slide1_desc": "Découvre des personnes vraies et vérifiées près de chez toi au Cameroun et en Afrique.",
+    "slide2_title": "Amitié, Amour ou Réseau",
+    "slide2_desc": "Choisis ton intention et laisse notre algorithme te proposer les profils les plus compatibles.",
+    "slide3_title": "Communauté Sûre",
+    "slide3_desc": "Profils vérifiés par selfie et sécurité renforcée contre les fausses identités.",
+    "skip": "Passer",
+    "start": "Commencer"
+  },
+  "auth": {
+    "login_title": "Entre ton numéro de téléphone",
+    "login_subtitle": "Un code de vérification à 6 chiffres va t'être envoyé par SMS.",
+    "phone_hint": "Numéro de téléphone",
+    "send_code": "Recevoir le code SMS",
+    "otp_title": "Vérification SMS",
+    "otp_subtitle": "Saisis le code reçu au {}",
+    "verify": "Vérifier et continuer",
+    "resend_in": "Renvoyer le code dans {}s",
+    "resend_now": "Renvoyer le code maintenant"
+  },
+  "discovery": {
+    "like": "LIKE",
+    "nope": "NOPE",
+    "superlike": "SUPER LIKE",
+    "match_title": "C'est un match !",
+    "match_desc": "Vous vous plaisez tous les deux ! Lance la discussion.",
+    "send_message": "Envoyer un message",
+    "keep_swiping": "Continuer à swiper",
+    "no_more_profiles": "Plus de profils pour le moment",
+    "no_more_desc": "Élargis tes critères de recherche ou réessaie plus tard.",
+    "adjust_filters": "Modifier mes filtres"
+  },
+  "chat": {
+    "placeholder": "Écris ton message…",
+    "typing": "est en train d'écrire…",
+    "safety_warning": "🛡️ Conseil Sécurité Feelinx : Ne partage jamais d'argent ni d'informations bancaires."
+  },
+  "premium": {
+    "title": "Feelinx Premium 👑",
+    "subtitle": "Débloque toutes les fonctionnalités et multiplie tes matchs !",
+    "unlimited_likes": "Likes illimités",
+    "see_who_liked": "Voir qui t'a liké",
+    "superlikes": "5 Super Likes par semaine",
+    "boost": "1 Boost par mois",
+    "rewind": "Annuler le dernier swipe",
+    "incognito": "Mode incognito",
+    "subscribe_momo": "Payer avec Mobile Money",
+    "select_operator": "Choisis ton opérateur",
+    "enter_phone": "Saisis ton numéro MoMo / Orange",
+    "ussd_prompt": "Compose le code sur ton téléphone pour valider le paiement.",
+    "success": "Félicitation ! Tu es maintenant membre Premium !"
+  }
+}

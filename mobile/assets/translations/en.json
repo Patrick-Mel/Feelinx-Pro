@@ -1,0 +1,57 @@
+{
+  "app_name": "Feelinx",
+  "tagline": "Links you can feel.",
+  "onboarding": {
+    "slide1_title": "Authentic Connections",
+    "slide1_desc": "Discover real and verified people near you in Cameroon and across Africa.",
+    "slide2_title": "Dating, Friendship or Networking",
+    "slide2_desc": "Choose your intention and let our algorithm match you with the best profiles.",
+    "slide3_title": "Safe Community",
+    "slide3_desc": "Selfie-verified profiles and advanced protection against fake accounts.",
+    "skip": "Skip",
+    "start": "Get Started"
+  },
+  "auth": {
+    "login_title": "Enter your phone number",
+    "login_subtitle": "We will send a 6-digit SMS verification code to your phone.",
+    "phone_hint": "Phone number",
+    "send_code": "Send SMS Code",
+    "otp_title": "SMS Verification",
+    "otp_subtitle": "Enter the code sent to {}",
+    "verify": "Verify & Continue",
+    "resend_in": "Resend code in {}s",
+    "resend_now": "Resend code now"
+  },
+  "discovery": {
+    "like": "LIKE",
+    "nope": "NOPE",
+    "superlike": "SUPER LIKE",
+    "match_title": "It's a Match!",
+    "match_desc": "You both liked each other! Start a conversation now.",
+    "send_message": "Send Message",
+    "keep_swiping": "Keep Swiping",
+    "no_more_profiles": "No more profiles right now",
+    "no_more_desc": "Expand your discovery filters or check back later.",
+    "adjust_filters": "Adjust Filters"
+  },
+  "chat": {
+    "placeholder": "Type a message…",
+    "typing": "is typing…",
+    "safety_warning": "🛡️ Feelinx Safety Tip: Never share money or bank account details."
+  },
+  "premium": {
+    "title": "Feelinx Premium 👑",
+    "subtitle": "Unlock all features and boost your match rate!",
+    "unlimited_likes": "Unlimited Likes",
+    "see_who_liked": "See Who Liked You",
+    "superlikes": "5 Super Likes per week",
+    "boost": "1 Boost per month",
+    "rewind": "Rewind Last Swipe",
+    "incognito": "Incognito Mode",
+    "subscribe_momo": "Pay with Mobile Money",
+    "select_operator": "Select Operator",
+    "enter_phone": "Enter your MoMo / Orange number",
+    "ussd_prompt": "Dial the prompt on your phone to validate payment.",
+    "success": "Congratulations! You are now a Premium member!"
+  }
+}
