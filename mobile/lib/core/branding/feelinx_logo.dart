@@ -16,6 +16,9 @@ enum FeelinxColorMode {
   gold,
 }
 
+typedef LogoVariant = FeelinxLogoVariant;
+typedef LogoColorMode = FeelinxColorMode;
+
 class FeelinxLogo extends StatelessWidget {
   final double size;
   final FeelinxLogoVariant variant;
