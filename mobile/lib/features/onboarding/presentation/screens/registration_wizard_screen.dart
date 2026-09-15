@@ -6,6 +6,7 @@ import '../../../../core/theme/typography.dart';
 import '../../../../core/widgets/fx_button.dart';
 import '../../../../core/widgets/fx_text_field.dart';
 import '../../../../core/widgets/fx_chip.dart';
+import '../../../../core/widgets/fx_city_picker.dart';
 import '../../../../core/network/dio_client.dart';
 
 class RegistrationWizardScreen extends StatefulWidget {
@@ -26,29 +27,29 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
   String _gender = 'female';
   String _seeking = 'male';
   String _intention = 'serious';
-  String _city = 'Yaoundé';
+  String _city = 'Douala (Cameroun)';
   final TextEditingController _bioController = TextEditingController();
   final Set<String> _selectedInterests = {};
   bool _isLoading = false;
 
   final List<Map<String, String>> _intentionsList = const [
-    {"code": "serious", "label": "Relation sérieuse ❤️"},
-    {"code": "casual", "label": "Rencontre décontractée 🥂"},
-    {"code": "friendship", "label": "Amitié 👋"},
-    {"code": "networking", "label": "Réseautage pro 💼"},
-    {"code": "undecided", "label": "Je ne sais pas encore 🤔"},
+    {"code": "serious", "label": "Relation sérieuse"},
+    {"code": "casual", "label": "Sorties & Discussions"},
+    {"code": "friendship", "label": "Rencontres amicales"},
+    {"code": "networking", "label": "Réseautage professionnel"},
+    {"code": "undecided", "label": "En cours de découverte"},
   ];
 
   final List<Map<String, String>> _interestsList = const [
-    {"code": "afrobeats", "label": "Afrobeats 🎵"},
-    {"code": "makossa", "label": "Makossa & Bikutsi 🎷"},
-    {"code": "football", "label": "Football ⚽"},
-    {"code": "ndole", "label": "Cuisine Africaine 🍲"},
-    {"code": "fashion", "label": "Mode & Sape 👗"},
-    {"code": "tech", "label": "Tech & Startups 💻"},
-    {"code": "travel", "label": "Voyages ✈️"},
-    {"code": "gaming", "label": "PS5 & Gaming 🎮"},
-    {"code": "church", "label": "Foi & Église ⛪"},
+    {"code": "afrobeats", "label": "Afrobeats & Musique"},
+    {"code": "makossa", "label": "Makossa & Bikutsi"},
+    {"code": "football", "label": "Football"},
+    {"code": "ndole", "label": "Gastronomie Africaine"},
+    {"code": "fashion", "label": "Mode & Style"},
+    {"code": "tech", "label": "Tech & Innovation"},
+    {"code": "travel", "label": "Voyages & Ecotourisme"},
+    {"code": "gaming", "label": "Jeux Vidéo"},
+    {"code": "church", "label": "Foi & Église"},
   ];
 
   void _nextStep() {
@@ -137,7 +138,7 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                       children: [
                         Text("Quelle est ta date de naissance ?", style: FxTypography.displayMedium),
                         const SizedBox(height: FxSpacing.sm8),
-                        Text("Seules les personnes majeures de plus de 18 ans peuvent utiliser Feelinx.", style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary)),
+                        Text("Seules les personnes majeures (18 ans et plus) peuvent s'inscrire.", style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary)),
                         const SizedBox(height: FxSpacing.xxxl32),
                         OutlinedButton(
                           onPressed: () async {
@@ -159,13 +160,19 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                       children: [
                         Text("Quel est ton genre ?", style: FxTypography.displayMedium),
                         const SizedBox(height: FxSpacing.xxxl32),
-                        ListTile(
+                        RadioListTile<String>(
                           title: const Text("Femme"),
-                          trailing: Radio<String>(value: 'female', groupValue: _gender, onChanged: (v) => setState(() => _gender = v!)),
+                          value: 'female',
+                          groupValue: _gender,
+                          activeColor: FxColors.primaryCoral,
+                          onChanged: (v) => setState(() => _gender = v!),
                         ),
-                        ListTile(
+                        RadioListTile<String>(
                           title: const Text("Homme"),
-                          trailing: Radio<String>(value: 'male', groupValue: _gender, onChanged: (v) => setState(() => _gender = v!)),
+                          value: 'male',
+                          groupValue: _gender,
+                          activeColor: FxColors.primaryCoral,
+                          onChanged: (v) => setState(() => _gender = v!),
                         ),
                       ],
                     ),
@@ -175,13 +182,19 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                       children: [
                         Text("Tu recherches...", style: FxTypography.displayMedium),
                         const SizedBox(height: FxSpacing.xxxl32),
-                        ListTile(
+                        RadioListTile<String>(
                           title: const Text("Des hommes"),
-                          trailing: Radio<String>(value: 'male', groupValue: _seeking, onChanged: (v) => setState(() => _seeking = v!)),
+                          value: 'male',
+                          groupValue: _seeking,
+                          activeColor: FxColors.primaryCoral,
+                          onChanged: (v) => setState(() => _seeking = v!),
                         ),
-                        ListTile(
+                        RadioListTile<String>(
                           title: const Text("Des femmes"),
-                          trailing: Radio<String>(value: 'female', groupValue: _seeking, onChanged: (v) => setState(() => _seeking = v!)),
+                          value: 'female',
+                          groupValue: _seeking,
+                          activeColor: FxColors.primaryCoral,
+                          onChanged: (v) => setState(() => _seeking = v!),
                         ),
                       ],
                     ),
@@ -204,22 +217,17 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                         }),
                       ],
                     ),
-                    // Step 6: Ville
+                    // Step 6: Ville Africaine
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Dans quelle ville vis-tu ?", style: FxTypography.displayMedium),
+                        const SizedBox(height: FxSpacing.sm8),
+                        Text("Sélectionne ta ville parmi les métropoles africaines.", style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary)),
                         const SizedBox(height: FxSpacing.xxxl32),
-                        DropdownButtonFormField<String>(
-                          value: _city,
-                          items: const [
-                            DropdownMenuItem(value: "Yaoundé", child: Text("Yaoundé")),
-                            DropdownMenuItem(value: "Douala", child: Text("Douala")),
-                            DropdownMenuItem(value: "Bafoussam", child: Text("Bafoussam")),
-                            DropdownMenuItem(value: "Garoua", child: Text("Garoua")),
-                            DropdownMenuItem(value: "Abidjan", child: Text("Abidjan")),
-                          ],
-                          onChanged: (v) => setState(() => _city = v!),
+                        FxCityPickerTile(
+                          selectedCity: _city,
+                          onCitySelected: (v) => setState(() => _city = v),
                         ),
                       ],
                     ),
@@ -241,8 +249,11 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                               isSelected: isSel,
                               onTap: () {
                                 setState(() {
-                                  if (isSel) _selectedInterests.remove(item["code"]);
-                                  else _selectedInterests.add(item["code"]!);
+                                  if (isSel) {
+                                    _selectedInterests.remove(item["code"]);
+                                  } else {
+                                    _selectedInterests.add(item["code"]!);
+                                  }
                                 });
                               },
                             );
@@ -257,7 +268,7 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                         Text("Écris ta biographie", style: FxTypography.displayMedium),
                         const SizedBox(height: FxSpacing.xxxl32),
                         FxTextField(
-                          label: "À propos de toi (max 500 car.)",
+                          label: "À propos de toi",
                           hint: "Parle de tes passions, de ce qui te caractérise...",
                           controller: _bioController,
                           maxLines: 4,
@@ -269,7 +280,7 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                 ),
               ),
               FxButton(
-                text: _currentStep == _totalSteps - 1 ? "Finaliser mon profil 🎉" : "Continuer",
+                text: _currentStep == _totalSteps - 1 ? "Finaliser mon profil" : "Continuer",
                 isLoading: _isLoading,
                 onPressed: _nextStep,
               ),

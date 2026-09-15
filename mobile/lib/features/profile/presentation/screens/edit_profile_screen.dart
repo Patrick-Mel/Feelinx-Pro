@@ -4,6 +4,7 @@ import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/typography.dart';
 import '../../../../core/widgets/fx_button.dart';
 import '../../../../core/widgets/fx_text_field.dart';
+import '../../../../core/widgets/fx_city_picker.dart';
 import '../../../../core/network/dio_client.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -16,18 +17,18 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _firstNameController = TextEditingController();
   final _bioController = TextEditingController();
-  final _cityController = TextEditingController();
 
+  String _selectedCity = 'Douala (Cameroun)';
   String _gender = 'female';
   String _intention = 'serious';
   bool _isLoading = true;
   bool _isSaving = false;
 
-  final List<Map<String, String>> _intentions = [
-    {'value': 'serious', 'label': '💍 Relation sérieuse'},
-    {'value': 'friendship', 'label': '👋 Se faire des amis'},
-    {'value': 'casual', 'label': '☕ Sorties & Discuter'},
-    {'value': 'marriage', 'label': '💒 Mariage / Foyer'},
+  final List<Map<String, String>> _intentions = const [
+    {'value': 'serious', 'label': 'Relation sérieuse'},
+    {'value': 'friendship', 'label': 'Rencontres amicales'},
+    {'value': 'casual', 'label': 'Sorties & Discussions'},
+    {'value': 'marriage', 'label': 'Mariage & Foyer'},
   ];
 
   @override
@@ -45,7 +46,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         setState(() {
           _firstNameController.text = data['first_name'] ?? '';
           _bioController.text = data['bio'] ?? '';
-          _cityController.text = data['city'] ?? 'Douala';
+          _selectedCity = data['city'] ?? 'Douala (Cameroun)';
           _gender = data['gender'] ?? 'female';
           _intention = data['intention'] ?? 'serious';
           _isLoading = false;
@@ -59,7 +60,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _saveProfile() async {
     if (_firstNameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Prénom obligatoire.")),
+        const SnackBar(content: Text("Le prénom est obligatoire.")),
       );
       return;
     }
@@ -70,7 +71,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final res = await dio.patch('profiles/me/', data: {
         'first_name': _firstNameController.text.trim(),
         'bio': _bioController.text.trim(),
-        'city': _cityController.text.trim(),
+        'city': _selectedCity,
         'gender': _gender,
         'intention': _intention,
       });
@@ -78,7 +79,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (res.statusCode == 200 && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Profil mis à jour avec succès ! ✨"),
+            content: Text("Profil mis à jour avec succès."),
             backgroundColor: FxColors.success,
           ),
         );
@@ -102,7 +103,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Modifier mon profil", style: TextStyle(fontWeight: FontWeight.w800)),
+        title: const Text("Modifier mon profil", style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -144,20 +145,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    FxTextField(
-                      label: "Ville",
-                      hint: "Douala, Yaoundé...",
-                      controller: _cityController,
+                    FxCityPickerTile(
+                      selectedCity: _selectedCity,
+                      onCitySelected: (city) => setState(() => _selectedCity = city),
                     ),
                     const SizedBox(height: 16),
 
-                    Text("Bio / À propos de toi", style: FxTypography.titleMedium),
+                    Text("À propos de toi", style: FxTypography.titleMedium),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _bioController,
                       maxLines: 4,
+                      style: FxTypography.bodyLarge,
                       decoration: InputDecoration(
-                        hintText: "Dis-nous en plus sur toi, tes passions...",
+                        hintText: "Décris ta personnalité, tes passions et ce que tu recherches...",
                         filled: true,
                         fillColor: FxColors.darkCard,
                         border: OutlineInputBorder(

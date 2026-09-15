@@ -105,9 +105,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Feelinx Premium 👑", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+                            Text("Feelinx Premium", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
                             const SizedBox(height: 2),
-                            Text("Likes illimités, voir qui t'a liké & plus !", style: FxTypography.labelSmall.copyWith(color: Colors.white.withOpacity(0.9))),
+                            Text("Likes illimités, voir qui vous a liké & plus encore", style: FxTypography.labelSmall.copyWith(color: Colors.white.withValues(alpha: 0.9))),
                           ],
                         ),
                       ),
@@ -123,19 +123,25 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               _buildSettingTile(Icons.photo_library, "Mes photos", () => context.push('/profile/photos')),
               _buildSettingTile(
                 Icons.verified_user,
-                _profile?['is_verified'] == true ? "Compte Vérifié 🛡️" : "Vérifier mon compte (Selfie)",
+                _profile?['is_verified'] == true ? "Compte Certifié" : "Certification de compte",
                 () => context.push('/safety/verification'),
               ),
-              _buildSettingTile(Icons.shield, "Centre de Sécurité & Anti-Arnaque", () {
+              _buildSettingTile(Icons.shield, "Centre de Sécurité & Protection", () {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text("Centre de Sécurité 🛡️"),
+                    title: const Row(
+                      children: [
+                        Icon(Icons.security, color: FxColors.primaryCoral),
+                        SizedBox(width: 8),
+                        Text("Centre de Sécurité"),
+                      ],
+                    ),
                     content: const Text(
-                      "Feelinx est équipé d'un système anti-arnaque et de détection automatique des faux profils.\n\n"
-                      "• Vérifie ton compte avec un selfie pour obtenir le badge bleu.\n"
-                      "• Signale ou bloque tout profil suspect depuis son profil.\n"
-                      "• Ne partage jamais tes informations bancaires.",
+                      "Feelinx est équipé d'un système intelligent anti-arnaque et de détection des profils frauduleux.\n\n"
+                      "• Faites certifier votre compte avec un selfie pour obtenir le badge de vérification.\n"
+                      "• Signalez ou bloquez tout comportement suspect.\n"
+                      "• Ne partagez jamais vos informations financières ou bancaires.",
                     ),
                     actions: [
                       TextButton(onPressed: () => Navigator.pop(context), child: const Text("Compris")),

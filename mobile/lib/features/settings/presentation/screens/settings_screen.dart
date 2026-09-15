@@ -140,7 +140,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 24),
 
                     SwitchListTile(
-                      title: const Text("Afficher uniquement les profils vérifiés 🛡️"),
+                      title: const Text("Afficher uniquement les profils certifiés"),
                       value: _verifiedOnly,
                       activeColor: FxColors.primaryCoral,
                       onChanged: (val) {
@@ -149,8 +149,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       },
                     ),
                     SwitchListTile(
-                      title: const Text("Mode Incognito 🕵️"),
-                      subtitle: const Text("Masque ton profil dans le feed sauf aux personnes que tu as likées"),
+                      title: const Text("Mode Incognito"),
+                      subtitle: const Text("Masque votre profil dans le fil sauf aux personnes que vous avez likées"),
                       value: _incognito,
                       activeColor: FxColors.primaryCoral,
                       onChanged: (val) {

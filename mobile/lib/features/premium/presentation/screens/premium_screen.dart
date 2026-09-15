@@ -19,15 +19,24 @@ class _PremiumScreenState extends State<PremiumScreen> {
   final TextEditingController _momoPhoneController = TextEditingController();
 
   final List<Map<String, dynamic>> _plans = const [
-    {"code": "premium_1m", "title": "1 Mois", "price": "3 000 FCFA", "popular": false},
-    {"code": "premium_3m", "title": "3 Mois", "price": "7 500 FCFA", "popular": true, "save": "-15%"},
-    {"code": "premium_12m", "title": "12 Mois", "price": "24 000 FCFA", "popular": false, "save": "-33%"},
+    {"code": "premium_1m", "title": "1 Mois", "price": "1 000 FCFA", "popular": false},
+    {"code": "premium_3m", "title": "3 Mois", "price": "2 500 FCFA", "popular": true, "save": "-17%"},
+    {"code": "premium_12m", "title": "12 Mois", "price": "10 000 FCFA", "popular": false, "save": "-50%"},
   ];
 
   void _openPaymentSheet(String provider) {
+    String providerTitle = "Paiement Mobile Money";
+    if (provider == 'mtn') providerTitle = "Paiement MTN MoMo";
+    else if (provider == 'orange') providerTitle = "Paiement Orange Money";
+    else if (provider == 'mock') providerTitle = "Paiement de Test (Instantané)";
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: FxColors.darkSurface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (context) {
         return Padding(
           padding: EdgeInsets.only(
@@ -38,13 +47,16 @@ class _PremiumScreenState extends State<PremiumScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                provider == 'mtn' ? "Paiement MTN MoMo 🟡" : "Paiement Orange Money 🟧",
-                style: FxTypography.titleLarge,
+              Row(
+                children: [
+                  const Icon(Icons.payment, color: FxColors.primaryCoral, size: 24),
+                  const SizedBox(width: 8),
+                  Text(providerTitle, style: FxTypography.titleLarge),
+                ],
               ),
               const SizedBox(height: 8),
               Text(
-                "Entre ton numéro Mobile Money. Une demande de confirmation USSD te sera envoyée sur ton téléphone.",
+                "Entrez votre numéro de téléphone. Une demande de validation vous sera envoyée.",
                 style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary),
               ),
               const SizedBox(height: 20),
@@ -63,7 +75,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
   }
 
   Future<void> _processPayment(String provider) async {
-    Navigator.pop(context); // Close sheet
+    Navigator.pop(context);
     setState(() => _isLoading = true);
 
     try {
@@ -78,15 +90,21 @@ class _PremiumScreenState extends State<PremiumScreen> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text("🎉 Abonnement Activé !"),
-            content: const Text("Félicitation ! Tu es maintenant membre Feelinx Premium ! Profite de tes avantages illimités."),
+            title: const Row(
+              children: [
+                Icon(Icons.workspace_premium, color: FxColors.accentGold),
+                SizedBox(width: 8),
+                Text("Abonnement Activé"),
+              ],
+            ),
+            content: const Text("Félicitations ! Vous êtes maintenant membre Feelinx Premium. Profitez de tous vos avantages illimités."),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                   context.go('/discovery');
                 },
-                child: const Text("C'est parti !"),
+                child: const Text("Continuer"),
               ),
             ],
           ),
@@ -102,7 +120,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Feelinx Premium 👑", style: TextStyle(fontWeight: FontWeight.w800)),
+        title: const Text("Feelinx Premium", style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -110,21 +128,29 @@ class _PremiumScreenState extends State<PremiumScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Gold Header Banner
+              // Premium Gold Header Banner
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(colors: [FxColors.accentGold, FxColors.primaryCoral]),
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
                   children: [
-                    const Icon(Icons.workspace_premium, size: 64, color: Colors.white),
+                    const Icon(Icons.workspace_premium, size: 56, color: Colors.white),
                     const SizedBox(height: 12),
-                    Text("Deviens Membre Premium", style: FxTypography.displayMedium.copyWith(color: Colors.white), textAlign: TextAlign.center),
+                    Text(
+                      "Devenez Membre Premium",
+                      style: FxTypography.displayMedium.copyWith(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
                     const SizedBox(height: 8),
-                    Text("Passe au niveau supérieur et multiplie tes chances de matcher !", style: FxTypography.bodyMedium.copyWith(color: Colors.white.withOpacity(0.9)), textAlign: TextAlign.center),
+                    Text(
+                      "Accédez à des privilèges exclusifs et multipliez vos opportunités de rencontres.",
+                      style: FxTypography.bodyMedium.copyWith(color: Colors.white.withValues(alpha: 0.9)),
+                      textAlign: TextAlign.center,
+                    ),
                   ],
                 ),
               ),
@@ -133,14 +159,14 @@ class _PremiumScreenState extends State<PremiumScreen> {
               Text("Avantages inclus", style: FxTypography.titleLarge),
               const SizedBox(height: 16),
               _buildFeatureRow(Icons.favorite, "Likes illimités sans restriction par 24h"),
-              _buildFeatureRow(Icons.visibility, "Découvre qui t'a liké en temps réel"),
-              _buildFeatureRow(Icons.star, "5 Super Likes offerts par semaine"),
-              _buildFeatureRow(Icons.bolt, "1 Boost offert par mois (3x plus visible)"),
-              _buildFeatureRow(Icons.replay, "Annule ton dernier swipe à tout moment"),
-              _buildFeatureRow(Icons.shield, "Mode incognito & filtres avancés"),
+              _buildFeatureRow(Icons.visibility, "Voir qui vous a liké en temps réel"),
+              _buildFeatureRow(Icons.star, "5 Super Likes offerts chaque semaine"),
+              _buildFeatureRow(Icons.bolt, "1 Boost mensuel offert pour 3x plus de visibilité"),
+              _buildFeatureRow(Icons.replay, "Annulation du dernier passage à tout moment"),
+              _buildFeatureRow(Icons.shield, "Mode incognito et filtres de recherche avancés"),
               const SizedBox(height: 28),
 
-              Text("Choisis ta formule", style: FxTypography.titleLarge),
+              Text("Choix de la formule", style: FxTypography.titleLarge),
               const SizedBox(height: 16),
               Row(
                 children: _plans.map((p) {
@@ -152,7 +178,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                         margin: const EdgeInsets.symmetric(horizontal: 4),
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: isSelected ? FxColors.primaryCoral.withOpacity(0.15) : FxColors.darkCard,
+                          color: isSelected ? FxColors.primaryCoral.withValues(alpha: 0.15) : FxColors.darkCard,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                             color: isSelected ? FxColors.primaryCoral : FxColors.darkBorder,
@@ -180,13 +206,13 @@ class _PremiumScreenState extends State<PremiumScreen> {
               ),
               const SizedBox(height: 32),
 
-              Text("Paiement sécurisé Mobile Money", style: FxTypography.titleMedium),
+              Text("Mode de paiement sécurisé", style: FxTypography.titleMedium),
               const SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(
                     child: FxButton(
-                      text: "MTN MoMo 🟡",
+                      text: "MTN MoMo",
                       variant: FxButtonVariant.outline,
                       onPressed: () => _openPaymentSheet('mtn'),
                     ),
@@ -194,7 +220,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: FxButton(
-                      text: "Orange Money 🟧",
+                      text: "Orange Money",
                       variant: FxButtonVariant.outline,
                       onPressed: () => _openPaymentSheet('orange'),
                     ),
@@ -203,7 +229,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
               ),
               const SizedBox(height: 12),
               FxButton(
-                text: "Mode Démo / Test (Instantané)",
+                text: "Paiement de Test (Instantané)",
                 onPressed: () => _openPaymentSheet('mock'),
               ),
             ],
