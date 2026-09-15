@@ -18,8 +18,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   RangeValues _ageRange = const RangeValues(18, 45);
   bool _verifiedOnly = false;
   bool _incognito = false;
+  bool _isDarkMode = true;
+  String _selectedLanguage = 'fr'; // 'fr' or 'en'
   bool _isLoading = true;
   List<dynamic> _blockedUsers = [];
+
+  final List<Map<String, String>> _languages = const [
+    {"code": "fr", "label": "Français 🇫🇷"},
+    {"code": "en", "label": "English 🇬🇧"},
+  ];
 
   @override
   void initState() {
@@ -115,7 +122,73 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Filtres de découverte", style: FxTypography.titleLarge),
+                    // Apparence & Langue Section
+                    Text("Apparence & Langue", style: FxTypography.titleLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 12),
+
+                    Container(
+                      decoration: BoxDecoration(
+                        color: FxColors.darkCard,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        children: [
+                          SwitchListTile(
+                            secondary: Icon(
+                              _isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                              color: FxColors.primaryCoral,
+                            ),
+                            title: const Text("Mode Sombre / Clair"),
+                            subtitle: Text(
+                              _isDarkMode ? "Thème sombre Feelinx actif" : "Thème clair actif",
+                              style: const TextStyle(color: FxColors.darkTextSecondary, fontSize: 12),
+                            ),
+                            value: _isDarkMode,
+                            activeColor: FxColors.primaryCoral,
+                            onChanged: (val) {
+                              setState(() => _isDarkMode = val);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(val ? "Thème Sombre activé 🌙" : "Thème Clair activé ☀️")),
+                              );
+                            },
+                          ),
+                          const Divider(height: 1, color: FxColors.darkBorder),
+                          ListTile(
+                            leading: const Icon(Icons.language, color: FxColors.primaryCoral),
+                            title: const Text("Langue de l'application"),
+                            subtitle: Text(
+                              _selectedLanguage == 'fr' ? "Français 🇫🇷" : "English 🇬🇧",
+                              style: const TextStyle(color: FxColors.darkTextSecondary, fontSize: 12),
+                            ),
+                            trailing: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: _selectedLanguage,
+                                dropdownColor: FxColors.darkSurface,
+                                style: FxTypography.bodyMedium.copyWith(color: Colors.white),
+                                onChanged: (val) {
+                                  if (val != null) {
+                                    setState(() => _selectedLanguage = val);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(val == 'fr' ? "Langue : Français 🇫🇷" : "Language: English 🇬🇧")),
+                                    );
+                                  }
+                                },
+                                items: _languages.map((l) {
+                                  return DropdownMenuItem<String>(
+                                    value: l["code"],
+                                    child: Text(l["label"]!),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Filtres de découverte Section
+                    Text("Filtres de découverte", style: FxTypography.titleLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 16),
 
                     Text("Distance maximale : ${_maxDistance.round()} km", style: FxTypography.titleMedium),
@@ -167,7 +240,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    Text("Gestion de la confidentialité", style: FxTypography.titleLarge),
+                    // Confidentialité Section
+                    Text("Gestion de la confidentialité", style: FxTypography.titleLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 12),
                     ListTile(
                       leading: const Icon(Icons.block, color: FxColors.error),

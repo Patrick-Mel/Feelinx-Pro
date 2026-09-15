@@ -66,6 +66,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -132,10 +133,15 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-LANGUAGE_CODE = 'fr-fr'
+LANGUAGE_CODE = 'fr'
 TIME_ZONE = 'Africa/Douala'
 USE_I18N = True
 USE_TZ = True
+
+LANGUAGES = [
+    ('fr', 'Français 🇫🇷'),
+    ('en', 'English 🇬🇧'),
+]
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -269,6 +275,9 @@ JAZZMIN_SETTINGS = {
     "related_modal_active": True,
     "use_google_fonts_boilerplates": True,
     "changeform_format": "horizontal_tabs",
+    "language_chooser": True,
+    "show_ui_builder": True,
+    "theme_toggle": True,
 }
 
 JAZZMIN_UI_TWEAKS = {
