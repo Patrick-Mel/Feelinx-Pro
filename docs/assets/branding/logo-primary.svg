@@ -1,24 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 240" width="800" height="240">
   <defs>
-    <linearGradient id="primaryGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="emberGlow" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#FF3366" />
-      <stop offset="50%" stop-color="#9D4EDD" />
-      <stop offset="100%" stop-color="#FFB703" />
+      <stop offset="50%" stop-color="#D800A6" />
+      <stop offset="100%" stop-color="#FFD166" />
     </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="4" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
-    </filter>
   </defs>
-  <rect width="100%" height="100%" fill="#0A0915" rx="24" />
-  <g transform="translate(40, 30)">
-    <path d="M 70 90 C 40 40, 10 70, 30 110 C 50 145, 80 120, 90 90 C 100 60, 130 35, 150 70 C 170 105, 140 140, 110 90 Z" 
-          fill="none" stroke="url(#primaryGlow)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-    <path d="M 65 90 Q 75 75 80 90 T 95 90 T 105 90 T 115 90" 
-          fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.95" />
-    <circle cx="90" cy="90" r="6" fill="#FFB703" />
+  <rect width="100%" height="100%" fill="#0B0914" rx="24" />
+  <g transform="translate(35, 25) scale(0.36)">
+    <path d="M 256 110 C 180 110, 120 170, 120 250 C 120 330, 200 390, 256 420 C 312 390, 392 330, 392 250 C 392 170, 332 110, 256 110 Z M 256 150 C 300 150, 350 190, 350 250 C 350 310, 290 355, 256 380 C 222 355, 162 310, 162 250 C 162 190, 212 150, 256 150 Z" 
+          fill="url(#emberGlow)" />
+    <path d="M 200 200 C 240 240, 272 240, 312 200 C 330 220, 330 250, 312 280 C 272 240, 240 240, 200 280 C 182 250, 182 220, 200 200 Z" 
+          fill="#FFD166" />
+    <circle cx="256" cy="240" r="18" fill="#FFFFFF" />
+    <circle cx="256" cy="240" r="10" fill="#FF3366" />
   </g>
-  <text x="240" y="135" font-family="'Outfit', 'Inter', 'Segoe UI', sans-serif" font-size="82" font-weight="800" fill="#FFFFFF" letter-spacing="-1.5">Feelinx</text>
-  <circle cx="555" cy="78" r="9" fill="#FF3366" />
-  <text x="242" y="175" font-family="'Inter', 'Segoe UI', sans-serif" font-size="20" font-weight="600" fill="#9D4EDD" letter-spacing="6">CONNEXIONS AUTHENTIQUES</text>
+  <text x="240" y="138" font-family="'Outfit', 'Inter', sans-serif" font-size="84" font-weight="800" fill="#FFFFFF" letter-spacing="-1.5">Feelinx</text>
+  <circle cx="560" cy="80" r="9" fill="#FF3366" />
+  <text x="242" y="178" font-family="'Inter', sans-serif" font-size="20" font-weight="600" fill="#D800A6" letter-spacing="6">RENCONTRES AUTHENTIQUES</text>
 </svg>

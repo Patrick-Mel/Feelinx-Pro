@@ -1,21 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <linearGradient id="symGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="emberGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#FF3366" />
-      <stop offset="50%" stop-color="#9D4EDD" />
-      <stop offset="100%" stop-color="#FFB703" />
+      <stop offset="50%" stop-color="#D800A6" />
+      <stop offset="100%" stop-color="#FFD166" />
     </linearGradient>
-    <filter id="glowSym" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="8" result="blur" />
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#140E26" />
+      <stop offset="100%" stop-color="#0B0914" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
   </defs>
-  <rect width="100%" height="100%" fill="#0A0915" rx="112" />
-  <g transform="translate(66, 66)">
-    <path d="M 140 180 C 80 80, 20 140, 60 220 C 100 290, 160 240, 180 180 C 200 120, 260 70, 300 140 C 340 210, 280 280, 220 180 Z" 
-          fill="none" stroke="url(#symGlow)" stroke-width="36" stroke-linecap="round" stroke-linejoin="round" filter="url(#glowSym)" />
-    <path d="M 130 180 Q 150 150 160 180 T 190 180 T 210 180 T 230 180" 
-          fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" opacity="0.95" />
-    <circle cx="180" cy="180" r="12" fill="#FFB703" />
+  <!-- Squircle Background -->
+  <rect width="512" height="512" fill="url(#bgGradient)" rx="116" />
+  
+  <!-- Ember Glow Outer Ring -->
+  <circle cx="256" cy="256" r="190" fill="none" stroke="url(#emberGradient)" stroke-width="4" opacity="0.15" />
+  
+  <g filter="url(#glow)">
+    <!-- Left Ribbon (F / Heart Flame Arc) -->
+    <path d="M 256 110 C 180 110, 120 170, 120 250 C 120 330, 200 390, 256 420 C 312 390, 392 330, 392 250 C 392 170, 332 110, 256 110 Z M 256 150 C 300 150, 350 190, 350 250 C 350 310, 290 355, 256 380 C 222 355, 162 310, 162 250 C 162 190, 212 150, 256 150 Z" 
+          fill="url(#emberGradient)" />
+          
+    <!-- Inner Interlocking Flame X-Knot -->
+    <path d="M 200 200 C 240 240, 272 240, 312 200 C 330 220, 330 250, 312 280 C 272 240, 240 240, 200 280 C 182 250, 182 220, 200 200 Z" 
+          fill="#FFD166" />
+
+    <!-- Center Radiant Spark -->
+    <circle cx="256" cy="240" r="18" fill="#FFFFFF" />
+    <circle cx="256" cy="240" r="10" fill="#FF3366" />
   </g>
 </svg>
