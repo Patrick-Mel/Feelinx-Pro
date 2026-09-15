@@ -63,6 +63,66 @@
 
     {% block extrastyle %} {% endblock %}
     {% block extrahead %} {% endblock %}
+
+<style>
+    /* Premium High-Contrast Theme Fixes for Jazzmin Admin */
+    [data-bs-theme="dark"] body, [data-bs-theme="dark"] .app-wrapper, [data-bs-theme="dark"] .app-main {
+        background-color: #0f172a !important;
+        color: #f8fafc !important;
+    }
+    [data-bs-theme="dark"] .card, [data-bs-theme="dark"] .app-content-header {
+        background-color: #1e293b !important;
+        border-color: #334155 !important;
+        color: #f8fafc !important;
+    }
+    [data-bs-theme="dark"] .card-header {
+        background-color: #334155 !important;
+        color: #f8fafc !important;
+        font-weight: bold;
+    }
+    [data-bs-theme="dark"] a {
+        color: #38bdf8 !important;
+    }
+    [data-bs-theme="dark"] a:hover {
+        color: #7dd3fc !important;
+        text-decoration: underline;
+    }
+    [data-bs-theme="dark"] .table {
+        color: #f8fafc !important;
+        border-color: #334155 !important;
+    }
+    [data-bs-theme="dark"] .table th {
+        background-color: #1e293b !important;
+        color: #f8fafc !important;
+    }
+    [data-bs-theme="dark"] .table td {
+        background-color: #0f172a !important;
+    }
+    [data-bs-theme="dark"] .btn-primary {
+        background-color: #ec4899 !important;
+        border-color: #db2777 !important;
+    }
+    [data-bs-theme="dark"] .btn-info {
+        background-color: #0284c7 !important;
+        border-color: #0369a1 !important;
+        color: #ffffff !important;
+    }
+
+    /* Light Theme Crisp Styling */
+    [data-bs-theme="light"] body, [data-bs-theme="light"] .app-wrapper {
+        background-color: #f1f5f9 !important;
+        color: #0f172a !important;
+    }
+    [data-bs-theme="light"] .card {
+        background-color: #ffffff !important;
+        border-color: #cbd5e1 !important;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+    [data-bs-theme="light"] a {
+        color: #2563eb !important;
+    }
+</style>
+
 </head>
 <body class="layout-fixed{% if jazzmin_settings.show_sidebar %} sidebar-expand-lg sidebar-open{% else %} no-sidebar{% endif %} bg-body-tertiary {% sidebar_status request %} {% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %} {{ jazzmin_ui.body_classes }}" data-admin-utc-offset="{% now "Z" %}">
 

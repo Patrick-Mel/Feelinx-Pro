@@ -6,7 +6,7 @@ class MessageInline(admin.TabularInline):
     model = Message
     extra = 0
     fields = ('sender', 'content_snippet', 'status', 'created_at')
-    readonly_fields = ('created_at',)
+    readonly_fields = ('content_snippet', 'created_at')
 
     def content_snippet(self, obj):
         return obj.content[:60] if obj.content else ""

@@ -9,7 +9,8 @@ class PlanAdmin(admin.ModelAdmin):
 
     @admin.display(description="Tarif")
     def price_display(self, obj):
-        return format_html('<span style="font-weight: bold; color: #10B981;">{:,} FCFA</span>', obj.price_xaf)
+        price = int(obj.price_xaf) if obj.price_xaf is not None else 0
+        return format_html('<span style="font-weight: bold; color: #10B981;">{} FCFA</span>', f"{price:,}")
 
     @admin.display(description="Populaire")
     def is_popular_badge(self, obj):
@@ -44,7 +45,8 @@ class TransactionAdmin(admin.ModelAdmin):
 
     @admin.display(description="Montant")
     def amount_display(self, obj):
-        return format_html('<span style="font-weight: bold;">{:,} FCFA</span>', obj.amount_xaf)
+        amount = int(obj.amount_xaf) if obj.amount_xaf is not None else 0
+        return format_html('<span style="font-weight: bold;">{} FCFA</span>', f"{amount:,}")
 
     @admin.display(description="Provider")
     def provider_badge(self, obj):
