@@ -7,6 +7,7 @@ import '../../../../core/theme/tokens.dart';
 import '../../../../core/theme/typography.dart';
 import '../../../../core/widgets/fx_shimmer_box.dart';
 import '../../../../core/network/dio_client.dart';
+import '../../../../core/branding/feelinx_logo.dart';
 
 class DiscoveryScreen extends StatefulWidget {
   const DiscoveryScreen({super.key});
@@ -110,18 +111,9 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 28,
-              height: 28,
-              decoration: const BoxDecoration(shape: BoxShape.circle, color: FxColors.primaryCoral),
-              child: const Center(child: Text("F", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
-            ),
-            const SizedBox(width: 8),
-            const Text("Feelinx", style: TextStyle(fontWeight: FontWeight.w800)),
-          ],
+        title: const FeelinxLogo(
+          size: 28,
+          variant: FeelinxLogoVariant.fullHorizontal,
         ),
         actions: [
           IconButton(

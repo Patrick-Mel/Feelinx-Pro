@@ -65,6 +65,29 @@ dev_dependencies:
   json_serializable: ^6.7.1
   riverpod_generator: ^2.4.0
   mocktail: ^1.0.3
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.0
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/branding/app-icon.svg"
+  adaptive_icon_background: "assets/branding/app-icon-adaptive-background.svg"
+  adaptive_icon_foreground: "assets/branding/app-icon-adaptive-foreground.svg"
+  web:
+    generate: true
+    image_path: "assets/branding/app-icon.svg"
+    background_color: "#0F0D13"
+    theme_color: "#FF4E64"
+
+flutter_native_splash:
+  color: "#0F0D13"
+  color_dark: "#0F0D13"
+  image: "assets/branding/logo-symbol.svg"
+  android_12:
+    image: "assets/branding/logo-symbol.svg"
+    icon_background_color: "#0F0D13"
+  web: false
 
 flutter:
   uses-material-design: true
@@ -72,3 +95,4 @@ flutter:
     - assets/translations/
     - assets/icons/
     - assets/images/
+    - assets/branding/

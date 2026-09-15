@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="feelinxWmGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF4E64" />
+      <stop offset="100%" stop-color="#6C4AB6" />
+    </linearGradient>
+  </defs>
+  <text x="500" y="200" font-family="'Plus Jakarta Sans', 'Outfit', 'Inter', sans-serif" font-size="200" font-weight="800" letter-spacing="-5" text-anchor="middle" fill="#FFFFFF">
+    Feel<tspan fill="url(#feelinxWmGrad)">inx</tspan>
+  </text>
+</svg>
