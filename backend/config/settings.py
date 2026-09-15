@@ -32,6 +32,7 @@ except ImportError:
     pass
 
 INSTALLED_APPS += [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -230,5 +231,72 @@ ORANGE_MONEY_ENV = os.environ.get('ORANGE_MONEY_ENV', 'sandbox')
 # CORS Settings for Web Clients
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+# Jazzmin Modern Django Admin Theme Settings
+JAZZMIN_SETTINGS = {
+    "site_title": "Feelinx Admin",
+    "site_header": "Feelinx Pro",
+    "site_brand": "Feelinx Control Center",
+    "site_logo_classes": "img-circle",
+    "welcome_sign": "Bienvenue sur le centre de contrôle Feelinx 🚀",
+    "copyright": "Feelinx Ltd",
+    "search_model": ["profiles.Profile", "accounts.User"],
+    "topmenu_links": [
+        {"name": "Tableau de Bord", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "Documentation Swagger API", "url": "/api/schema/swagger-ui/", "new_window": True},
+    ],
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "icons": {
+        "accounts.User": "fas fa-user-shield",
+        "accounts.OTPCode": "fas fa-key",
+        "profiles.Profile": "fas fa-user-circle",
+        "profiles.Photo": "fas fa-camera",
+        "profiles.Interest": "fas fa-tags",
+        "discovery.Swipe": "fas fa-fire",
+        "discovery.Match": "fas fa-heart",
+        "discovery.ProfileView": "fas fa-eye",
+        "chat.Conversation": "fas fa-comments",
+        "chat.Message": "fas fa-paper-plane",
+        "payments.Plan": "fas fa-gem",
+        "payments.Subscription": "fas fa-crown",
+        "payments.Transaction": "fas fa-credit-card",
+        "safety.Report": "fas fa-shield-alt",
+        "safety.BlockedUser": "fas fa-user-slash",
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    "related_modal_active": True,
+    "use_google_fonts_boilerplates": True,
+    "changeform_format": "horizontal_tabs",
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-dark",
+    "accent": "accent-danger",
+    "navbar": "navbar-dark navbar-primary",
+    "no_navbar_border": False,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-danger",
+    "sidebar_nav_small_text": False,
+    "theme": "darkly",
+    "dark_mode_theme": "darkly",
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
+
 
 
