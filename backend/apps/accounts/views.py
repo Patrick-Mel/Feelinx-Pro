@@ -8,7 +8,11 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from drf_spectacular.utils import extend_schema
 
 from .models import User, OTPCode
-from .serializers import RequestOTPSerializer, VerifyOTPSerializer, UserSerializer
+from .serializers import (
+    RequestOTPSerializer, VerifyOTPSerializer, 
+    PasswordLoginSerializer, RegisterWithPasswordSerializer, 
+    ResetPasswordConfirmSerializer, UserSerializer
+)
 from .services.sms import get_sms_provider
 
 class RequestOTPView(APIView):
