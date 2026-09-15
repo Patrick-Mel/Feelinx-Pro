@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/typography.dart';
@@ -17,6 +18,8 @@ class PublicProfileScreen extends StatefulWidget {
 class _PublicProfileScreenState extends State<PublicProfileScreen> {
   dynamic _profile;
   bool _isLoading = true;
+  int _currentPhotoIndex = 0;
+  final PageController _photoPageController = PageController();
 
   @override
   void initState() {
@@ -99,13 +102,17 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
     }
 
     final photos = _profile?['photos'] as List? ?? [];
-    final photoUrl = photos.isNotEmpty ? photos.first['url'] : '';
+    final defaultAvatar = (_profile?['gender'] == 'male')
+        ? "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop"
+        : "https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=800&auto=format&fit=crop";
 
     return Scaffold(
+      backgroundColor: FxColors.darkBackground,
       body: CustomScrollView(
         slivers: [
+          // Photo Carousel Header
           SliverAppBar(
-            expandedHeight: 420,
+            expandedHeight: 440,
             pinned: true,
             actions: [
               IconButton(
@@ -140,11 +147,70 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              background: photoUrl.isNotEmpty
-                  ? CachedNetworkImage(imageUrl: photoUrl, fit: BoxFit.cover)
-                  : Container(color: FxColors.darkCard),
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  if (photos.isNotEmpty)
+                    PageView.builder(
+                      controller: _photoPageController,
+                      itemCount: photos.length,
+                      onPageChanged: (idx) => setState(() => _currentPhotoIndex = idx),
+                      itemBuilder: (context, index) {
+                        return CachedNetworkImage(
+                          imageUrl: photos[index]['url'],
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    )
+                  else
+                    CachedNetworkImage(
+                      imageUrl: defaultAvatar,
+                      fit: BoxFit.cover,
+                    ),
+
+                  // Vignette Overlay
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.3),
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.8),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Photo Indicator Dots if multiple photos
+                  if (photos.length > 1)
+                    Positioned(
+                      top: 100,
+                      left: 0,
+                      right: 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          photos.length,
+                          (idx) => Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 3),
+                            width: _currentPhotoIndex == idx ? 24 : 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: _currentPhotoIndex == idx ? FxColors.primaryCoral : Colors.white.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
+
+          // Profile Content Details
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -153,39 +219,111 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                 children: [
                   Row(
                     children: [
-                      Text("${_profile['first_name']}, ${_profile['age'] ?? 24}", style: FxTypography.displayMedium),
+                      Text(
+                        "${_profile['first_name']}, ${_profile['age'] ?? 24}",
+                        style: FxTypography.displayMedium.copyWith(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+                      ),
                       if (_profile['is_verified'] == true) ...[
                         const SizedBox(width: 8),
                         const Icon(Icons.verified, color: FxColors.info, size: 24),
                       ],
+                      if (_profile['is_premium'] == true) ...[
+                        const SizedBox(width: 6),
+                        const Icon(Icons.workspace_premium, color: FxColors.accentGold, size: 22),
+                      ],
                     ],
                   ),
-                  const SizedBox(height: 4),
-                  Text("${_profile['city']} • à ${_profile['distance_km'] ?? 3} km", style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary)),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on, size: 18, color: FxColors.primaryCoral),
+                      const SizedBox(width: 4),
+                      Text(
+                        "${_profile['city']} • à ${_profile['distance_km'] ?? 3} km de toi",
+                        style: FxTypography.bodyMedium.copyWith(color: Colors.white70),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 16),
 
                   // Intention Badge
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    decoration: BoxDecoration(color: FxColors.primaryCoral.withOpacity(0.15), borderRadius: BorderRadius.circular(20)),
-                    child: Text("Recherche : ${_profile['intention'] ?? 'Relation sérieuse'}", style: FxTypography.bodyMedium.copyWith(color: FxColors.primaryCoral, fontWeight: FontWeight.bold)),
+                    decoration: BoxDecoration(
+                      color: FxColors.primaryCoral.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: FxColors.primaryCoral.withOpacity(0.4)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.favorite, size: 16, color: FxColors.primaryCoral),
+                        const SizedBox(width: 6),
+                        Text(
+                          "Recherche : ${_profile['intention'] ?? 'Relation sérieuse'}",
+                          style: FxTypography.bodyMedium.copyWith(color: FxColors.primaryCoral, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 24),
 
-                  Text("À propos", style: FxTypography.titleLarge),
-                  const SizedBox(height: 8),
-                  Text(_profile['bio'] ?? 'Aucune bio rédigée pour le moment.', style: FxTypography.bodyLarge),
+                  // Bio Section
+                  Text("À propos de moi", style: FxTypography.titleLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 10),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: FxColors.darkCard,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(
+                      _profile['bio'] != null && _profile['bio'].toString().isNotEmpty
+                          ? _profile['bio']
+                          : "Passions, sourires et beaux échanges à partager sur Feelinx.",
+                      style: FxTypography.bodyLarge.copyWith(color: Colors.white.withOpacity(0.9), height: 1.4),
+                    ),
+                  ),
                   const SizedBox(height: 24),
 
-                  Text("Centres d'intérêt", style: FxTypography.titleLarge),
+                  // Interests Section
+                  Text("Centres d'intérêt", style: FxTypography.titleLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 12),
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
                     children: ((_profile['interests'] as List? ?? [])).map((intItem) {
-                      return FxChip(label: "${intItem['emoji']} ${intItem['name_fr']}");
+                      return FxChip(
+                        label: "${intItem['emoji']} ${intItem['name_fr']}",
+                        isSelected: true,
+                      );
                     }).toList(),
                   ),
+                  const SizedBox(height: 32),
+
+                  // Action Buttons (Like & Chat)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Vous avez envoyé un Like à ${_profile['first_name']} ! ❤️")),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: FxColors.primaryCoral,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          ),
+                          icon: const Icon(Icons.favorite, color: Colors.white),
+                          label: const Text("Envoyer un Like", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
                 ],
               ),
             ),

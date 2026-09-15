@@ -283,39 +283,57 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
             bottom: 0,
             left: 0,
             right: 0,
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [Colors.black.withOpacity(0.9), Colors.transparent],
+            child: GestureDetector(
+              onTap: () => context.push('/profile/public/${profile['id']}'),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [Colors.black.withOpacity(0.9), Colors.transparent],
+                  ),
                 ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Text("${profile['first_name']}, ${profile['age'] ?? 24}", style: FxTypography.displayMedium.copyWith(color: Colors.white)),
-                      const SizedBox(width: 8),
-                      if (profile['is_verified'] == true)
-                        const Icon(Icons.verified, color: FxColors.info, size: 22),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(Icons.location_on, size: 16, color: Colors.white70),
-                      const SizedBox(width: 4),
-                      Text("${profile['city']} • à ${profile['distance_km'] ?? 3} km", style: FxTypography.bodyMedium.copyWith(color: Colors.white70)),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  if (profile['bio'] != null && profile['bio'].toString().isNotEmpty)
-                    Text(profile['bio'], style: FxTypography.bodyMedium.copyWith(color: Colors.white), maxLines: 2, overflow: TextOverflow.ellipsis),
-                ],
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Text("${profile['first_name']}, ${profile['age'] ?? 24}", style: FxTypography.displayMedium.copyWith(color: Colors.white)),
+                              const SizedBox(width: 8),
+                              if (profile['is_verified'] == true)
+                                const Icon(Icons.verified, color: FxColors.info, size: 22),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.info_outline, color: Colors.white, size: 22),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        const Icon(Icons.location_on, size: 16, color: Colors.white70),
+                        const SizedBox(width: 4),
+                        Text("${profile['city']} • à ${profile['distance_km'] ?? 3} km", style: FxTypography.bodyMedium.copyWith(color: Colors.white70)),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    if (profile['bio'] != null && profile['bio'].toString().isNotEmpty)
+                      Text(profile['bio'], style: FxTypography.bodyMedium.copyWith(color: Colors.white), maxLines: 2, overflow: TextOverflow.ellipsis),
+                  ],
+                ),
               ),
             ),
           ),
