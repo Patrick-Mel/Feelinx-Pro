@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Swipe, Match, ProfileView
+from .models import Swipe, Match, ProfileView, Boost
 
 @admin.register(Swipe)
 class SwipeAdmin(admin.ModelAdmin):
@@ -34,7 +34,15 @@ class MatchAdmin(admin.ModelAdmin):
 
 @admin.register(ProfileView)
 class ProfileViewAdmin(admin.ModelAdmin):
-    list_display = ('viewer', 'viewed', 'created_at')
-    list_filter = ('created_at',)
+    list_display = ('viewer', 'viewed', 'viewed_at')
+    list_filter = ('viewed_at',)
     search_fields = ('viewer__first_name', 'viewed__first_name')
-    ordering = ('-created_at',)
+    ordering = ('-viewed_at',)
+
+
+@admin.register(Boost)
+class BoostAdmin(admin.ModelAdmin):
+    list_display = ('profile', 'views_gained', 'started_at', 'ends_at')
+    list_filter = ('started_at',)
+    search_fields = ('profile__first_name',)
+    ordering = ('-started_at',)
