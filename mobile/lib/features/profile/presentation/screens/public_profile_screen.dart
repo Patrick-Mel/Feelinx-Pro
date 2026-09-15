@@ -106,8 +106,13 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
         ? "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop"
         : "https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=800&auto=format&fit=crop";
 
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final surfaceBg = theme.colorScheme.surface;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = isDarkMode ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+
     return Scaffold(
-      backgroundColor: FxColors.darkBackground,
       body: CustomScrollView(
         slivers: [
           // Photo Carousel Header
@@ -120,7 +125,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                 onPressed: () {
                   showModalBottomSheet(
                     context: context,
-                    backgroundColor: FxColors.darkSurface,
+                    backgroundColor: surfaceBg,
                     builder: (ctx) => Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -133,8 +138,8 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                           },
                         ),
                         ListTile(
-                          leading: const Icon(Icons.block, color: FxColors.darkTextSecondary),
-                          title: const Text("Bloquer cet utilisateur"),
+                          leading: Icon(Icons.block, color: textSecondary),
+                          title: Text("Bloquer cet utilisateur", style: TextStyle(color: textPrimary)),
                           onTap: () {
                             Navigator.pop(ctx);
                             _blockUser();

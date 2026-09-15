@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/typography.dart';
 import '../../../../core/widgets/fx_button.dart';
@@ -108,20 +109,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeModeProvider);
-    final locale = ref.watch(localeProvider);
-
     final bool isDarkMode = themeMode == ThemeMode.dark;
-    final String selectedLanguage = locale.languageCode;
+    final String selectedLanguage = context.locale.languageCode;
 
-    final Color cardBg = isDarkMode ? FxColors.darkCard : FxColors.lightCard;
-    final Color borderBg = isDarkMode ? FxColors.darkBorder : FxColors.lightBorder;
-    final Color textPrimary = isDarkMode ? FxColors.darkTextPrimary : FxColors.lightTextPrimary;
-    final Color textSecondary = isDarkMode ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
-    final Color surfaceBg = isDarkMode ? FxColors.darkSurface : FxColors.lightSurface;
+    final theme = Theme.of(context);
+    final cardBg = theme.cardTheme.color ?? (isDarkMode ? FxColors.darkCard : FxColors.lightCard);
+    final borderBg = isDarkMode ? FxColors.darkBorder : FxColors.lightBorder;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = isDarkMode ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+    final surfaceBg = theme.colorScheme.surface;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Paramètres", style: TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(context.tr('settings.title'), style: const TextStyle(fontWeight: FontWeight.w800)),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -133,7 +133,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   children: [
                     // Apparence & Langue Section
                     Text(
-                      "Apparence & Langue",
+                      context.tr('settings.appearance_language'),
                       style: FxTypography.titleLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 12),
@@ -152,15 +152,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               color: FxColors.primaryCoral,
                             ),
                             title: Text(
-                              "Mode Sombre / Clair",
+                              context.tr('settings.dark_light_mode'),
                               style: TextStyle(color: textPrimary, fontWeight: FontWeight.w600),
                             ),
                             subtitle: Text(
-                              isDarkMode ? "Thème sombre Feelinx actif" : "Thème clair actif",
+                              isDarkMode ? context.tr('settings.dark_active') : context.tr('settings.light_active'),
                               style: TextStyle(color: textSecondary, fontSize: 12),
                             ),
                             value: isDarkMode,
-                            activeColor: FxColors.primaryCoral,
+                            activeThumbColor: FxColors.primaryCoral,
                             onChanged: (val) {
                               ref.read(themeModeProvider.notifier).toggleTheme(val);
                             },
@@ -177,7 +177,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Langue de l'application",
+                                        context.tr('settings.app_language'),
                                         style: TextStyle(color: textPrimary, fontWeight: FontWeight.w600, fontSize: 15),
                                       ),
                                       const SizedBox(height: 2),
@@ -203,7 +203,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                       style: FxTypography.bodyMedium.copyWith(color: textPrimary),
                                       onChanged: (val) {
                                         if (val != null) {
-                                          ref.read(localeProvider.notifier).setLocale(val);
+                                          ref.read(localeProvider.notifier).setLocale(val, context);
                                         }
                                       },
                                       items: _languages.map((l) {
@@ -227,10 +227,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     const SizedBox(height: 24),
 
                     // Filtres de découverte Section
-                    Text("Filtres de découverte", style: FxTypography.titleLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
+                    Text(
+                      context.tr('settings.discovery_filters'),
+                      style: FxTypography.titleLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
+                    ),
                     const SizedBox(height: 16),
 
-                    Text("Distance maximale : ${_maxDistance.round()} km", style: FxTypography.titleMedium.copyWith(color: textPrimary)),
+                    Text(
+                      context.tr('settings.max_distance', args: ['${_maxDistance.round()}']),
+                      style: FxTypography.titleMedium.copyWith(color: textPrimary),
+                    ),
                     Slider(
                       value: _maxDistance,
                       min: 5,
@@ -244,7 +250,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    Text("Tranche d'âge : ${_ageRange.start.round()} - ${_ageRange.end.round()} ans", style: FxTypography.titleMedium.copyWith(color: textPrimary)),
+                    Text(
+                      context.tr('settings.age_range', args: ['${_ageRange.start.round()}', '${_ageRange.end.round()}']),
+                      style: FxTypography.titleMedium.copyWith(color: textPrimary),
+                    ),
                     RangeSlider(
                       values: _ageRange,
                       min: 18,
@@ -259,7 +268,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     const SizedBox(height: 24),
 
                     SwitchListTile(
-                      title: Text("Afficher uniquement les profils certifiés", style: TextStyle(color: textPrimary)),
+                      title: Text(context.tr('settings.verified_only'), style: TextStyle(color: textPrimary)),
                       value: _verifiedOnly,
                       activeThumbColor: FxColors.primaryCoral,
                       onChanged: (val) {
@@ -268,8 +277,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       },
                     ),
                     SwitchListTile(
-                      title: Text("Mode Incognito", style: TextStyle(color: textPrimary)),
-                      subtitle: Text("Masque votre profil dans le fil sauf aux personnes que vous avez likées", style: TextStyle(color: textSecondary)),
+                      title: Text(context.tr('settings.incognito'), style: TextStyle(color: textPrimary)),
+                      subtitle: Text(context.tr('settings.incognito_desc'), style: TextStyle(color: textSecondary)),
                       value: _incognito,
                       activeThumbColor: FxColors.primaryCoral,
                       onChanged: (val) {
@@ -280,28 +289,34 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     const SizedBox(height: 24),
 
                     // Confidentialité Section
-                    Text("Gestion de la confidentialité", style: FxTypography.titleLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
+                    Text(
+                      context.tr('settings.privacy'),
+                      style: FxTypography.titleLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
+                    ),
                     const SizedBox(height: 12),
                     ListTile(
                       leading: const Icon(Icons.block, color: FxColors.error),
-                      title: Text("Utilisateurs bloqués (${_blockedUsers.length})", style: FxTypography.bodyLarge),
-                      trailing: const Icon(Icons.chevron_right),
+                      title: Text(
+                        context.tr('settings.blocked_users', args: ['${_blockedUsers.length}']),
+                        style: FxTypography.bodyLarge.copyWith(color: textPrimary),
+                      ),
+                      trailing: Icon(Icons.chevron_right, color: textSecondary),
                       onTap: () {
                         showModalBottomSheet(
                           context: context,
-                          backgroundColor: FxColors.darkSurface,
+                          backgroundColor: surfaceBg,
                           builder: (context) => Container(
                             padding: const EdgeInsets.all(20),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Comptes bloqués", style: FxTypography.titleLarge),
+                                Text(context.tr('settings.blocked_title'), style: FxTypography.titleLarge.copyWith(color: textPrimary)),
                                 const SizedBox(height: 12),
                                 if (_blockedUsers.isEmpty)
-                                  const Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 20),
-                                    child: Center(child: Text("Aucun utilisateur bloqué.", style: TextStyle(color: FxColors.darkTextSecondary))),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 20),
+                                    child: Center(child: Text(context.tr('settings.no_blocked'), style: TextStyle(color: textSecondary))),
                                   )
                                 else
                                   Expanded(
@@ -310,13 +325,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                       itemBuilder: (context, index) {
                                         final u = _blockedUsers[index];
                                         return ListTile(
-                                          title: Text(u['blocked_name'] ?? 'Utilisateur'),
+                                          title: Text(u['blocked_name'] ?? 'Utilisateur', style: TextStyle(color: textPrimary)),
                                           trailing: TextButton(
                                             onPressed: () {
                                               Navigator.pop(context);
                                               _unblockUser(u['blocked_id']);
                                             },
-                                            child: const Text("Débloquer", style: TextStyle(color: FxColors.primaryCoral)),
+                                            child: Text(context.tr('settings.unblock'), style: const TextStyle(color: FxColors.primaryCoral)),
                                           ),
                                         );
                                       },
@@ -331,26 +346,30 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     const SizedBox(height: 32),
 
                     FxButton(
-                      text: "Se déconnecter",
+                      text: context.tr('settings.logout'),
                       variant: FxButtonVariant.outline,
                       onPressed: _logout,
                     ),
                     const SizedBox(height: 12),
                     FxButton(
-                      text: "Supprimer définitivement mon compte",
+                      text: context.tr('settings.delete_account'),
                       variant: FxButtonVariant.danger,
                       onPressed: () {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: const Text("Suppression de compte"),
-                            content: const Text("Es-tu sûr(e) de vouloir supprimer définitivement ton compte Feelinx ? Toutes tes données et conversations seront détruites."),
+                            backgroundColor: surfaceBg,
+                            title: Text(context.tr('settings.delete_title'), style: TextStyle(color: textPrimary)),
+                            content: Text(context.tr('settings.delete_confirm'), style: TextStyle(color: textSecondary)),
                             actions: [
-                              TextButton(onPressed: () => Navigator.pop(context), child: const Text("Annuler")),
-                              TextButton(onPressed: () {
-                                Navigator.pop(context);
-                                _logout();
-                              }, child: const Text("Supprimer", style: TextStyle(color: FxColors.error))),
+                              TextButton(onPressed: () => Navigator.pop(context), child: Text(context.tr('settings.cancel'))),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  _logout();
+                                },
+                                child: Text(context.tr('settings.delete_account'), style: const TextStyle(color: FxColors.error)),
+                              ),
                             ],
                           ),
                         );

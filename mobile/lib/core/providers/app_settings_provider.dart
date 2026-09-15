@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 const _storage = FlutterSecureStorage();
 
@@ -57,9 +58,10 @@ class LocaleNotifier extends StateNotifier<Locale> {
     } catch (_) {}
   }
 
-  Future<void> setLocale(String langCode) async {
+  Future<void> setLocale(String langCode, BuildContext context) async {
     final newLocale = Locale(langCode);
     state = newLocale;
+    await context.setLocale(newLocale);
     try {
       await _storage.write(key: 'app_locale', value: langCode);
     } catch (_) {}

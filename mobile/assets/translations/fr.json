@@ -53,5 +53,29 @@
     "enter_phone": "Saisis ton numéro MoMo / Orange",
     "ussd_prompt": "Compose le code sur ton téléphone pour valider le paiement.",
     "success": "Félicitation ! Tu es maintenant membre Premium !"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "appearance_language": "Apparence & Langue",
+    "dark_light_mode": "Mode Sombre / Clair",
+    "dark_active": "Thème sombre Feelinx actif",
+    "light_active": "Thème clair Feelinx actif",
+    "app_language": "Langue de l'application",
+    "discovery_filters": "Filtres de découverte",
+    "max_distance": "Distance maximale : {} km",
+    "age_range": "Tranche d'âge : {} - {} ans",
+    "verified_only": "Afficher uniquement les profils certifiés",
+    "incognito": "Mode Incognito",
+    "incognito_desc": "Masque votre profil dans le fil sauf aux personnes que vous avez likées",
+    "privacy": "Gestion de la confidentialité",
+    "blocked_users": "Utilisateurs bloqués ({})",
+    "blocked_title": "Comptes bloqués",
+    "no_blocked": "Aucun utilisateur bloqué.",
+    "unblock": "Débloquer",
+    "logout": "Se déconnecter",
+    "delete_account": "Supprimer définitivement mon compte",
+    "delete_title": "Suppression de compte",
+    "delete_confirm": "Es-tu sûr(e) de vouloir supprimer définitivement ton compte Feelinx ? Toutes tes données et conversations seront détruites.",
+    "cancel": "Annuler"
   }
 }
