@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../../core/network/dio_client.dart';
-import '../../../../core/services/storage_service.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/tokens.dart';
 import '../../../../core/theme/typography.dart';
 import '../../../../core/widgets/fx_button.dart';
-import '../../../../core/widgets/fx_text_field.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -25,7 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _isLoading = false;
   String? _errorMessage;
 
-  final List<Map<String, String>> _countries = [
+  final List<Map<String, String>> _countries = const [
     {"code": "+237", "flag": "🇨🇲", "name": "Cameroun"},
     {"code": "+225", "flag": "🇨🇮", "name": "Côte d'Ivoire"},
     {"code": "+221", "flag": "🇸🇳", "name": "Sénégal"},
@@ -72,9 +71,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         final access = res.data['access'];
         final refresh = res.data['refresh'];
 
-        final storage = StorageService();
-        await storage.saveAccessToken(access);
-        await storage.saveRefreshToken(refresh);
+        const storage = FlutterSecureStorage();
+        await storage.write(key: 'jwt_access_token', value: access);
+        await storage.write(key: 'jwt_refresh_token', value: refresh);
 
         context.go('/onboarding/wizard');
       }
@@ -115,7 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 "Créer un compte Feelinx",
                 style: FxTypography.displayMedium.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: FxSpacing.xs8),
+              const SizedBox(height: FxSpacing.sm8),
               Text(
                 "Rejoignez la communauté de rencontres la plus exclusive et authentique.",
                 style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary),
@@ -128,17 +127,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   padding: const EdgeInsets.all(FxSpacing.md12),
                   decoration: BoxDecoration(
                     color: FxColors.error.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(FxRadii.md12),
+                    borderRadius: BorderRadius.circular(FxRadius.medium16),
                     border: Border.all(color: FxColors.error.withOpacity(0.4)),
                   ),
                   child: Row(
                     children: [
                       const Icon(Icons.error_outline, color: FxColors.error, size: 20),
-                      const SizedBox(width: FxSpacing.sm10),
+                      const SizedBox(width: FxSpacing.sm8),
                       Expanded(
                         child: Text(
                           _errorMessage!,
-                          style: FxTypography.bodySmall.copyWith(color: FxColors.error),
+                          style: FxTypography.bodyMedium.copyWith(color: FxColors.error),
                         ),
                       ),
                     ],
@@ -148,15 +147,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ],
 
               // Phone Field
-              Text("Numéro de téléphone", style: FxTypography.labelLarge.copyWith(color: Colors.white)),
-              const SizedBox(height: FxSpacing.xs8),
+              Text("Numéro de téléphone", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+              const SizedBox(height: FxSpacing.sm8),
               Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                     decoration: BoxDecoration(
                       color: FxColors.darkSurface,
-                      borderRadius: BorderRadius.circular(FxRadii.md12),
+                      borderRadius: BorderRadius.circular(FxRadius.medium16),
                       border: Border.all(color: FxColors.darkBorder),
                     ),
                     child: DropdownButtonHideUnderline(
@@ -177,12 +176,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: FxSpacing.sm10),
+                  const SizedBox(width: FxSpacing.sm8),
                   Expanded(
-                    child: FxTextField(
+                    child: TextField(
                       controller: _phoneController,
-                      hintText: "690000000",
                       keyboardType: TextInputType.phone,
+                      style: FxTypography.bodyLarge.copyWith(color: Colors.white),
+                      decoration: const InputDecoration(
+                        hintText: "690000000",
+                      ),
                     ),
                   ),
                 ],
@@ -190,29 +192,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: FxSpacing.xl20),
 
               // Password Field
-              Text("Mot de passe", style: FxTypography.labelLarge.copyWith(color: Colors.white)),
-              const SizedBox(height: FxSpacing.xs8),
-              FxTextField(
+              Text("Mot de passe", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+              const SizedBox(height: FxSpacing.sm8),
+              TextField(
                 controller: _passwordController,
-                hintText: "Au moins 6 caractères",
                 obscureText: _isPasswordObscured,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _isPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                    color: FxColors.darkTextSecondary,
+                style: FxTypography.bodyLarge.copyWith(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: "Au moins 6 caractères",
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      color: FxColors.darkTextSecondary,
+                    ),
+                    onPressed: () => setState(() => _isPasswordObscured = !_isPasswordObscured),
                   ),
-                  onPressed: () => setState(() => _isPasswordObscured = !_isPasswordObscured),
                 ),
               ),
               const SizedBox(height: FxSpacing.xl20),
 
               // Confirm Password Field
-              Text("Confirmer le mot de passe", style: FxTypography.labelLarge.copyWith(color: Colors.white)),
-              const SizedBox(height: FxSpacing.xs8),
-              FxTextField(
+              Text("Confirmer le mot de passe", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+              const SizedBox(height: FxSpacing.sm8),
+              TextField(
                 controller: _confirmPasswordController,
-                hintText: "Répétez le mot de passe",
                 obscureText: _isPasswordObscured,
+                style: FxTypography.bodyLarge.copyWith(color: Colors.white),
+                decoration: const InputDecoration(
+                  hintText: "Répétez le mot de passe",
+                ),
               ),
 
               const SizedBox(height: FxSpacing.xxl24),

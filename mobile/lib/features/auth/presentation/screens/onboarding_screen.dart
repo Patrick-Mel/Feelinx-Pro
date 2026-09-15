@@ -98,7 +98,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             center: Alignment.center,
                             radius: 1.2,
                             colors: [
-                              FxColors.secondaryAmethyst.withOpacity(0.2),
+                              FxColors.secondaryIndigo.withOpacity(0.2),
                               FxColors.darkBackground,
                             ],
                           ),
@@ -138,7 +138,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const FeelinxLogo(size: 38, variant: LogoVariant.symbol),
-                      const SizedBox(width: FxSpacing.sm10),
+                      const SizedBox(width: FxSpacing.sm8),
                       Text(
                         "Feelinx",
                         style: FxTypography.displayMedium.copyWith(
@@ -221,13 +221,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     onPressed: () => context.go('/auth/phone'),
                     child: Text(
                       "Connexion rapide sans mot de passe (SMS)",
-                      style: FxTypography.bodySmall.copyWith(
+                      style: FxTypography.bodyMedium.copyWith(
                         color: FxColors.darkTextSecondary,
                         decoration: TextDecoration.underline,
                       ),
                     ),
                   ),
-                  const SizedBox(height: FxSpacing.xs8),
+                  const SizedBox(height: FxSpacing.sm8),
                 ],
               ),
             ),

@@ -6,7 +6,6 @@ import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/tokens.dart';
 import '../../../../core/theme/typography.dart';
 import '../../../../core/widgets/fx_button.dart';
-import '../../../../core/widgets/fx_text_field.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -27,7 +26,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   String? _errorMessage;
   String? _successMessage;
 
-  final List<Map<String, String>> _countries = [
+  final List<Map<String, String>> _countries = const [
     {"code": "+237", "flag": "🇨🇲", "name": "Cameroun"},
     {"code": "+225", "flag": "🇨🇮", "name": "Côte d'Ivoire"},
     {"code": "+221", "flag": "🇸🇳", "name": "Sénégal"},
@@ -142,7 +141,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 _step == 1 ? "Mot de passe oublié" : "Nouveau mot de passe",
                 style: FxTypography.displayMedium.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: FxSpacing.xs8),
+              const SizedBox(height: FxSpacing.sm8),
               Text(
                 _step == 1
                     ? "Entrez votre numéro pour recevoir un code de réinitialisation."
@@ -157,15 +156,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   padding: const EdgeInsets.all(FxSpacing.md12),
                   decoration: BoxDecoration(
                     color: FxColors.error.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(FxRadii.md12),
+                    borderRadius: BorderRadius.circular(FxRadius.medium16),
                     border: Border.all(color: FxColors.error.withOpacity(0.4)),
                   ),
                   child: Row(
                     children: [
                       const Icon(Icons.error_outline, color: FxColors.error, size: 20),
-                      const SizedBox(width: FxSpacing.sm10),
+                      const SizedBox(width: FxSpacing.sm8),
                       Expanded(
-                        child: Text(_errorMessage!, style: FxTypography.bodySmall.copyWith(color: FxColors.error)),
+                        child: Text(_errorMessage!, style: FxTypography.bodyMedium.copyWith(color: FxColors.error)),
                       ),
                     ],
                   ),
@@ -179,15 +178,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   padding: const EdgeInsets.all(FxSpacing.md12),
                   decoration: BoxDecoration(
                     color: FxColors.success.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(FxRadii.md12),
+                    borderRadius: BorderRadius.circular(FxRadius.medium16),
                     border: Border.all(color: FxColors.success.withOpacity(0.4)),
                   ),
                   child: Row(
                     children: [
                       const Icon(Icons.check_circle_outline, color: FxColors.success, size: 20),
-                      const SizedBox(width: FxSpacing.sm10),
+                      const SizedBox(width: FxSpacing.sm8),
                       Expanded(
-                        child: Text(_successMessage!, style: FxTypography.bodySmall.copyWith(color: FxColors.success)),
+                        child: Text(_successMessage!, style: FxTypography.bodyMedium.copyWith(color: FxColors.success)),
                       ),
                     ],
                   ),
@@ -196,15 +195,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ],
 
               if (_step == 1) ...[
-                Text("Numéro de téléphone", style: FxTypography.labelLarge.copyWith(color: Colors.white)),
-                const SizedBox(height: FxSpacing.xs8),
+                Text("Numéro de téléphone", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+                const SizedBox(height: FxSpacing.sm8),
                 Row(
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                       decoration: BoxDecoration(
                         color: FxColors.darkSurface,
-                        borderRadius: BorderRadius.circular(FxRadii.md12),
+                        borderRadius: BorderRadius.circular(FxRadius.medium16),
                         border: Border.all(color: FxColors.darkBorder),
                       ),
                       child: DropdownButtonHideUnderline(
@@ -225,12 +224,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: FxSpacing.sm10),
+                    const SizedBox(width: FxSpacing.sm8),
                     Expanded(
-                      child: FxTextField(
+                      child: TextField(
                         controller: _phoneController,
-                        hintText: "690000000",
                         keyboardType: TextInputType.phone,
+                        style: FxTypography.bodyLarge.copyWith(color: Colors.white),
+                        decoration: const InputDecoration(
+                          hintText: "690000000",
+                        ),
                       ),
                     ),
                   ],
@@ -242,26 +244,32 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   onPressed: _requestResetCode,
                 ),
               ] else ...[
-                Text("Code de vérification SMS (6 chiffres)", style: FxTypography.labelLarge.copyWith(color: Colors.white)),
-                const SizedBox(height: FxSpacing.xs8),
-                FxTextField(
+                Text("Code de vérification SMS (6 chiffres)", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+                const SizedBox(height: FxSpacing.sm8),
+                TextField(
                   controller: _otpController,
-                  hintText: "123456",
                   keyboardType: TextInputType.number,
+                  style: FxTypography.bodyLarge.copyWith(color: Colors.white),
+                  decoration: const InputDecoration(
+                    hintText: "123456",
+                  ),
                 ),
                 const SizedBox(height: FxSpacing.xl20),
-                Text("Nouveau mot de passe", style: FxTypography.labelLarge.copyWith(color: Colors.white)),
-                const SizedBox(height: FxSpacing.xs8),
-                FxTextField(
+                Text("Nouveau mot de passe", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+                const SizedBox(height: FxSpacing.sm8),
+                TextField(
                   controller: _newPasswordController,
-                  hintText: "Au moins 6 caractères",
                   obscureText: _isPasswordObscured,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                      color: FxColors.darkTextSecondary,
+                  style: FxTypography.bodyLarge.copyWith(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: "Au moins 6 caractères",
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                        color: FxColors.darkTextSecondary,
+                      ),
+                      onPressed: () => setState(() => _isPasswordObscured = !_isPasswordObscured),
                     ),
-                    onPressed: () => setState(() => _isPasswordObscured = !_isPasswordObscured),
                   ),
                 ),
                 const SizedBox(height: FxSpacing.xxl24),
