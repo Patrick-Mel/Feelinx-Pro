@@ -14,25 +14,24 @@ class OnboardingScreen extends StatefulWidget {
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerProviderStateMixin {
+class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentSlide = 0;
   Timer? _carouselTimer;
 
-  // High quality authentic images of African singles
   final List<Map<String, String>> _heroSlides = const [
     {
-      "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80",
+      "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80",
       "title": "Rencontres Authentiques",
       "subtitle": "Connecte-toi avec des personnes d'exception au Cameroun et en Afrique.",
     },
     {
-      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80",
+      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=80",
       "title": "Des Liens Électrisants",
       "subtitle": "Un algorithme intelligent basé sur tes affinités et valeurs profondes.",
     },
     {
-      "image": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=1200&q=80",
+      "image": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=1000&q=80",
       "title": "Profils Vérifiés & Sécurisés",
       "subtitle": "Échange en toute sérénité au sein d'une communauté sélect.",
     },
@@ -50,8 +49,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
         int next = (_currentSlide + 1) % _heroSlides.length;
         _pageController.animateToPage(
           next,
-          duration: const Duration(milliseconds: 800),
-          curve: Curves.easeInOutCubic,
+          duration: const Duration(milliseconds: 700),
+          curve: Curves.easeInOut,
         );
       }
     });
@@ -80,11 +79,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
               return Stack(
                 fit: StackFit.expand,
                 children: [
+                  Container(color: FxColors.darkBackground),
                   Image.network(
                     slide["image"]!,
                     fit: BoxFit.cover,
+                    frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                      if (wasSynchronouslyLoaded) return child;
+                      return AnimatedOpacity(
+                        opacity: frame == null ? 0 : 1,
+                        duration: const Duration(milliseconds: 400),
+                        child: child,
+                      );
+                    },
                     errorBuilder: (context, error, stackTrace) {
-                      return Container(color: FxColors.darkSurface);
+                      return Container(
+                        decoration: BoxDecoration(
+                          gradient: RadialGradient(
+                            center: Alignment.center,
+                            radius: 1.2,
+                            colors: [
+                              FxColors.secondaryAmethyst.withOpacity(0.2),
+                              FxColors.darkBackground,
+                            ],
+                          ),
+                        ),
+                      );
                     },
                   ),
                   // Dark Vignette Gradient Overlay
@@ -135,7 +154,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
 
                   // Carousel Text Content
                   AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 400),
+                    duration: const Duration(milliseconds: 300),
                     child: Column(
                       key: ValueKey<int>(_currentSlide),
                       children: [
