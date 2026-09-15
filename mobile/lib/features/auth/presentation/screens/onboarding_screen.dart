@@ -21,19 +21,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<Map<String, String>> _heroSlides = const [
     {
-      "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80",
+      "image": "https://images.unsplash.com/photo-1589156280159-27698a70f29e?auto=format&fit=crop&w=1200&q=80",
       "title": "Rencontres Authentiques",
       "subtitle": "Connecte-toi avec des personnes d'exception au Cameroun et en Afrique.",
     },
     {
-      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=80",
+      "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80",
       "title": "Des Liens Électrisants",
       "subtitle": "Un algorithme intelligent basé sur tes affinités et valeurs profondes.",
     },
     {
-      "image": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=1000&q=80",
+      "image": "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=1200&q=80",
       "title": "Profils Vérifiés & Sécurisés",
       "subtitle": "Échange en toute sérénité au sein d'une communauté sélect.",
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1200&q=80",
+      "title": "Émotions & Passion",
+      "subtitle": "Des conversations vraies avec des personnes qui partagent ta vision.",
     },
   ];
 
@@ -113,11 +118,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          FxColors.darkBackground.withOpacity(0.4),
-                          FxColors.darkBackground.withOpacity(0.7),
+                          FxColors.darkBackground.withOpacity(0.35),
+                          FxColors.darkBackground.withOpacity(0.65),
                           FxColors.darkBackground.withOpacity(0.98),
                         ],
-                        stops: const [0.0, 0.5, 0.85],
+                        stops: const [0.0, 0.45, 0.82],
                       ),
                     ),
                   ),
@@ -202,7 +207,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                   const SizedBox(height: FxSpacing.xxxl32),
 
-                  // Action Buttons (Créer un compte & Se connecter)
+                  // Action Buttons (Créer un compte, Se connecter & Connexion rapide)
                   FxButton(
                     text: "Créer un compte",
                     onPressed: () => context.go('/auth/register'),
@@ -214,16 +219,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     onPressed: () => context.go('/auth/login'),
                   ),
 
-                  const SizedBox(height: FxSpacing.lg16),
+                  const SizedBox(height: FxSpacing.md12),
 
-                  // Fast SMS Option
-                  TextButton(
-                    onPressed: () => context.go('/auth/phone'),
-                    child: Text(
-                      "Connexion rapide sans mot de passe (SMS)",
-                      style: FxTypography.bodyMedium.copyWith(
-                        color: FxColors.darkTextSecondary,
-                        decoration: TextDecoration.underline,
+                  // Styled Compact Fast SMS Button
+                  Container(
+                    width: double.infinity,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(FxRadius.medium16),
+                      border: Border.all(color: Colors.white.withOpacity(0.18)),
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(FxRadius.medium16),
+                        onTap: () => context.go('/auth/phone'),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.sms_outlined, size: 18, color: FxColors.accentGold),
+                            const SizedBox(width: FxSpacing.sm8),
+                            Text(
+                              "Connexion rapide (via SMS)",
+                              style: FxTypography.bodyMedium.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
