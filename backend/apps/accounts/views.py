@@ -128,6 +128,131 @@ class VerifyOTPView(APIView):
         }, status=status.HTTP_200_OK)
 
 
+class PasswordLoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    @extend_schema(
+        request=PasswordLoginSerializer,
+        responses={200: {"type": "object", "properties": {"access": {"type": "string"}, "refresh": {"type": "string"}, "has_profile": {"type": "boolean"}}}}
+    )
+    def post(self, request):
+        serializer = PasswordLoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        phone_number = serializer.validated_data['phone_number']
+        password = serializer.validated_data['password']
+
+        try:
+            user = User.objects.get(phone_number=phone_number)
+        except User.DoesNotExist:
+            return Response(
+                {"success": False, "message": "Aucun compte associé à ce numéro de téléphone."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        if not user.has_usable_password():
+            return Response(
+                {"success": False, "message": "Aucun mot de passe défini. Utilisez la connexion par SMS ou réinitialisez votre mot de passe."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if not user.check_password(password):
+            return Response(
+                {"success": False, "message": "Mot de passe incorrect. Veuillez réessayer."},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        refresh = RefreshToken.for_user(user)
+        has_profile = hasattr(user, 'profile') and user.profile is not None
+
+        return Response({
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+            "has_profile": has_profile,
+            "user": UserSerializer(user).data
+        }, status=status.HTTP_200_OK)
+
+
+class RegisterWithPasswordView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    @extend_schema(
+        request=RegisterWithPasswordSerializer,
+        responses={201: {"type": "object", "properties": {"access": {"type": "string"}, "refresh": {"type": "string"}}}}
+    )
+    def post(self, request):
+        serializer = RegisterWithPasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        phone_number = serializer.validated_data['phone_number']
+        password = serializer.validated_data['password']
+
+        if User.objects.filter(phone_number=phone_number).exists():
+            return Response(
+                {"success": False, "message": "Ce numéro est déjà inscrit. Veuillez vous connecter."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = User.objects.create_user(phone_number=phone_number, password=password)
+        user.is_phone_verified = True
+        user.save()
+
+        refresh = RefreshToken.for_user(user)
+
+        return Response({
+            "success": True,
+            "message": "Compte créé avec succès.",
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+            "has_profile": False,
+            "user": UserSerializer(user).data
+        }, status=status.HTTP_201_CREATED)
+
+
+class ResetPasswordConfirmView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    @extend_schema(
+        request=ResetPasswordConfirmSerializer,
+        responses={200: {"type": "object", "properties": {"success": {"type": "boolean"}, "message": {"type": "string"}}}}
+    )
+    def post(self, request):
+        serializer = ResetPasswordConfirmSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        phone_number = serializer.validated_data['phone_number']
+        raw_code = serializer.validated_data['code']
+        new_password = serializer.validated_data['new_password']
+
+        otp = OTPCode.objects.filter(
+            phone_number=phone_number,
+            is_used=False
+        ).order_by('-created_at').first()
+
+        if not otp or otp.is_expired:
+            return Response(
+                {"success": False, "message": "Code expiré ou invalide. Demandez un nouveau code."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if not otp.check_code(raw_code):
+            return Response(
+                {"success": False, "message": "Code incorrect."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        otp.is_used = True
+        otp.save()
+
+        try:
+            user = User.objects.get(phone_number=phone_number)
+            user.set_password(new_password)
+            user.save()
+            return Response({"success": True, "message": "Mot de passe réinitialisé avec succès. Connectez-vous."}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({"success": False, "message": "Utilisateur introuvable."}, status=status.HTTP_404_NOT_FOUND)
+
+
 class LogoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -149,3 +274,4 @@ class DeleteAccountView(APIView):
         user = request.user
         user.soft_delete()
         return Response({"success": True, "message": "Compte supprimé avec succès."}, status=status.HTTP_200_OK)
+

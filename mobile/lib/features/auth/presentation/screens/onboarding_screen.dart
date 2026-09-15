@@ -1,21 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/tokens.dart';
 import '../../../../core/theme/typography.dart';
+import '../../../../core/branding/feelinx_logo.dart';
 import '../../../../core/widgets/fx_button.dart';
-
-class OnboardingSlide {
-  final String title;
-  final String description;
-  final IconData icon;
-
-  const OnboardingSlide({
-    required this.title,
-    required this.description,
-    required this.icon,
-  });
-}
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -24,105 +14,206 @@ class OnboardingScreen extends StatefulWidget {
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerProviderStateMixin {
   final PageController _pageController = PageController();
-  int _currentIndex = 0;
+  int _currentSlide = 0;
+  Timer? _carouselTimer;
 
-  final List<OnboardingSlide> _slides = const [
-    OnboardingSlide(
-      title: "Rencontres Authentiques",
-      description: "Découvre des personnes vraies et vérifiées près de chez toi au Cameroun et en Afrique.",
-      icon: Icons.favorite,
-    ),
-    OnboardingSlide(
-      title: "Amitié, Amour ou Réseau",
-      description: "Choisis ton intention et laisse notre algorithme te proposer les profils les plus compatibles.",
-      icon: Icons.people_alt,
-    ),
-    OnboardingSlide(
-      title: "Communauté Sûre",
-      description: "Profils vérifiés par selfie et sécurité renforcée contre les fausses identités.",
-      icon: Icons.verified_user,
-    ),
+  // High quality authentic images of African singles
+  final List<Map<String, String>> _heroSlides = const [
+    {
+      "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80",
+      "title": "Rencontres Authentiques",
+      "subtitle": "Connecte-toi avec des personnes d'exception au Cameroun et en Afrique.",
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80",
+      "title": "Des Liens Électrisants",
+      "subtitle": "Un algorithme intelligent basé sur tes affinités et valeurs profondes.",
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=1200&q=80",
+      "title": "Profils Vérifiés & Sécurisés",
+      "subtitle": "Échange en toute sérénité au sein d'une communauté sélect.",
+    },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _startAutoSlide();
+  }
+
+  void _startAutoSlide() {
+    _carouselTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (_pageController.hasClients) {
+        int next = (_currentSlide + 1) % _heroSlides.length;
+        _pageController.animateToPage(
+          next,
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeInOutCubic,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _carouselTimer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(FxSpacing.xxl24),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: TextButton(
-                  onPressed: () => context.go('/auth/phone'),
-                  child: const Text("Passer", style: TextStyle(color: FxColors.darkTextSecondary)),
-                ),
-              ),
-              Expanded(
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: _slides.length,
-                  onPageChanged: (idx) => setState(() => _currentIndex = idx),
-                  itemBuilder: (context, index) {
-                    final slide = _slides[index];
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 140,
-                          height: 140,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: FxColors.primaryCoral.withOpacity(0.12),
-                          ),
-                          child: Icon(slide.icon, size: 72, color: FxColors.primaryCoral),
-                        ),
-                        const SizedBox(height: FxSpacing.xxxl32),
-                        Text(slide.title, style: FxTypography.displayMedium, textAlign: TextAlign.center),
-                        const SizedBox(height: FxSpacing.lg16),
-                        Text(
-                          slide.description,
-                          style: FxTypography.bodyLarge.copyWith(color: FxColors.darkTextSecondary),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  _slides.length,
-                  (idx) => AnimatedContainer(
-                    duration: FxDurations.standard250,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    width: _currentIndex == idx ? 28 : 8,
-                    height: 8,
+      backgroundColor: FxColors.darkBackground,
+      body: Stack(
+        children: [
+          // Background Hero Carousel
+          PageView.builder(
+            controller: _pageController,
+            itemCount: _heroSlides.length,
+            onPageChanged: (idx) => setState(() => _currentSlide = idx),
+            itemBuilder: (context, index) {
+              final slide = _heroSlides[index];
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.network(
+                    slide["image"]!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(color: FxColors.darkSurface);
+                    },
+                  ),
+                  // Dark Vignette Gradient Overlay
+                  Container(
                     decoration: BoxDecoration(
-                      color: _currentIndex == idx ? FxColors.primaryCoral : FxColors.darkBorder,
-                      borderRadius: BorderRadius.circular(4),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          FxColors.darkBackground.withOpacity(0.4),
+                          FxColors.darkBackground.withOpacity(0.7),
+                          FxColors.darkBackground.withOpacity(0.98),
+                        ],
+                        stops: const [0.0, 0.5, 0.85],
+                      ),
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(height: FxSpacing.xxxl32),
-              FxButton(
-                text: _currentIndex == _slides.length - 1 ? "Commencer" : "Suivant",
-                onPressed: () {
-                  if (_currentIndex < _slides.length - 1) {
-                    _pageController.nextPage(duration: FxDurations.standard250, curve: FxCurves.defaultCurve);
-                  } else {
-                    context.go('/auth/phone');
-                  }
-                },
-              ),
-            ],
+                ],
+              );
+            },
           ),
-        ),
+
+          // Content Layer
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: FxSpacing.xxl24, vertical: FxSpacing.lg16),
+              child: Column(
+                children: [
+                  // Top Brand Header
+                  const SizedBox(height: FxSpacing.md12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const FeelinxLogo(size: 38, variant: LogoVariant.symbol),
+                      const SizedBox(width: FxSpacing.sm10),
+                      Text(
+                        "Feelinx",
+                        style: FxTypography.displayMedium.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const Spacer(),
+
+                  // Carousel Text Content
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 400),
+                    child: Column(
+                      key: ValueKey<int>(_currentSlide),
+                      children: [
+                        Text(
+                          _heroSlides[_currentSlide]["title"]!,
+                          textAlign: TextAlign.center,
+                          style: FxTypography.displayMedium.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            height: 1.2,
+                          ),
+                        ),
+                        const SizedBox(height: FxSpacing.md12),
+                        Text(
+                          _heroSlides[_currentSlide]["subtitle"]!,
+                          textAlign: TextAlign.center,
+                          style: FxTypography.bodyMedium.copyWith(
+                            color: Colors.white.withOpacity(0.85),
+                            height: 1.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: FxSpacing.xxl24),
+
+                  // Carousel Indicators
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      _heroSlides.length,
+                      (idx) => AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        width: _currentSlide == idx ? 28 : 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: _currentSlide == idx ? FxColors.primaryCoral : Colors.white.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: FxSpacing.xxxl32),
+
+                  // Action Buttons (Créer un compte & Se connecter)
+                  FxButton(
+                    text: "Créer un compte",
+                    onPressed: () => context.go('/auth/register'),
+                  ),
+                  const SizedBox(height: FxSpacing.md12),
+                  FxButton(
+                    text: "Se connecter",
+                    variant: FxButtonVariant.secondary,
+                    onPressed: () => context.go('/auth/login'),
+                  ),
+
+                  const SizedBox(height: FxSpacing.lg16),
+
+                  // Fast SMS Option
+                  TextButton(
+                    onPressed: () => context.go('/auth/phone'),
+                    child: Text(
+                      "Connexion rapide sans mot de passe (SMS)",
+                      style: FxTypography.bodySmall.copyWith(
+                        color: FxColors.darkTextSecondary,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: FxSpacing.xs8),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
