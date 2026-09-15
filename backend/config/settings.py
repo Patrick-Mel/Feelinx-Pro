@@ -277,7 +277,7 @@ JAZZMIN_SETTINGS = {
     "changeform_format": "horizontal_tabs",
     "language_chooser": True,
     "show_ui_builder": True,
-    "theme_toggle": True,
+    "show_theme_chooser": True,
 }
 
 JAZZMIN_UI_TWEAKS = {
@@ -296,7 +296,7 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar": "sidebar-dark-danger",
     "sidebar_nav_small_text": False,
     "theme": "default",
-    "dark_mode_theme": "darkly",
+    "default_theme_mode": "auto",
     "button_classes": {
         "primary": "btn-primary",
         "secondary": "btn-secondary",
