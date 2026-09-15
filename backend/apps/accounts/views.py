@@ -59,9 +59,7 @@ class RequestOTPView(APIView):
         return Response({
             "success": True,
             "message": "Code de vérification envoyé avec succès.",
-            "expires_in": 300,
-            # In dev console mode, include code for convenient testing
-            "dev_code": raw_code if getattr(sms_provider, '__class__').__name__ == 'ConsoleSMSProvider' else None
+            "expires_in": 300
         }, status=status.HTTP_200_OK)
 
 

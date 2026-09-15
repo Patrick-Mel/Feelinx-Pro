@@ -50,10 +50,9 @@ class _OtpScreenState extends State<OtpScreen> {
       final dio = DioClient().dio;
       final res = await dio.post('auth/request-otp/', data: {'phone_number': widget.phoneNumber});
       if (res.statusCode == 200 && mounted) {
-        final devCode = res.data['dev_code'];
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(devCode != null ? "Nouveau code dev : $devCode" : "Un nouveau code SMS a été envoyé."),
+          const SnackBar(
+            content: Text("Un nouveau code de vérification a été envoyé."),
             backgroundColor: FxColors.info,
           ),
         );

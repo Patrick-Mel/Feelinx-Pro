@@ -47,16 +47,6 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
       final res = await dio.post('auth/request-otp/', data: {'phone_number': fullPhone});
 
       if (res.statusCode == 200 && mounted) {
-        final devCode = res.data['dev_code'];
-        if (devCode != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Code de test rapide : $devCode"),
-              duration: const Duration(seconds: 5),
-              backgroundColor: FxColors.info,
-            ),
-          );
-        }
         context.go('/auth/otp', extra: fullPhone);
       }
     } on DioException catch (e) {
