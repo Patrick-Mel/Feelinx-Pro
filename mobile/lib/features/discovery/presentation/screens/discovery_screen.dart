@@ -31,10 +31,17 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
     setState(() => _isLoading = true);
     try {
       final dio = DioClient().dio;
-      final res = await dio.get('discovery/feed/');
+      final res = await dio.get('discovery/feed/?limit=50');
       if (res.statusCode == 200 && mounted) {
+        final data = res.data;
+        List<dynamic> list = [];
+        if (data is List) {
+          list = data;
+        } else if (data is Map && data['results'] is List) {
+          list = data['results'];
+        }
         setState(() {
-          _profiles = res.data ?? [];
+          _profiles = list;
           _isLoading = false;
         });
       }

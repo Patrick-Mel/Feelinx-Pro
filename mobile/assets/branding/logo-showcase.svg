@@ -1,80 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 240" width="800" height="240">
   <defs>
-    <linearGradient id="scBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#14111D" />
-      <stop offset="100%" stop-color="#09070D" />
+    <linearGradient id="primaryGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF3366" />
+      <stop offset="50%" stop-color="#9D4EDD" />
+      <stop offset="100%" stop-color="#FFB703" />
     </linearGradient>
-    <linearGradient id="scSymbolGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FF4E64" />
-      <stop offset="100%" stop-color="#6C4AB6" />
-    </linearGradient>
-    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1E192C" />
-      <stop offset="100%" stop-color="#141020" />
-    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
   </defs>
-
-  <!-- Background -->
-  <rect width="1920" height="1080" fill="url(#scBgGrad)" />
-
-  <!-- Title Banner -->
-  <text x="100" y="110" font-family="'Plus Jakarta Sans', sans-serif" font-size="48" font-weight="800" fill="#FFFFFF">FEELINX — KIT DE MARQUE VISUELLE 2026</text>
-  <text x="100" y="150" font-family="'Plus Jakarta Sans', sans-serif" font-size="20" font-weight="500" fill="#A0A0B0">Système d'Identité Vectoriel &amp; Applications Mobile / Système</text>
-
-  <!-- Card 1: Main Lockup Horizontal -->
-  <rect x="100" y="200" width="820" height="380" rx="24" fill="url(#cardGrad)" stroke="#2D283A" stroke-width="2" />
-  <text x="140" y="250" font-family="sans-serif" font-size="18" font-weight="600" fill="#FF4E64">01. LOCKUP PRINCIPAL (Fond Sombre)</text>
-  <g transform="translate(140, 270) scale(0.65)">
-    <path fill="url(#scSymbolGrad)" d="M 116,420 V 152 C 116,108 152,72 196,72 H 380 C 397.67,72 412,86.33 412,104 C 412,121.67 397.67,136 380,136 H 216 C 196.12,136 180,152.12 180,172 V 420 C 180,437.67 165.67,452 148,452 C 130.33,452 116,437.67 116,420 Z" />
-    <path fill="url(#scSymbolGrad)" d="M 180,248 H 340 C 362.09,248 380,265.91 380,288 C 380,310.09 362.09,328 340,328 H 260 C 242.33,328 228,342.33 228,360 C 228,377.67 242.33,392 260,392 H 340 C 397.44,392 444,345.44 444,288 C 444,230.56 397.44,184 340,184 H 180 V 248 Z" />
-    <text x="540" y="320" font-family="'Plus Jakarta Sans', sans-serif" font-size="210" font-weight="800" letter-spacing="-4" fill="#FFFFFF">Feel<tspan fill="url(#scSymbolGrad)">inx</tspan></text>
+  <rect width="100%" height="100%" fill="#0A0915" rx="24" />
+  <g transform="translate(40, 30)">
+    <path d="M 70 90 C 40 40, 10 70, 30 110 C 50 145, 80 120, 90 90 C 100 60, 130 35, 150 70 C 170 105, 140 140, 110 90 Z" 
+          fill="none" stroke="url(#primaryGlow)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+    <path d="M 65 90 Q 75 75 80 90 T 95 90 T 105 90 T 115 90" 
+          fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.95" />
+    <circle cx="90" cy="90" r="6" fill="#FFB703" />
   </g>
-
-  <!-- Card 2: App Icon Mockup -->
-  <rect x="960" y="200" width="860" height="380" rx="24" fill="url(#cardGrad)" stroke="#2D283A" stroke-width="2" />
-  <text x="1000" y="250" font-family="sans-serif" font-size="18" font-weight="600" fill="#FF4E64">02. ICÔNE D'APPLICATION MOBILE (1024x1024 Master)</text>
-  <rect x="1000" y="280" width="220" height="220" rx="48" fill="#1A1528" stroke="#FF4E64" stroke-width="2" />
-  <g transform="translate(980, 260) scale(0.4)">
-    <path fill="url(#scSymbolGrad)" d="M 116,420 V 152 C 116,108 152,72 196,72 H 380 C 397.67,72 412,86.33 412,104 C 412,121.67 397.67,136 380,136 H 216 C 196.12,136 180,152.12 180,172 V 420 C 180,437.67 165.67,452 148,452 C 130.33,452 116,437.67 116,420 Z" />
-    <path fill="url(#scSymbolGrad)" d="M 180,248 H 340 C 362.09,248 380,265.91 380,288 C 380,310.09 362.09,328 340,328 H 260 C 242.33,328 228,342.33 228,360 C 228,377.67 242.33,392 260,392 H 340 C 397.44,392 444,345.44 444,288 C 444,230.56 397.44,184 340,184 H 180 V 248 Z" />
-  </g>
-  <text x="1260" y="340" font-family="sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">Feelinx App Icon</text>
-  <text x="1260" y="380" font-family="sans-serif" font-size="16" fill="#A0A0B0">Optimisé pour iOS Squircle &amp; Android Adaptive (66dp)</text>
-  <text x="1260" y="410" font-family="sans-serif" font-size="16" fill="#A0A0B0">Dégradé Coral Pink #FF4E64 ➔ Indigo #6C4AB6 à 135°</text>
-
-  <!-- Card 3: Monochromes & Micro Sizes -->
-  <rect x="100" y="610" width="820" height="390" rx="24" fill="url(#cardGrad)" stroke="#2D283A" stroke-width="2" />
-  <text x="140" y="660" font-family="sans-serif" font-size="18" font-weight="600" fill="#FF4E64">03. VERSIONS MONOCHROMES &amp; TAILLE FAVICON (16px)</text>
-
-  <rect x="140" y="700" width="180" height="180" rx="20" fill="#FFFFFF" />
-  <g transform="translate(130, 690) scale(0.35)">
-    <path fill="#000000" d="M 116,420 V 152 C 116,108 152,72 196,72 H 380 C 397.67,72 412,86.33 412,104 C 412,121.67 397.67,136 380,136 H 216 C 196.12,136 180,152.12 180,172 V 420 C 180,437.67 165.67,452 148,452 C 130.33,452 116,437.67 116,420 Z" />
-    <path fill="#000000" d="M 180,248 H 340 C 362.09,248 380,265.91 380,288 C 380,310.09 362.09,328 340,328 H 260 C 242.33,328 228,342.33 228,360 C 228,377.67 242.33,392 260,392 H 340 C 397.44,392 444,345.44 444,288 C 444,230.56 397.44,184 340,184 H 180 V 248 Z" />
-  </g>
-
-  <rect x="350" y="700" width="180" height="180" rx="20" fill="#000000" stroke="#333" stroke-width="1" />
-  <g transform="translate(340, 690) scale(0.35)">
-    <path fill="#FFFFFF" d="M 116,420 V 152 C 116,108 152,72 196,72 H 380 C 397.67,72 412,86.33 412,104 C 412,121.67 397.67,136 380,136 H 216 C 196.12,136 180,152.12 180,172 V 420 C 180,437.67 165.67,452 148,452 C 130.33,452 116,437.67 116,420 Z" />
-    <path fill="#FFFFFF" d="M 180,248 H 340 C 362.09,248 380,265.91 380,288 C 380,310.09 362.09,328 340,328 H 260 C 242.33,328 228,342.33 228,360 C 228,377.67 242.33,392 260,392 H 340 C 397.44,392 444,345.44 444,288 C 444,230.56 397.44,184 340,184 H 180 V 248 Z" />
-  </g>
-
-  <!-- Card 4: Color Palette Swatches -->
-  <rect x="960" y="610" width="860" height="390" rx="24" fill="url(#cardGrad)" stroke="#2D283A" stroke-width="2" />
-  <text x="1000" y="660" font-family="sans-serif" font-size="18" font-weight="600" fill="#FF4E64">04. SYSTEME DE COULEURS DE MARQUE</text>
-
-  <rect x="1000" y="700" width="150" height="150" rx="16" fill="#FF4E64" />
-  <text x="1000" y="880" font-family="sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">#FF4E64</text>
-  <text x="1000" y="905" font-family="sans-serif" font-size="14" fill="#A0A0B0">Coral Pink (Primaire)</text>
-
-  <rect x="1180" y="700" width="150" height="150" rx="16" fill="#6C4AB6" />
-  <text x="1180" y="880" font-family="sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">#6C4AB6</text>
-  <text x="1180" y="905" font-family="sans-serif" font-size="14" fill="#A0A0B0">Indigo Nocturne</text>
-
-  <rect x="1360" y="700" width="150" height="150" rx="16" fill="#F4B740" />
-  <text x="1360" y="880" font-family="sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">#F4B740</text>
-  <text x="1360" y="905" font-family="sans-serif" font-size="14" fill="#A0A0B0">Doré Premium</text>
-
-  <rect x="1540" y="700" width="150" height="150" rx="16" fill="#0F0D13" stroke="#333" stroke-width="1" />
-  <text x="1540" y="880" font-family="sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">#0F0D13</text>
-  <text x="1540" y="905" font-family="sans-serif" font-size="14" fill="#A0A0B0">Fond Obscur</text>
+  <text x="240" y="135" font-family="'Outfit', 'Inter', 'Segoe UI', sans-serif" font-size="82" font-weight="800" fill="#FFFFFF" letter-spacing="-1.5">Feelinx</text>
+  <circle cx="555" cy="78" r="9" fill="#FF3366" />
+  <text x="242" y="175" font-family="'Inter', 'Segoe UI', sans-serif" font-size="20" font-weight="600" fill="#9D4EDD" letter-spacing="6">CONNEXIONS AUTHENTIQUES</text>
 </svg>

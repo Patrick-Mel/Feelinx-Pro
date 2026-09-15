@@ -29,10 +29,17 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
     setState(() => _isLoading = true);
     try {
       final dio = DioClient().dio;
-      final res = await dio.get('discovery/feed/?limit=40');
+      final res = await dio.get('discovery/feed/?limit=50');
       if (res.statusCode == 200 && mounted) {
+        final data = res.data;
+        List<dynamic> list = [];
+        if (data is List) {
+          list = data;
+        } else if (data is Map && data['results'] is List) {
+          list = data['results'];
+        }
         setState(() {
-          _profiles = res.data ?? [];
+          _profiles = list;
           _isLoading = false;
         });
       }
@@ -56,32 +63,35 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 children: [
-                  FxChip(label: "Près de moi 📍", isSelected: _selectedFilter == 'near_me', onTap: () => setState(() => _selectedFilter = 'near_me')),
+                  FxChip(label: "Près de moi", isSelected: _selectedFilter == 'near_me', onTap: () => setState(() => _selectedFilter = 'near_me')),
                   const SizedBox(width: 8),
-                  FxChip(label: "Nouveaux ✨", isSelected: _selectedFilter == 'new', onTap: () => setState(() => _selectedFilter = 'new')),
+                  FxChip(label: "Nouveaux", isSelected: _selectedFilter == 'new', onTap: () => setState(() => _selectedFilter = 'new')),
                   const SizedBox(width: 8),
-                  FxChip(label: "En ligne 🟢", isSelected: _selectedFilter == 'online', onTap: () => setState(() => _selectedFilter = 'online')),
+                  FxChip(label: "En ligne", isSelected: _selectedFilter == 'online', onTap: () => setState(() => _selectedFilter = 'online')),
                   const SizedBox(width: 8),
-                  FxChip(label: "Même intention ❤️", isSelected: _selectedFilter == 'intention', onTap: () => setState(() => _selectedFilter = 'intention')),
+                  FxChip(label: "Même intention", isSelected: _selectedFilter == 'intention', onTap: () => setState(() => _selectedFilter = 'intention')),
                 ],
               ),
             ),
             const SizedBox(height: 8),
             // Grid
             Expanded(
-              child: _isLoading
-                  ? GridView.builder(
-                      padding: const EdgeInsets.all(16),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.75,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                      ),
-                      itemCount: 6,
-                      itemBuilder: (_, __) => const FxShimmerBox(width: double.infinity, height: 200, borderRadius: 16),
-                    )
-                  : GridView.builder(
+              child: RefreshIndicator(
+                onRefresh: _fetchFeed,
+                color: FxColors.primaryCoral,
+                child: _isLoading
+                    ? GridView.builder(
+                        padding: const EdgeInsets.all(16),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.75,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                        ),
+                        itemCount: 6,
+                        itemBuilder: (_, __) => const FxShimmerBox(width: double.infinity, height: 200, borderRadius: 16),
+                      )
+                    : GridView.builder(
                       padding: const EdgeInsets.all(16),
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
@@ -139,6 +149,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                         );
                       },
                     ),
+              ),
             ),
           ],
         ),

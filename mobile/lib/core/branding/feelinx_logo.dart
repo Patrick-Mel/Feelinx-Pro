@@ -161,13 +161,13 @@ class FeelinxSymbolPainter extends CustomPainter {
       switch (colorMode) {
         case FeelinxColorMode.gradient:
           paint.shader = const LinearGradient(
-            colors: [Color(0xFFFF4E64), Color(0xFF6C4AB6)],
+            colors: [Color(0xFFFF3366), Color(0xFF9D4EDD), Color(0xFF7B2CBF)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
           break;
         case FeelinxColorMode.solid:
-          paint.color = FxColors.primaryCoral;
+          paint.color = const Color(0xFFFF3366);
           break;
         case FeelinxColorMode.monochromeBlack:
           paint.color = Colors.black;
@@ -177,7 +177,7 @@ class FeelinxSymbolPainter extends CustomPainter {
           break;
         case FeelinxColorMode.gold:
           paint.shader = const LinearGradient(
-            colors: [Color(0xFFFFE082), Color(0xFFF4B740), Color(0xFFB37D14)],
+            colors: [Color(0xFFFFE082), Color(0xFFFFB703), Color(0xFFD48800)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
@@ -185,34 +185,33 @@ class FeelinxSymbolPainter extends CustomPainter {
       }
     }
 
-    // Path 1: Primary Vertical Pillar & Top Curve (Left Entity)
+    // Path 1: Outer Arc & Pillar (Left Entity)
     final Path path1 = Path();
-    path1.moveTo(116 * scaleX, 420 * scaleY);
-    path1.lineTo(116 * scaleX, 152 * scaleY);
-    path1.cubicTo(116 * scaleX, 108 * scaleY, 152 * scaleX, 72 * scaleY, 196 * scaleX, 72 * scaleY);
-    path1.lineTo(380 * scaleX, 72 * scaleY);
-    path1.cubicTo(397.67 * scaleX, 72 * scaleY, 412 * scaleX, 86.33 * scaleY, 412 * scaleX, 104 * scaleY);
-    path1.cubicTo(412 * scaleX, 121.67 * scaleY, 397.67 * scaleX, 136 * scaleY, 380 * scaleX, 136 * scaleY);
-    path1.lineTo(216 * scaleX, 136 * scaleY);
-    path1.cubicTo(196.12 * scaleX, 136 * scaleY, 180 * scaleX, 152.12 * scaleY, 180 * scaleX, 172 * scaleY);
-    path1.lineTo(180 * scaleX, 420 * scaleY);
-    path1.cubicTo(180 * scaleX, 437.67 * scaleY, 165.67 * scaleX, 452 * scaleY, 148 * scaleX, 452 * scaleY);
-    path1.cubicTo(130.33 * scaleX, 452 * scaleY, 116 * scaleX, 437.67 * scaleY, 116 * scaleX, 420 * scaleY);
+    path1.moveTo(140 * scaleX, 420 * scaleY);
+    path1.lineTo(140 * scaleX, 160 * scaleY);
+    path1.cubicTo(140 * scaleX, 110 * scaleY, 180 * scaleX, 70 * scaleY, 230 * scaleX, 70 * scaleY);
+    path1.lineTo(380 * scaleX, 70 * scaleY);
+    path1.cubicTo(402.09 * scaleX, 70 * scaleY, 420 * scaleX, 87.91 * scaleY, 420 * scaleX, 110 * scaleY);
+    path1.cubicTo(420 * scaleX, 132.09 * scaleY, 402.09 * scaleX, 150 * scaleY, 380 * scaleX, 150 * scaleY);
+    path1.lineTo(220 * scaleX, 150 * scaleY);
+    path1.cubicTo(203.43 * scaleX, 150 * scaleY, 190 * scaleX, 163.43 * scaleY, 190 * scaleX, 180 * scaleY);
+    path1.lineTo(190 * scaleX, 420 * scaleY);
+    path1.cubicTo(190 * scaleX, 436.57 * scaleY, 176.57 * scaleX, 450 * scaleY, 160 * scaleX, 450 * scaleY);
+    path1.cubicTo(143.43 * scaleX, 450 * scaleY, 140 * scaleX, 436.57 * scaleY, 140 * scaleX, 420 * scaleY);
     path1.close();
 
-    // Path 2: Interlocking Middle Arc (Right Entity / Link Connection)
+    // Path 2: Interlocking Heart Arc (Right Entity / Link Connection)
     final Path path2 = Path();
-    path2.moveTo(180 * scaleX, 248 * scaleY);
-    path2.lineTo(340 * scaleX, 248 * scaleY);
-    path2.cubicTo(362.09 * scaleX, 248 * scaleY, 380 * scaleX, 265.91 * scaleY, 380 * scaleX, 288 * scaleY);
-    path2.cubicTo(380 * scaleX, 310.09 * scaleY, 362.09 * scaleX, 328 * scaleY, 340 * scaleX, 328 * scaleY);
-    path2.lineTo(260 * scaleX, 328 * scaleY);
-    path2.cubicTo(242.33 * scaleX, 328 * scaleY, 228 * scaleX, 342.33 * scaleY, 228 * scaleX, 360 * scaleY);
-    path2.cubicTo(228 * scaleX, 377.67 * scaleY, 242.33 * scaleX, 392 * scaleY, 260 * scaleX, 392 * scaleY);
-    path2.lineTo(340 * scaleX, 392 * scaleY);
-    path2.cubicTo(397.44 * scaleX, 392 * scaleY, 444 * scaleX, 345.44 * scaleY, 444 * scaleX, 288 * scaleY);
-    path2.cubicTo(444 * scaleX, 230.56 * scaleY, 397.44 * scaleX, 184 * scaleY, 340 * scaleX, 184 * scaleY);
-    path2.lineTo(180 * scaleX, 184 * scaleY);
+    path2.moveTo(190 * scaleX, 230 * scaleY);
+    path2.lineTo(350 * scaleX, 230 * scaleY);
+    path2.cubicTo(394.18 * scaleX, 230 * scaleY, 430 * scaleX, 265.82 * scaleY, 430 * scaleX, 310 * scaleY);
+    path2.cubicTo(430 * scaleX, 354.18 * scaleY, 394.18 * scaleX, 390 * scaleY, 350 * scaleX, 390 * scaleY);
+    path2.cubicTo(315 * scaleX, 390 * scaleY, 280 * scaleX, 360 * scaleY, 250 * scaleX, 325 * scaleY);
+    path2.cubicTo(235 * scaleX, 307.5 * scaleY, 210 * scaleX, 307.5 * scaleY, 195 * scaleX, 325 * scaleY);
+    path2.cubicTo(185 * scaleX, 336.6 * scaleY, 175 * scaleX, 348 * scaleY, 165 * scaleX, 358 * scaleY);
+    path2.cubicTo(153.28 * scaleX, 369.72 * scaleY, 134.28 * scaleX, 369.72 * scaleY, 122.56 * scaleX, 358 * scaleY);
+    path2.cubicTo(110.84 * scaleX, 346.28 * scaleY, 110.84 * scaleX, 327.28 * scaleY, 122.56 * scaleX, 315.56 * scaleY);
+    path2.cubicTo(135 * scaleX, 303.12 * scaleY, 155 * scaleX, 280 * scaleY, 190 * scaleX, 230 * scaleY);
     path2.close();
 
     canvas.drawPath(path1, paint);
