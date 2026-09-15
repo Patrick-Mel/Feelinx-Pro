@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/typography.dart';
 import '../../../../core/widgets/fx_button.dart';
 import '../../../../core/network/dio_client.dart';
+import '../../../../core/providers/app_settings_provider.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   double _maxDistance = 50;
   RangeValues _ageRange = const RangeValues(18, 45);
   bool _verifiedOnly = false;
   bool _incognito = false;
-  bool _isDarkMode = true;
-  String _selectedLanguage = 'fr'; // 'fr' or 'en'
   bool _isLoading = true;
   List<dynamic> _blockedUsers = [];
 
@@ -87,9 +87,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       final dio = DioClient().dio;
       await dio.post('safety/unblock/', data: {'user_id': blockedId});
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Utilisateur débloqué.")),
-        );
         _loadBlockedUsers();
       }
     } catch (_) {}
@@ -110,6 +107,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeMode = ref.watch(themeModeProvider);
+    final locale = ref.watch(localeProvider);
+
+    final bool isDarkMode = themeMode == ThemeMode.dark;
+    final String selectedLanguage = locale.languageCode;
+
+    final Color cardBg = isDarkMode ? FxColors.darkCard : FxColors.lightCard;
+    final Color borderBg = isDarkMode ? FxColors.darkBorder : FxColors.lightBorder;
+    final Color textPrimary = isDarkMode ? FxColors.darkTextPrimary : FxColors.lightTextPrimary;
+    final Color textSecondary = isDarkMode ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+    final Color surfaceBg = isDarkMode ? FxColors.darkSurface : FxColors.lightSurface;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Paramètres", style: TextStyle(fontWeight: FontWeight.w800)),
@@ -123,36 +132,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Apparence & Langue Section
-                    Text("Apparence & Langue", style: FxTypography.titleLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                    Text(
+                      "Apparence & Langue",
+                      style: FxTypography.titleLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
+                    ),
                     const SizedBox(height: 12),
 
                     Container(
                       decoration: BoxDecoration(
-                        color: FxColors.darkCard,
+                        color: cardBg,
                         borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: borderBg),
                       ),
                       child: Column(
                         children: [
                           SwitchListTile(
                             secondary: Icon(
-                              _isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                              isDarkMode ? Icons.dark_mode : Icons.light_mode,
                               color: FxColors.primaryCoral,
                             ),
-                            title: const Text("Mode Sombre / Clair"),
-                            subtitle: Text(
-                              _isDarkMode ? "Thème sombre Feelinx actif" : "Thème clair actif",
-                              style: const TextStyle(color: FxColors.darkTextSecondary, fontSize: 12),
+                            title: Text(
+                              "Mode Sombre / Clair",
+                              style: TextStyle(color: textPrimary, fontWeight: FontWeight.w600),
                             ),
-                            value: _isDarkMode,
+                            subtitle: Text(
+                              isDarkMode ? "Thème sombre Feelinx actif" : "Thème clair actif",
+                              style: TextStyle(color: textSecondary, fontSize: 12),
+                            ),
+                            value: isDarkMode,
                             activeColor: FxColors.primaryCoral,
                             onChanged: (val) {
-                              setState(() => _isDarkMode = val);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(val ? "Thème Sombre activé 🌙" : "Thème Clair activé ☀️")),
-                              );
+                              ref.read(themeModeProvider.notifier).toggleTheme(val);
                             },
                           ),
-                          const Divider(height: 1, color: FxColors.darkBorder),
+                          Divider(height: 1, color: borderBg),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             child: Row(
@@ -163,11 +176,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const Text("Langue de l'application", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                                      Text(
+                                        "Langue de l'application",
+                                        style: TextStyle(color: textPrimary, fontWeight: FontWeight.w600, fontSize: 15),
+                                      ),
                                       const SizedBox(height: 2),
                                       Text(
-                                        _selectedLanguage == 'fr' ? "Français 🇫🇷" : "English 🇬🇧",
-                                        style: const TextStyle(color: FxColors.darkTextSecondary, fontSize: 12),
+                                        selectedLanguage == 'fr' ? "Français 🇫🇷" : "English 🇬🇧",
+                                        style: TextStyle(color: textSecondary, fontSize: 12),
                                       ),
                                     ],
                                   ),
@@ -175,28 +191,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: FxColors.darkSurface,
+                                    color: surfaceBg,
                                     borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(color: FxColors.darkBorder),
+                                    border: Border.all(color: borderBg),
                                   ),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton<String>(
-                                      value: _selectedLanguage,
+                                      value: selectedLanguage,
                                       isDense: true,
-                                      dropdownColor: FxColors.darkSurface,
-                                      style: FxTypography.bodyMedium.copyWith(color: Colors.white),
+                                      dropdownColor: surfaceBg,
+                                      style: FxTypography.bodyMedium.copyWith(color: textPrimary),
                                       onChanged: (val) {
                                         if (val != null) {
-                                          setState(() => _selectedLanguage = val);
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(content: Text(val == 'fr' ? "Langue : Français 🇫🇷" : "Language: English 🇬🇧")),
-                                          );
+                                          ref.read(localeProvider.notifier).setLocale(val);
                                         }
                                       },
                                       items: _languages.map((l) {
                                         return DropdownMenuItem<String>(
                                           value: l["code"],
-                                          child: Text(l["label"]!),
+                                          child: Text(
+                                            l["label"]!,
+                                            style: TextStyle(color: textPrimary),
+                                          ),
                                         );
                                       }).toList(),
                                     ),
@@ -211,10 +227,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 24),
 
                     // Filtres de découverte Section
-                    Text("Filtres de découverte", style: FxTypography.titleLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                    Text("Filtres de découverte", style: FxTypography.titleLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 16),
 
-                    Text("Distance maximale : ${_maxDistance.round()} km", style: FxTypography.titleMedium),
+                    Text("Distance maximale : ${_maxDistance.round()} km", style: FxTypography.titleMedium.copyWith(color: textPrimary)),
                     Slider(
                       value: _maxDistance,
                       min: 5,
@@ -228,7 +244,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    Text("Tranche d'âge : ${_ageRange.start.round()} - ${_ageRange.end.round()} ans", style: FxTypography.titleMedium),
+                    Text("Tranche d'âge : ${_ageRange.start.round()} - ${_ageRange.end.round()} ans", style: FxTypography.titleMedium.copyWith(color: textPrimary)),
                     RangeSlider(
                       values: _ageRange,
                       min: 18,
@@ -243,19 +259,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 24),
 
                     SwitchListTile(
-                      title: const Text("Afficher uniquement les profils certifiés"),
+                      title: Text("Afficher uniquement les profils certifiés", style: TextStyle(color: textPrimary)),
                       value: _verifiedOnly,
-                      activeColor: FxColors.primaryCoral,
+                      activeThumbColor: FxColors.primaryCoral,
                       onChanged: (val) {
                         setState(() => _verifiedOnly = val);
                         _updatePreferences();
                       },
                     ),
                     SwitchListTile(
-                      title: const Text("Mode Incognito"),
-                      subtitle: const Text("Masque votre profil dans le fil sauf aux personnes que vous avez likées"),
+                      title: Text("Mode Incognito", style: TextStyle(color: textPrimary)),
+                      subtitle: Text("Masque votre profil dans le fil sauf aux personnes que vous avez likées", style: TextStyle(color: textSecondary)),
                       value: _incognito,
-                      activeColor: FxColors.primaryCoral,
+                      activeThumbColor: FxColors.primaryCoral,
                       onChanged: (val) {
                         setState(() => _incognito = val);
                         _updatePreferences();
@@ -264,7 +280,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 24),
 
                     // Confidentialité Section
-                    Text("Gestion de la confidentialité", style: FxTypography.titleLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                    Text("Gestion de la confidentialité", style: FxTypography.titleLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 12),
                     ListTile(
                       leading: const Icon(Icons.block, color: FxColors.error),
