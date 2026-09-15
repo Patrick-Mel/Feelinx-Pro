@@ -153,33 +153,56 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             },
                           ),
                           const Divider(height: 1, color: FxColors.darkBorder),
-                          ListTile(
-                            leading: const Icon(Icons.language, color: FxColors.primaryCoral),
-                            title: const Text("Langue de l'application"),
-                            subtitle: Text(
-                              _selectedLanguage == 'fr' ? "Français 🇫🇷" : "English 🇬🇧",
-                              style: const TextStyle(color: FxColors.darkTextSecondary, fontSize: 12),
-                            ),
-                            trailing: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: _selectedLanguage,
-                                dropdownColor: FxColors.darkSurface,
-                                style: FxTypography.bodyMedium.copyWith(color: Colors.white),
-                                onChanged: (val) {
-                                  if (val != null) {
-                                    setState(() => _selectedLanguage = val);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(val == 'fr' ? "Langue : Français 🇫🇷" : "Language: English 🇬🇧")),
-                                    );
-                                  }
-                                },
-                                items: _languages.map((l) {
-                                  return DropdownMenuItem<String>(
-                                    value: l["code"],
-                                    child: Text(l["label"]!),
-                                  );
-                                }).toList(),
-                              ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.language, color: FxColors.primaryCoral),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text("Langue de l'application", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        _selectedLanguage == 'fr' ? "Français 🇫🇷" : "English 🇬🇧",
+                                        style: const TextStyle(color: FxColors.darkTextSecondary, fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: FxColors.darkSurface,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: FxColors.darkBorder),
+                                  ),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
+                                      value: _selectedLanguage,
+                                      isDense: true,
+                                      dropdownColor: FxColors.darkSurface,
+                                      style: FxTypography.bodyMedium.copyWith(color: Colors.white),
+                                      onChanged: (val) {
+                                        if (val != null) {
+                                          setState(() => _selectedLanguage = val);
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text(val == 'fr' ? "Langue : Français 🇫🇷" : "Language: English 🇬🇧")),
+                                          );
+                                        }
+                                      },
+                                      items: _languages.map((l) {
+                                        return DropdownMenuItem<String>(
+                                          value: l["code"],
+                                          child: Text(l["label"]!),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
