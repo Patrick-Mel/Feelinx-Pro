@@ -230,13 +230,33 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: FxSpacing.lg16),
 
               // Alternative login option by SMS
-              Center(
-                child: TextButton.icon(
-                  onPressed: () => context.go('/auth/phone'),
-                  icon: const Icon(Icons.sms_outlined, size: 18, color: FxColors.secondaryIndigo),
-                  label: Text(
-                    "Se connecter par SMS / Code OTP",
-                    style: FxTypography.bodyMedium.copyWith(color: FxColors.secondaryIndigo, fontWeight: FontWeight.w600),
+              Container(
+                width: double.infinity,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(FxRadius.medium16),
+                  border: Border.all(color: Colors.white.withOpacity(0.18)),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(FxRadius.medium16),
+                    onTap: () => context.go('/auth/phone'),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.sms_outlined, size: 18, color: FxColors.accentGold),
+                        const SizedBox(width: FxSpacing.sm8),
+                        Text(
+                          "Connexion rapide (via SMS)",
+                          style: FxTypography.bodyMedium.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
