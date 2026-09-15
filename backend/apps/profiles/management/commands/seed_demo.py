@@ -65,31 +65,33 @@ BIOS = [
 ]
 
 AVATARS_FEMALE = [
-    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1523825036634-aab3cce05919?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1618151313441-bc79b11e5090?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1534751516642-a171e261f52c?w=800&auto=format&fit=crop",
 ]
 
 AVATARS_MALE = [
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1463453091185-61582044d556?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1507081323647-4d250478b919?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1600486913747-55e5470d6f40?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?w=800&auto=format&fit=crop",
 ]
 
 class Command(BaseCommand):
