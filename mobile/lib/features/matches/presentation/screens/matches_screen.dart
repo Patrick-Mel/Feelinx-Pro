@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:dio/dio.dart';
 import '../../../../core/theme/colors.dart';
-import '../../../../core/theme/tokens.dart';
 import '../../../../core/theme/typography.dart';
 import '../../../../core/widgets/fx_avatar.dart';
 import '../../../../core/widgets/fx_shimmer_box.dart';

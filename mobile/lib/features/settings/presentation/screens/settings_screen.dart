@@ -90,6 +90,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _logout() async {
     const storage = FlutterSecureStorage();
+    final refreshToken = await storage.read(key: 'jwt_refresh_token');
+    if (refreshToken != null && refreshToken.isNotEmpty) {
+      try {
+        final dio = DioClient().dio;
+        await dio.post('auth/logout/', data: {'refresh': refreshToken});
+      } catch (_) {}
+    }
     await storage.deleteAll();
     if (mounted) context.go('/onboarding');
   }

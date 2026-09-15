@@ -44,6 +44,23 @@ class _OtpScreenState extends State<OtpScreen> {
     });
   }
 
+  Future<void> _resendOtp() async {
+    _startTimer();
+    try {
+      final dio = DioClient().dio;
+      final res = await dio.post('auth/request-otp/', data: {'phone_number': widget.phoneNumber});
+      if (res.statusCode == 200 && mounted) {
+        final devCode = res.data['dev_code'];
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(devCode != null ? "Nouveau code dev : $devCode" : "Un nouveau code SMS a été envoyé."),
+            backgroundColor: FxColors.info,
+          ),
+        );
+      }
+    } catch (_) {}
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
@@ -87,7 +104,7 @@ class _OtpScreenState extends State<OtpScreen> {
       }
     } on DioException catch (e) {
       setState(() {
-        _errorMessage = e.response?.data?['message'] ?? "Code incorrect ou expiré.";
+        _errorMessage = e.response?.data?['message'] ?? "Code incorrect ou expiré. Veuillez réessayer.";
       });
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -112,7 +129,7 @@ class _OtpScreenState extends State<OtpScreen> {
               Text("Vérification SMS", style: FxTypography.displayMedium),
               const SizedBox(height: FxSpacing.sm8),
               Text(
-                "Saisis le code à 6 chiffres envoyé au ${widget.phoneNumber}",
+                "Saisissez le code à 6 chiffres envoyé au ${widget.phoneNumber}",
                 style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary),
               ),
               const SizedBox(height: FxSpacing.xxxl32),
@@ -140,7 +157,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary),
                       )
                     : TextButton(
-                        onPressed: _startTimer,
+                        onPressed: _resendOtp,
                         child: const Text("Renvoyer le code maintenant", style: TextStyle(color: FxColors.primaryCoral)),
                       ),
               ),

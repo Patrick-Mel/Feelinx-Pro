@@ -17,6 +17,7 @@ class PhoneInputScreen extends StatefulWidget {
 
 class _PhoneInputScreenState extends State<PhoneInputScreen> {
   final TextEditingController _phoneController = TextEditingController();
+  String _selectedCountryCode = "+237";
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -32,18 +33,28 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
       _errorMessage = null;
     });
 
-    final fullPhone = "+237$phone";
+    final fullPhone = "$_selectedCountryCode$phone";
 
     try {
       final dio = DioClient().dio;
       final res = await dio.post('auth/request-otp/', data: {'phone_number': fullPhone});
 
       if (res.statusCode == 200 && mounted) {
+        final devCode = res.data['dev_code'];
+        if (devCode != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Code de test rapide : $devCode"),
+              duration: const Duration(seconds: 5),
+              backgroundColor: FxColors.info,
+            ),
+          );
+        }
         context.go('/auth/otp', extra: fullPhone);
       }
     } on DioException catch (e) {
       setState(() {
-        _errorMessage = e.response?.data?['message'] ?? "Impossible de contacter le serveur. Vérifie ton réseau.";
+        _errorMessage = e.response?.data?['message'] ?? "Impossible de contacter le serveur. Vérifiez votre connexion.";
       });
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -65,15 +76,17 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Mon numéro de téléphone", style: FxTypography.displayMedium),
+              Text("Numéro de téléphone", style: FxTypography.displayMedium),
               const SizedBox(height: FxSpacing.sm8),
               Text(
-                "Un code de vérification à 6 chiffres te sera envoyé par SMS pour valider ton compte.",
+                "Un code de vérification à 6 chiffres vous sera envoyé par SMS pour valider votre compte.",
                 style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary),
               ),
               const SizedBox(height: FxSpacing.xxxl32),
               FxPhoneField(
                 controller: _phoneController,
+                countryCode: _selectedCountryCode,
+                onCountryChanged: (code) => setState(() => _selectedCountryCode = code),
                 errorText: _errorMessage,
                 onChanged: (_) {
                   if (_errorMessage != null) setState(() => _errorMessage = null);
@@ -88,7 +101,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
               const SizedBox(height: FxSpacing.lg16),
               Center(
                 child: Text(
-                  "En continuant, tu acceptes nos CGU et Politique de confidentialité.",
+                  "En continuant, vous acceptez nos CGU et Politique de confidentialité.",
                   style: FxTypography.labelSmall.copyWith(color: FxColors.darkTextSecondary),
                   textAlign: TextAlign.center,
                 ),

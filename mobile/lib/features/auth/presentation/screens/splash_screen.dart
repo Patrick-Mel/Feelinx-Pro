@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../../../core/network/dio_client.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -23,15 +24,32 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 
   Future<void> _checkAuth() async {
-    await Future.delayed(const Duration(milliseconds: 1800));
+    await Future.delayed(const Duration(milliseconds: 1500));
     if (!mounted) return;
 
     const storage = FlutterSecureStorage();
     final token = await storage.read(key: 'jwt_access_token');
 
     if (token != null && token.isNotEmpty) {
-      context.go('/discovery');
-    } else {
+      try {
+        final dio = DioClient().dio;
+        final res = await dio.get('profiles/me/');
+        if (res.statusCode == 200 && mounted) {
+          final profile = res.data;
+          final firstName = profile['first_name'];
+          if (firstName != null && firstName.isNotEmpty && firstName != 'Membre') {
+            context.go('/discovery');
+          } else {
+            context.go('/onboarding/wizard');
+          }
+          return;
+        }
+      } catch (_) {
+        await storage.deleteAll();
+      }
+    }
+
+    if (mounted) {
       context.go('/onboarding');
     }
   }
@@ -67,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               const SizedBox(height: 24),
               const Text("Feelinx", style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800)),
               const SizedBox(height: 8),
-              Text("Des liens qui se ressentent", style: TextStyle(fontSize: 16, color: Colors.white.withOpacity(0.6))),
+              Text("Des liens qui se ressentent", style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.6))),
             ],
           ),
         ),
