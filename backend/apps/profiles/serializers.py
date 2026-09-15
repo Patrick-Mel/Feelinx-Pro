@@ -17,15 +17,25 @@ class PhotoSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'url', 'thumbnail_url', 'is_approved']
 
     def get_url(self, obj):
+        if not obj.image:
+            return ""
+        name = str(obj.image.name) if hasattr(obj.image, 'name') and obj.image.name else str(obj.image)
+        if name.startswith('http://') or name.startswith('https://'):
+            return name
         request = self.context.get('request')
-        if obj.image and hasattr(obj.image, 'url'):
+        if hasattr(obj.image, 'url'):
             return request.build_absolute_uri(obj.image.url) if request else obj.image.url
         return ""
 
     def get_thumbnail_url(self, obj):
-        request = self.context.get('request')
         img = obj.thumbnail or obj.image
-        if img and hasattr(img, 'url'):
+        if not img:
+            return ""
+        name = str(img.name) if hasattr(img, 'name') and img.name else str(img)
+        if name.startswith('http://') or name.startswith('https://'):
+            return name
+        request = self.context.get('request')
+        if hasattr(img, 'url'):
             return request.build_absolute_uri(img.url) if request else img.url
         return ""
 

@@ -6,7 +6,10 @@ class RequestOTPSerializer(serializers.Serializer):
 
     def validate_phone_number(self, value):
         from .models import User
-        return User.objects.normalize_phone(value)
+        try:
+            return User.objects.normalize_phone(value)
+        except ValueError as e:
+            raise serializers.ValidationError(str(e))
 
 
 class VerifyOTPSerializer(serializers.Serializer):
@@ -15,7 +18,10 @@ class VerifyOTPSerializer(serializers.Serializer):
 
     def validate_phone_number(self, value):
         from .models import User
-        return User.objects.normalize_phone(value)
+        try:
+            return User.objects.normalize_phone(value)
+        except ValueError as e:
+            raise serializers.ValidationError(str(e))
 
 
 class UserSerializer(serializers.ModelSerializer):

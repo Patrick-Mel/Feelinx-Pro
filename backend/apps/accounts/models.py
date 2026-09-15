@@ -31,13 +31,24 @@ class UserManager(BaseUserManager):
         return self.create_user(phone_number, password, **extra_fields)
 
     def normalize_phone(self, phone_number):
-        """Clean whitespace and ensure international format."""
+        """Clean whitespace and validate international E.164 phone format."""
+        if not phone_number:
+            raise ValueError("Le numéro de téléphone est obligatoire.")
         phone = str(phone_number).strip().replace(" ", "").replace("-", "")
         if not phone.startswith("+"):
             if phone.startswith("237"):
                 phone = "+" + phone
-            elif len(phone) == 9: # standard Cameroon 9-digit format
+            elif len(phone) == 9:
                 phone = "+237" + phone
+
+        import re
+        if not re.match(r'^\+[1-9]\d{8,14}$', phone):
+            raise ValueError("Numéro de téléphone invalide. Veuillez entrer un numéro au format international (ex: +237690000000).")
+
+        digits = phone.lstrip('+')
+        if len(digits) >= 6 and len(set(digits[3:])) == 1:
+            raise ValueError("Numéro de téléphone invalide. Les numéros fictifs répétitifs ne sont pas autorisés.")
+
         return phone
 
 

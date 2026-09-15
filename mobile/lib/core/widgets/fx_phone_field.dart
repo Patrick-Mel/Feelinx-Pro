@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../theme/colors.dart';
 import '../theme/tokens.dart';
 import '../theme/typography.dart';
@@ -126,6 +127,10 @@ class FxPhoneField extends StatelessWidget {
                 controller: controller,
                 onChanged: onChanged,
                 keyboardType: TextInputType.phone,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(10),
+                ],
                 style: FxTypography.bodyLarge,
                 decoration: InputDecoration(
                   hintText: "690 00 00 00",

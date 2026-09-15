@@ -23,8 +23,15 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
 
   Future<void> _submitPhone() async {
     final phone = _phoneController.text.trim();
-    if (phone.length < 8) {
-      setState(() => _errorMessage = "Numéro de téléphone invalide (min 8 chiffres)");
+
+    final RegExp phoneRegex = RegExp(r'^[0-9]{8,10}$');
+    if (!phoneRegex.hasMatch(phone)) {
+      setState(() => _errorMessage = "Veuillez entrer un numéro valide à 8, 9 ou 10 chiffres (ex: 690123456)");
+      return;
+    }
+
+    if (Set.from(phone.split('')).length == 1) {
+      setState(() => _errorMessage = "Les numéros avec chiffres répétitifs (ex: 00000000) ne sont pas autorisés.");
       return;
     }
 
@@ -53,8 +60,15 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
         context.go('/auth/otp', extra: fullPhone);
       }
     } on DioException catch (e) {
+      final serverMsg = e.response?.data?['message'];
+      String msg = "Impossible de contacter le serveur. Vérifiez votre connexion.";
+      if (serverMsg is String && serverMsg.isNotEmpty) {
+        msg = serverMsg;
+      } else if (e.response?.data?['phone_number'] is List) {
+        msg = (e.response!.data['phone_number'] as List).first.toString();
+      }
       setState(() {
-        _errorMessage = e.response?.data?['message'] ?? "Impossible de contacter le serveur. Vérifiez votre connexion.";
+        _errorMessage = msg;
       });
     } finally {
       if (mounted) setState(() => _isLoading = false);
