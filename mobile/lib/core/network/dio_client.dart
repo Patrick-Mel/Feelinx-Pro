@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -9,9 +10,13 @@ class DioClient {
   factory DioClient() => _instance;
 
   DioClient._internal() {
+    final String defaultUrl = kIsWeb
+        ? 'http://127.0.0.1:8000/api/v1/'
+        : 'http://192.168.1.154:8000/api/v1/';
+
     dio = Dio(
       BaseOptions(
-        baseUrl: 'http://192.168.1.154:8000/api/v1/', // Fallback local Android emulator IP (use 127.0.0.1 on Web)
+        baseUrl: defaultUrl,
         connectTimeout: const Duration(seconds: 15),
         receiveTimeout: const Duration(seconds: 15),
         headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
