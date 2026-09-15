@@ -72,8 +72,9 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
     setState(() => _isLoading = true);
     try {
       final dio = DioClient().dio;
+      final name = _firstNameController.text.trim();
       await dio.patch('profiles/me/', data: {
-        'first_name': _firstNameController.text.trim().isEmpty ? 'Membre' : _firstNameController.text.trim(),
+        'first_name': name.isEmpty ? 'Membre' : name,
         'birth_date': _birthDate != null ? _birthDate!.toIso8601String().split('T')[0] : '2000-01-01',
         'gender': _gender,
         'seeking': _seeking,
