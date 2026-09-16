@@ -39,6 +39,7 @@ class Profile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50, blank=True, default='')
     birth_date = models.DateField()
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     seeking = models.CharField(max_length=10, choices=GENDER_CHOICES, default='female')
@@ -78,6 +79,12 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.first_name} ({self.age} ans) - {self.city}"
+
+    @property
+    def full_name(self):
+        if self.last_name:
+            return f"{self.first_name} {self.last_name}"
+        return self.first_name
 
     @property
     def age(self):

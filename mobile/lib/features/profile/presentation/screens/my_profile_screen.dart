@@ -94,7 +94,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            "${_profile?['first_name'] ?? 'Membre'}, ${_profile?['age'] ?? 24}",
+                            "${_profile?['full_name'] ?? _profile?['first_name'] ?? 'Membre'}, ${_profile?['age'] ?? 24}",
                             style: FxTypography.displayMedium.copyWith(fontSize: 22, color: textPrimary),
                           ),
                           if (_profile?['is_verified'] == true) ...[

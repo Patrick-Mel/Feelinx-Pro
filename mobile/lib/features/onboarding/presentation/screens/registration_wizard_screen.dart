@@ -23,6 +23,7 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
 
   // Form values
   final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
   DateTime? _birthDate;
   String _gender = 'female';
   String _seeking = 'male';
@@ -72,9 +73,11 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
     setState(() => _isLoading = true);
     try {
       final dio = DioClient().dio;
-      final name = _firstNameController.text.trim();
+      final firstName = _firstNameController.text.trim();
+      final lastName = _lastNameController.text.trim();
       await dio.patch('profiles/me/', data: {
-        'first_name': name.isEmpty ? 'Membre' : name,
+        'first_name': firstName.isEmpty ? 'Membre' : firstName,
+        'last_name': lastName,
         'birth_date': _birthDate != null ? _birthDate!.toIso8601String().split('T')[0] : '2000-01-01',
         'gender': _gender,
         'seeking': _seeking,
@@ -120,7 +123,7 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                   controller: _pageController,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    // Step 1: Prénom
+                    // Step 1: Prénom et Nom
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -130,6 +133,12 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                           label: "Ton prénom",
                           hint: "ex. Manuella",
                           controller: _firstNameController,
+                        ),
+                        const SizedBox(height: FxSpacing.lg16),
+                        FxTextField(
+                          label: "Ton nom de famille",
+                          hint: "ex. Ndongo",
+                          controller: _lastNameController,
                         ),
                       ],
                     ),

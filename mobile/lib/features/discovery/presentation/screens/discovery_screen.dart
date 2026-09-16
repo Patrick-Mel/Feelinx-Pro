@@ -304,7 +304,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
                         Expanded(
                           child: Row(
                             children: [
-                              Text("${profile['first_name']}, ${profile['age'] ?? 24}", style: FxTypography.displayMedium.copyWith(color: Colors.white)),
+                              Text("${profile['full_name'] ?? profile['first_name']}, ${profile['age'] ?? 24}", style: FxTypography.displayMedium.copyWith(color: Colors.white)),
                               const SizedBox(width: 8),
                               if (profile['is_verified'] == true)
                                 const Icon(Icons.verified, color: FxColors.info, size: 22),

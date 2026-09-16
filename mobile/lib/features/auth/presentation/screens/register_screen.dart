@@ -16,16 +16,18 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _countryCodeController = TextEditingController(text: "+237");
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  String _selectedCountryCode = "+237";
   bool _isPasswordObscured = true;
   bool _isConfirmPasswordObscured = true;
   bool _isLoading = false;
   String? _errorMessage;
 
-  final List<Map<String, String>> _countries = const [
+  static const List<Map<String, String>> _countryList = [
     {"code": "+237", "flag": "🇨🇲", "name": "Cameroun"},
     {"code": "+225", "flag": "🇨🇮", "name": "Côte d'Ivoire"},
     {"code": "+221", "flag": "🇸🇳", "name": "Sénégal"},
@@ -55,13 +57,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
     {"code": "+213", "flag": "🇩🇿", "name": "Algérie"},
   ];
 
+  Map<String, String> _getDetectedCountry(String rawCode) {
+    String clean = rawCode.replaceAll(RegExp(r'[^\d+]'), '');
+    if (!clean.startsWith('+')) {
+      clean = '+$clean';
+    }
+    for (var c in _countryList) {
+      if (clean == c['code'] || clean.startsWith(c['code']!)) {
+        return c;
+      }
+    }
+    return {"code": clean, "flag": "🌐", "name": "International"};
+  }
+
   Future<void> _handleRegister() async {
+    final firstName = _firstNameController.text.trim();
+    final lastName = _lastNameController.text.trim();
+    final countryCode = _countryCodeController.text.trim();
     final phone = _phoneController.text.trim();
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
 
-    if (phone.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      setState(() => _errorMessage = "Veuillez remplir tous les champs.");
+    if (firstName.isEmpty || lastName.isEmpty || phone.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      setState(() => _errorMessage = "Veuillez remplir tous les champs (Prénom, Nom, Téléphone, Mot de passe).");
       return;
     }
 
@@ -168,33 +186,78 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: FxSpacing.lg16),
               ],
 
-              // Phone Field
-              Text("Numéro de téléphone", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+              // Prénom & Nom Fields
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Prénom", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+                        const SizedBox(height: FxSpacing.sm8),
+                        TextField(
+                          controller: _firstNameController,
+                          style: FxTypography.bodyLarge.copyWith(color: Colors.white),
+                          decoration: const InputDecoration(hintText: "ex. Manuella"),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: FxSpacing.md12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Nom", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+                        const SizedBox(height: FxSpacing.sm8),
+                        TextField(
+                          controller: _lastNameController,
+                          style: FxTypography.bodyLarge.copyWith(color: Colors.white),
+                          decoration: const InputDecoration(hintText: "ex. Ndongo"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: FxSpacing.xl20),
+
+              // Phone Field with Custom Country Code Input & Live Detection Badge
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Numéro de téléphone", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+                  Builder(
+                    builder: (context) {
+                      final detected = _getDetectedCountry(_countryCodeController.text);
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: FxColors.primaryCoral.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: FxColors.primaryCoral.withOpacity(0.4)),
+                        ),
+                        child: Text(
+                          "${detected['flag']} ${detected['name']}",
+                          style: FxTypography.labelMedium.copyWith(color: FxColors.primaryCoral, fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    }
+                  ),
+                ],
+              ),
               const SizedBox(height: FxSpacing.sm8),
               Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                    decoration: BoxDecoration(
-                      color: FxColors.darkSurface,
-                      borderRadius: BorderRadius.circular(FxRadius.medium16),
-                      border: Border.all(color: FxColors.darkBorder),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _selectedCountryCode,
-                        dropdownColor: FxColors.darkSurface,
-                        style: FxTypography.bodyMedium.copyWith(color: Colors.white),
-                        icon: const Icon(Icons.keyboard_arrow_down, color: FxColors.darkTextSecondary, size: 18),
-                        onChanged: (val) {
-                          if (val != null) setState(() => _selectedCountryCode = val);
-                        },
-                        items: _countries.map((c) {
-                          return DropdownMenuItem<String>(
-                            value: c["code"],
-                            child: Text("${c["flag"]} ${c["code"]}"),
-                          );
-                        }).toList(),
+                  SizedBox(
+                    width: 95,
+                    child: TextField(
+                      controller: _countryCodeController,
+                      keyboardType: TextInputType.phone,
+                      onChanged: (_) => setState(() {}),
+                      style: FxTypography.bodyLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                      decoration: const InputDecoration(
+                        hintText: "+237",
                       ),
                     ),
                   ),

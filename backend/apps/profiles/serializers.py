@@ -48,6 +48,7 @@ class PreferenceSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     age = serializers.IntegerField(read_only=True)
+    full_name = serializers.CharField(read_only=True)
     is_premium_active = serializers.BooleanField(read_only=True)
     profile_completion = serializers.IntegerField(read_only=True)
     photos = PhotoSerializer(many=True, read_only=True)
@@ -58,7 +59,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
-            'id', 'first_name', 'birth_date', 'age', 'gender', 'seeking', 'intention',
+            'id', 'first_name', 'last_name', 'full_name', 'birth_date', 'age', 'gender', 'seeking', 'intention',
             'bio', 'city', 'neighborhood', 'latitude', 'longitude', 'is_verified',
             'verification_status', 'is_premium', 'is_premium_active', 'premium_until',
             'is_incognito', 'hide_distance', 'hide_age', 'profile_completion',
@@ -77,6 +78,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class PublicProfileSerializer(serializers.ModelSerializer):
     age = serializers.SerializerMethodField()
+    full_name = serializers.CharField(read_only=True)
     distance_km = serializers.SerializerMethodField()
     photos = PhotoSerializer(many=True, read_only=True)
     interests = InterestSerializer(many=True, read_only=True)
@@ -84,7 +86,7 @@ class PublicProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
-            'id', 'first_name', 'age', 'gender', 'intention', 'bio', 'city',
+            'id', 'first_name', 'last_name', 'full_name', 'age', 'gender', 'intention', 'bio', 'city',
             'neighborhood', 'distance_km', 'is_verified', 'is_premium',
             'personality_answers', 'last_seen', 'photos', 'interests'
         ]

@@ -226,6 +226,7 @@ class Command(BaseCommand):
             )
 
             profile.first_name = first_name
+            profile.last_name = last_name
             profile.city = location["city"]
             profile.neighborhood = location["neighborhood"]
             profile.save()
