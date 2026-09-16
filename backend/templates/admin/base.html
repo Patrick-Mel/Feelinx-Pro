@@ -67,30 +67,30 @@
 <style>
     /* CSS Variables for Dynamic & Harmonious Theme Switching */
     [data-bs-theme="dark"] {
-        --body-bg: #0f172a;
+        --body-bg: #0b0f19;
         --body-color: #f8fafc;
-        --card-bg: #1e293b;
-        --card-border: #334155;
-        --header-bg: #334155;
+        --card-bg: #151d30;
+        --card-border: rgba(255, 255, 255, 0.1);
+        --header-bg: #1e293b;
         --text-primary: #f8fafc;
         --text-muted: #94a3b8;
-        --table-bg: #1e293b;
-        --table-alt-bg: #0f172a;
-        --table-border: #334155;
+        --table-bg: #151d30;
+        --table-alt-bg: #0b0f19;
+        --table-border: rgba(255, 255, 255, 0.08);
         --link-color: #38bdf8;
         --link-hover-color: #7dd3fc;
         --input-bg: #1e293b;
         --input-border: #475569;
         --input-color: #f8fafc;
-        --sidebar-bg: #0f172a;
+        --sidebar-bg: #0b0f19;
     }
 
     [data-bs-theme="light"] {
-        --body-bg: #f8fafc;
+        --body-bg: #f1f5f9;
         --body-color: #0f172a;
         --card-bg: #ffffff;
         --card-border: #e2e8f0;
-        --header-bg: #f1f5f9;
+        --header-bg: #f8fafc;
         --text-primary: #0f172a;
         --text-muted: #64748b;
         --table-bg: #ffffff;
@@ -110,20 +110,27 @@
         transition: background-color 0.25s ease, color 0.25s ease;
     }
 
+    /* Cards & Containers */
     .card, .app-content-header, .modal-content {
         background-color: var(--card-bg) !important;
-        border-color: var(--card-border) !important;
+        border: 1px solid var(--card-border) !important;
         color: var(--text-primary) !important;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        border-radius: 16px !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08) !important;
+        margin-bottom: 20px !important;
     }
 
     .card-header, .modal-header {
         background-color: var(--header-bg) !important;
         color: var(--text-primary) !important;
         border-bottom: 1px solid var(--card-border) !important;
-        font-weight: 600;
+        border-top-left-radius: 16px !important;
+        border-top-right-radius: 16px !important;
+        font-weight: 700 !important;
+        padding: 14px 20px !important;
     }
 
+    /* Links & Action Tiles in Dashboard Cards */
     a {
         color: var(--link-color) !important;
         transition: color 0.2s ease;
@@ -133,6 +140,113 @@
         color: var(--link-hover-color) !important;
     }
 
+    /* Separating the attached Action Buttons ("Ajouter", "Modification") */
+    .card-body .btn-group, .model-user .btn-group, td .btn-group, td .btn, .card-body table a.btn {
+        display: inline-flex !important;
+        gap: 6px !important;
+        border-radius: 10px !important;
+        overflow: hidden !important;
+        box-shadow: none !important;
+    }
+
+    .card-body a.addlink, .card-body a.changelink, .card-body .btn, .model-user a.btn {
+        border-radius: 8px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        padding: 5px 12px !important;
+        margin: 2px 3px !important;
+        text-transform: none !important;
+        border: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    }
+
+    .addlink, .btn-success, a.addlink {
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+        color: #ffffff !important;
+    }
+
+    .changelink, .btn-info, a.changelink {
+        background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%) !important;
+        color: #ffffff !important;
+    }
+
+    /* Top Navbar Styling & Search Inputs */
+    .app-header.navbar {
+        background-color: var(--card-bg) !important;
+        border-bottom: 1px solid var(--card-border) !important;
+        padding: 8px 16px !important;
+    }
+
+    .form-control-navbar {
+        background-color: var(--input-bg) !important;
+        border: 1px solid var(--input-border) !important;
+        color: var(--input-color) !important;
+        border-radius: 20px !important;
+        padding: 4px 12px !important;
+        font-size: 13px !important;
+        max-width: 180px !important;
+    }
+
+    .form-control-navbar:focus {
+        border-color: #FF4E64 !important;
+        box-shadow: 0 0 0 3px rgba(255, 78, 100, 0.25) !important;
+    }
+
+    /* Breadcrumbs Fix */
+    .breadcrumb {
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .breadcrumb-item a {
+        color: var(--link-color) !important;
+    }
+
+    .breadcrumb-item.active {
+        color: var(--text-muted) !important;
+    }
+
+    /* Form Inputs */
+    .form-control, .form-select, select, input[type="text"], input[type="password"], input[type="email"], textarea {
+        background-color: var(--input-bg) !important;
+        border-color: var(--input-border) !important;
+        color: var(--input-color) !important;
+        border-radius: 10px !important;
+    }
+
+    /* Sidebar Brand & Feelinx Accent */
+    .sidebar-brand {
+        background: linear-gradient(135deg, #FF4E64 0%, #6C4AB6 100%) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .sidebar-brand .brand-text {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        font-family: 'Outfit', sans-serif !important;
+    }
+
+    .nav-sidebar .nav-link.active {
+        background: linear-gradient(135deg, #FF4E64 0%, #6C4AB6 100%) !important;
+        color: #ffffff !important;
+        border-radius: 10px !important;
+        box-shadow: 0 4px 12px rgba(255, 78, 100, 0.3) !important;
+    }
+
+    .nav-header {
+        color: var(--text-muted) !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.8px !important;
+        margin-top: 14px !important;
+    }
+
+    /* Table Adjustments */
     .table {
         color: var(--text-primary) !important;
         border-color: var(--table-border) !important;
@@ -152,17 +266,6 @@
 
     .table-striped tbody tr:nth-of-type(odd) td {
         background-color: var(--table-alt-bg) !important;
-    }
-
-    .form-control, .form-select, select, input[type="text"], input[type="password"], input[type="email"], textarea {
-        background-color: var(--input-bg) !important;
-        border-color: var(--input-border) !important;
-        color: var(--input-color) !important;
-    }
-
-    .form-control:focus, .form-select:focus {
-        border-color: #38bdf8 !important;
-        box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25) !important;
     }
 
     /* Fully Responsive Admin Adjustments */
@@ -190,6 +293,7 @@
         }
     }
 </style>
+
 
 
 </head>
