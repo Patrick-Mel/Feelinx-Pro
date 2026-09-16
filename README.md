@@ -92,5 +92,15 @@ flutter test
 
 ---
 
+## ☁️ Déploiement en Production (Railway)
+
+Le backend Django est hébergé en production sur Railway avec PostgreSQL et Redis :
+- **URL API Production** : `https://feelinx-backend-production-9537.up.railway.app/api/v1/`
+- **Documentation API Swagger** : `https://feelinx-backend-production-9537.up.railway.app/api/docs/`
+- **Interface d'administration Admin** : `https://feelinx-backend-production-9537.up.railway.app/admin/`
+
+---
+
 ## 📄 Licence
 Propriété exclusive de Feelinx Inc. Tous droits réservés.
+
