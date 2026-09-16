@@ -117,8 +117,8 @@ db_url = (
 
 if db_url:
     DATABASES = {
-        'default': dj_database_url.config(
-            default=db_url,
+        'default': dj_database_url.parse(
+            db_url,
             conn_max_age=600,
             conn_health_checks=True,
         )
@@ -134,6 +134,7 @@ elif os.environ.get('PGHOST') or os.environ.get('DB_NAME'):
             'PORT': os.environ.get('PGPORT') or os.environ.get('DB_PORT', '5432'),
         }
     }
+
 else:
     DATABASES = {
         'default': {

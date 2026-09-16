@@ -11,16 +11,19 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="{% static "vendor/fontawesome-free/css/all.min.css" %}">
     <!-- Google Fonts: Outfit & Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
+            --feelinx-coral: #FF4E64;
+            --feelinx-indigo: #6C4AB6;
+            --feelinx-gold: #F4B740;
             --primary-gradient: linear-gradient(135deg, #FF4E64 0%, #6C4AB6 100%);
-            --accent-glow: rgba(255, 78, 100, 0.35);
-            --bg-dark: #090D16;
-            --card-bg: rgba(18, 24, 38, 0.75);
-            --card-border: rgba(255, 255, 255, 0.12);
-            --input-bg: rgba(30, 41, 59, 0.7);
+            --accent-glow: rgba(255, 78, 100, 0.4);
+            --bg-dark: #070A12;
+            --card-bg: rgba(15, 23, 42, 0.82);
+            --card-border: rgba(255, 255, 255, 0.14);
+            --input-bg: rgba(30, 41, 59, 0.75);
             --text-main: #F8FAFC;
             --text-sub: #94A3B8;
         }
@@ -41,110 +44,114 @@
             overflow-x: hidden;
             position: relative;
             color: var(--text-main);
+            padding: 20px;
         }
 
-        /* Animated Background Orbs */
+        /* Ambient Glowing Background Orbs */
         .bg-orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(120px);
+            filter: blur(130px);
             z-index: 0;
-            opacity: 0.45;
-            animation: pulseOrb 8s infinite alternate ease-in-out;
+            opacity: 0.5;
+            animation: pulseOrb 10s infinite alternate ease-in-out;
         }
 
         .orb-1 {
-            width: 450px;
-            height: 450px;
+            width: 480px;
+            height: 480px;
             background: #FF4E64;
-            top: -100px;
+            top: -120px;
             left: -100px;
         }
 
         .orb-2 {
-            width: 500px;
-            height: 500px;
+            width: 520px;
+            height: 520px;
             background: #6C4AB6;
             bottom: -150px;
             right: -100px;
-            animation-delay: -4s;
+            animation-delay: -5s;
         }
 
         @keyframes pulseOrb {
-            0% { transform: scale(1) translate(0, 0); opacity: 0.35; }
-            100% { transform: scale(1.15) translate(30px, -20px); opacity: 0.55; }
+            0% { transform: scale(1) translate(0, 0); opacity: 0.4; }
+            100% { transform: scale(1.18) translate(35px, -25px); opacity: 0.65; }
         }
 
-        /* Glassmorphism Card Wrapper */
+        /* Glassmorphism Card Container */
         .login-container {
             width: 100%;
-            max-width: 440px;
-            padding: 24px;
+            max-width: 450px;
             z-index: 10;
         }
 
         .glass-card {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--card-border);
-            border-radius: 24px;
-            padding: 40px 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 30px var(--accent-glow);
+            border-radius: 28px;
+            padding: 44px 36px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 35px var(--accent-glow);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .glass-card:hover {
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 78, 100, 0.45);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), 0 0 45px rgba(255, 78, 100, 0.5);
         }
 
-        /* Header Logo & Titles */
+        /* Brand Logo & Header */
         .brand-header {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 34px;
         }
 
-        .brand-icon {
-            width: 68px;
-            height: 68px;
-            margin: 0 auto 16px;
+        .brand-logo-wrapper {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 18px;
             background: var(--primary-gradient);
-            border-radius: 20px;
+            border-radius: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Outfit', sans-serif;
-            font-size: 32px;
-            font-weight: 800;
-            color: #FFFFFF;
-            box-shadow: 0 10px 25px var(--accent-glow);
+            box-shadow: 0 12px 28px var(--accent-glow);
+            position: relative;
+        }
+
+        .brand-logo-svg {
+            width: 42px;
+            height: 42px;
+            fill: #FFFFFF;
         }
 
         .brand-title {
             font-family: 'Outfit', sans-serif;
-            font-size: 26px;
-            font-weight: 700;
+            font-size: 28px;
+            font-weight: 800;
             letter-spacing: -0.5px;
-            background: linear-gradient(180deg, #FFFFFF 0%, #CBD5E1 100%);
+            background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 6px;
         }
 
         .brand-subtitle {
-            font-size: 13.5px;
+            font-size: 14px;
             color: var(--text-sub);
+            font-weight: 500;
         }
 
-        /* Form Inputs & Eye Toggle */
+        /* Form Controls */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             position: relative;
         }
 
         .form-label {
             display: block;
-            font-size: 13px;
+            font-size: 13.5px;
             font-weight: 600;
             color: #E2E8F0;
             margin-bottom: 8px;
@@ -161,20 +168,20 @@
             position: absolute;
             left: 16px;
             color: var(--text-sub);
-            font-size: 15px;
+            font-size: 16px;
             pointer-events: none;
             transition: color 0.2s ease;
         }
 
         .form-input {
             width: 100%;
-            height: 50px;
-            padding: 12px 48px 12px 44px;
+            height: 52px;
+            padding: 12px 50px 12px 46px;
             background: var(--input-bg);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 16px;
             color: #FFFFFF;
-            font-size: 14.5px;
+            font-size: 15px;
             outline: none;
             transition: all 0.25s ease;
         }
@@ -182,7 +189,7 @@
         .form-input:focus {
             border-color: #FF4E64;
             background: rgba(30, 41, 59, 0.95);
-            box-shadow: 0 0 0 4px rgba(255, 78, 100, 0.2);
+            box-shadow: 0 0 0 4px rgba(255, 78, 100, 0.22);
         }
 
         .form-input:focus ~ .input-icon {
@@ -196,7 +203,7 @@
             background: none;
             border: none;
             color: var(--text-sub);
-            font-size: 16px;
+            font-size: 17px;
             cursor: pointer;
             padding: 6px;
             display: flex;
@@ -208,34 +215,34 @@
 
         .password-toggle-btn:hover {
             color: #FF4E64;
-            transform: scale(1.1);
+            transform: scale(1.12);
         }
 
         /* Submit Button */
         .btn-submit {
             width: 100%;
-            height: 52px;
+            height: 54px;
             background: var(--primary-gradient);
             border: none;
-            border-radius: 14px;
+            border-radius: 16px;
             color: #FFFFFF;
             font-family: 'Outfit', sans-serif;
-            font-size: 16px;
+            font-size: 16.5px;
             font-weight: 700;
             letter-spacing: 0.5px;
             cursor: pointer;
-            box-shadow: 0 8px 20px var(--accent-glow);
+            box-shadow: 0 10px 24px var(--accent-glow);
             transition: all 0.3s ease;
-            margin-top: 10px;
+            margin-top: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(255, 78, 100, 0.5);
+            box-shadow: 0 14px 32px rgba(255, 78, 100, 0.55);
         }
 
         .btn-submit:active {
@@ -244,17 +251,17 @@
 
         /* Error Notification Alert */
         .alert-error {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.35);
-            border-radius: 12px;
+            background: rgba(239, 68, 68, 0.16);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 14px;
             padding: 14px 16px;
-            margin-bottom: 22px;
+            margin-bottom: 24px;
             color: #FCA5A5;
-            font-size: 13px;
+            font-size: 13.5px;
             line-height: 1.45;
             display: flex;
             align-items: flex-start;
-            gap: 10px;
+            gap: 12px;
             animation: fadeIn 0.3s ease;
         }
 
@@ -265,13 +272,24 @@
 
         .footer-note {
             text-align: center;
-            margin-top: 24px;
-            font-size: 12px;
+            margin-top: 26px;
+            font-size: 12.5px;
             color: var(--text-sub);
         }
 
         .footer-note strong {
             color: #E2E8F0;
+        }
+
+        /* Responsive Breakpoint */
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 32px 24px;
+                border-radius: 22px;
+            }
+            .brand-title {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
@@ -284,28 +302,34 @@
         <div class="glass-card">
             
             <div class="brand-header">
-                <div class="brand-icon">F</div>
+                <div class="brand-logo-wrapper">
+                    <!-- Feelinx Heart Connection SVG Logo -->
+                    <svg class="brand-logo-svg" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </div>
                 <h1 class="brand-title">Feelinx Pro</h1>
                 <p class="brand-subtitle">Centre de contrôle & administration</p>
             </div>
 
-            {% if errors %}
+            {% if errors or form.non_field_errors %}
                 <div class="alert-error">
-                    <i class="fas fa-exclamation-triangle" style="margin-top: 2px; font-size: 15px;"></i>
+                    <i class="fas fa-exclamation-triangle" style="margin-top: 2px; font-size: 16px;"></i>
                     <div>
-                        <strong>Accès refusé :</strong> Identifiants invalides ou privilèges insuffisants. Veuillez vérifier votre numéro et mot de passe.
+                        <strong>Accès refusé :</strong> Identifiants invalides ou compte non autorisé. Veuillez vérifier votre numéro (+237...) et votre mot de passe.
                     </div>
                 </div>
             {% endif %}
 
             <form action="{{ app_path }}" method="post" id="login-form">
                 {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next|default:'/admin/' }}">
 
                 <div class="form-group">
                     <label class="form-label" for="id_username">Numéro de Téléphone (Identifiant)</label>
                     <div class="input-wrapper">
                         <i class="fas fa-phone-alt input-icon"></i>
-                        <input type="text" name="username" id="id_username" class="form-input" placeholder="+237690000000" value="{{ username|default:'' }}" required autofocus autocomplete="username">
+                        <input type="text" name="username" id="id_username" class="form-input" placeholder="+237689731055" value="{{ username|default:'' }}" required autofocus autocomplete="username">
                     </div>
                 </div>
 
@@ -327,7 +351,7 @@
             </form>
 
             <div class="footer-note">
-                Feelinx Ltd • <strong>Système hautement sécurisé</strong>
+                Feelinx Inc. • <strong>Plateforme d'Administration Sécurisée</strong>
             </div>
 
         </div>
