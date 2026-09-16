@@ -31,7 +31,14 @@ class MyProfileView(APIView):
         return Response(serializer.data)
 
     def patch(self, request):
-        profile, _ = Profile.objects.get_or_create(user=request.user)
+        profile, _ = Profile.objects.get_or_create(
+            user=request.user,
+            defaults={
+                'first_name': 'Membre',
+                'birth_date': '2000-01-01',
+                'gender': 'female',
+            }
+        )
         serializer = ProfileSerializer(profile, data=request.data, partial=True, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()

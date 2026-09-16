@@ -102,6 +102,9 @@ class FeelinxLogo extends StatelessWidget {
       fontFamily: 'Plus Jakarta Sans',
     );
 
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final primaryTextColor = isDarkMode ? Colors.white : FxColors.lightTextPrimary;
+
     if (colorMode == FeelinxColorMode.monochromeBlack) {
       return Text("Feelinx", style: baseStyle.copyWith(color: Colors.black));
     }
@@ -119,11 +122,11 @@ class FeelinxLogo extends StatelessWidget {
       );
     }
 
-    // Default Gradient
+    // Default Adaptive Gradient
     return Text.rich(
       TextSpan(
         children: [
-          TextSpan(text: "Feel", style: baseStyle.copyWith(color: Colors.white)),
+          TextSpan(text: "Feel", style: baseStyle.copyWith(color: primaryTextColor)),
           WidgetSpan(
             alignment: PlaceholderAlignment.baseline,
             baseline: TextBaseline.alphabetic,

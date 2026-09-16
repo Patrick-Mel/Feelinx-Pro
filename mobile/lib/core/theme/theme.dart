@@ -24,8 +24,10 @@ class FxTheme {
         backgroundColor: FxColors.darkBackground,
         elevation: 0,
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        actionsIconTheme: IconThemeData(color: Colors.white),
         systemOverlayStyle: SystemUiOverlayStyle.light,
-        titleTextStyle: FxTypography.titleLarge,
+        titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
       ),
       cardTheme: CardThemeData(
         color: FxColors.darkCard,
@@ -84,8 +86,10 @@ class FxTheme {
         backgroundColor: FxColors.lightBackground,
         elevation: 0,
         centerTitle: true,
+        iconTheme: IconThemeData(color: FxColors.lightTextPrimary),
+        actionsIconTheme: IconThemeData(color: FxColors.lightTextPrimary),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
-        titleTextStyle: FxTypography.titleLarge,
+        titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: FxColors.lightTextPrimary),
       ),
       cardTheme: CardThemeData(
         color: FxColors.lightCard,
