@@ -5,7 +5,7 @@
     "dockerfilePath": "backend/Dockerfile"
   },
   "deploy": {
-    "startCommand": "cd backend && python manage.py migrate && daphne -b 0.0.0.0 -p $PORT config.asgi:application",
+    "startCommand": "python manage.py migrate && daphne -b 0.0.0.0 -p ${PORT:-8000} config.asgi:application",
     "restartPolicyType": "ON_FAILURE"
   }
 }
