@@ -1,0 +1,359 @@
+{% load i18n static jazzmin %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:"fr" }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% trans "Connexion" %} | Feelinx Control Center</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="{% static "vendor/fontawesome-free/css/all.min.css" %}">
+    <!-- Google Fonts: Outfit & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #FF4E64 0%, #6C4AB6 100%);
+            --accent-glow: rgba(255, 78, 100, 0.35);
+            --bg-dark: #090D16;
+            --card-bg: rgba(18, 24, 38, 0.75);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --input-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #F8FAFC;
+            --text-sub: #94A3B8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+            color: var(--text-main);
+        }
+
+        /* Animated Background Orbs */
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            opacity: 0.45;
+            animation: pulseOrb 8s infinite alternate ease-in-out;
+        }
+
+        .orb-1 {
+            width: 450px;
+            height: 450px;
+            background: #FF4E64;
+            top: -100px;
+            left: -100px;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: #6C4AB6;
+            bottom: -150px;
+            right: -100px;
+            animation-delay: -4s;
+        }
+
+        @keyframes pulseOrb {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.35; }
+            100% { transform: scale(1.15) translate(30px, -20px); opacity: 0.55; }
+        }
+
+        /* Glassmorphism Card Wrapper */
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+            padding: 24px;
+            z-index: 10;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 30px var(--accent-glow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 78, 100, 0.45);
+        }
+
+        /* Header Logo & Titles */
+        .brand-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .brand-icon {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 16px;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            color: #FFFFFF;
+            box-shadow: 0 10px 25px var(--accent-glow);
+        }
+
+        .brand-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(180deg, #FFFFFF 0%, #CBD5E1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .brand-subtitle {
+            font-size: 13.5px;
+            color: var(--text-sub);
+        }
+
+        /* Form Inputs & Eye Toggle */
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #E2E8F0;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            color: var(--text-sub);
+            font-size: 15px;
+            pointer-events: none;
+            transition: color 0.2s ease;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 50px;
+            padding: 12px 48px 12px 44px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            color: #FFFFFF;
+            font-size: 14.5px;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .form-input:focus {
+            border-color: #FF4E64;
+            background: rgba(30, 41, 59, 0.95);
+            box-shadow: 0 0 0 4px rgba(255, 78, 100, 0.2);
+        }
+
+        .form-input:focus ~ .input-icon {
+            color: #FF4E64;
+        }
+
+        /* Toggle Password Eye Icon Button */
+        .password-toggle-btn {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease, transform 0.2s ease;
+            border-radius: 8px;
+        }
+
+        .password-toggle-btn:hover {
+            color: #FF4E64;
+            transform: scale(1.1);
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            height: 52px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 14px;
+            color: #FFFFFF;
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px var(--accent-glow);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(255, 78, 100, 0.5);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        /* Error Notification Alert */
+        .alert-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 22px;
+            color: #FCA5A5;
+            font-size: 13px;
+            line-height: 1.45;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+
+        .footer-note strong {
+            color: #E2E8F0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    <div class="login-container">
+        <div class="glass-card">
+            
+            <div class="brand-header">
+                <div class="brand-icon">F</div>
+                <h1 class="brand-title">Feelinx Pro</h1>
+                <p class="brand-subtitle">Centre de contrôle & administration</p>
+            </div>
+
+            {% if errors %}
+                <div class="alert-error">
+                    <i class="fas fa-exclamation-triangle" style="margin-top: 2px; font-size: 15px;"></i>
+                    <div>
+                        <strong>Accès refusé :</strong> Identifiants invalides ou privilèges insuffisants. Veuillez vérifier votre numéro et mot de passe.
+                    </div>
+                </div>
+            {% endif %}
+
+            <form action="{{ app_path }}" method="post" id="login-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label class="form-label" for="id_username">Numéro de Téléphone (Identifiant)</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone-alt input-icon"></i>
+                        <input type="text" name="username" id="id_username" class="form-input" placeholder="+237690000000" value="{{ username|default:'' }}" required autofocus autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="id_password">Mot de Passe</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" name="password" id="id_password" class="form-input" placeholder="••••••••••••" required autocomplete="current-password">
+                        <button type="button" class="password-toggle-btn" id="toggle-password-btn" title="Afficher / Masquer le mot de passe">
+                            <i class="fas fa-eye" id="toggle-password-icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <span>Connexion</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="footer-note">
+                Feelinx Ltd • <strong>Système hautement sécurisé</strong>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var toggleBtn = document.getElementById('toggle-password-btn');
+            var passwordInput = document.getElementById('id_password');
+            var toggleIcon = document.getElementById('toggle-password-icon');
+
+            if (toggleBtn && passwordInput && toggleIcon) {
+                toggleBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        toggleIcon.className = 'fas fa-eye-slash';
+                        toggleBtn.style.color = '#FF4E64';
+                    } else {
+                        passwordInput.type = 'password';
+                        toggleIcon.className = 'fas fa-eye';
+                        toggleBtn.style.color = '#94A3B8';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
