@@ -18,7 +18,7 @@ def env_list(name, default=None):
         return default or []
     return [x.strip() for x in val.split(',')]
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-feelinx-dev-secret-key-change-in-production-12345')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-secure-!feelinx#2026$p9@x8%k7^m6&n5*b4(v3)c2_a1+z9y8x7w6v5u4t3s2r1q')
 DEBUG = env_bool('DEBUG', True)
 ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', ['*'])
 
