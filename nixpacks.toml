@@ -11,4 +11,4 @@ cmds = ["python3 -m pip install -r backend/requirements.txt"]
 cmds = ["python3 backend/manage.py collectstatic --noinput"]
 
 [start]
-cmd = "python3 backend/manage.py migrate && daphne -b 0.0.0.0 -p ${PORT:-8000} config.asgi:application"
+cmd = "sh backend/entrypoint.sh"
