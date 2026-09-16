@@ -21,6 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
   String _selectedCountryCode = "+237";
   bool _isPasswordObscured = true;
+  bool _isConfirmPasswordObscured = true;
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -30,7 +31,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
     {"code": "+221", "flag": "🇸🇳", "name": "Sénégal"},
     {"code": "+242", "flag": "🇨🇬", "name": "Congo"},
     {"code": "+243", "flag": "🇨🇩", "name": "RDC"},
+    {"code": "+241", "flag": "🇬🇦", "name": "Gabon"},
+    {"code": "+235", "flag": "🇹🇩", "name": "Tchad"},
+    {"code": "+236", "flag": "🇨🇫", "name": "Centrafrique"},
+    {"code": "+223", "flag": "🇲🇱", "name": "Mali"},
+    {"code": "+226", "flag": "🇧🇫", "name": "Burkina Faso"},
+    {"code": "+228", "flag": "🇹🇬", "name": "Togo"},
+    {"code": "+229", "flag": "🇧🇯", "name": "Bénin"},
+    {"code": "+224", "flag": "🇬🇳", "name": "Guinée"},
+    {"code": "+250", "flag": "🇷🇼", "name": "Rwanda"},
+    {"code": "+257", "flag": "🇧🇮", "name": "Burundi"},
+    {"code": "+227", "flag": "🇳🇪", "name": "Niger"},
+    {"code": "+234", "flag": "🇳🇬", "name": "Nigéria"},
+    {"code": "+233", "flag": "🇬🇭", "name": "Ghana"},
+    {"code": "+254", "flag": "🇰🇪", "name": "Kenya"},
+    {"code": "+27",  "flag": "🇿🇦", "name": "Afrique du Sud"},
     {"code": "+33",  "flag": "🇫🇷", "name": "France"},
+    {"code": "+1",   "flag": "🇨🇦", "name": "Canada / USA"},
+    {"code": "+32",  "flag": "🇧🇪", "name": "Belgique"},
+    {"code": "+41",  "flag": "🇨🇭", "name": "Suisse"},
+    {"code": "+212", "flag": "🇲🇦", "name": "Maroc"},
+    {"code": "+216", "flag": "🇹🇳", "name": "Tunisie"},
+    {"code": "+213", "flag": "🇩🇿", "name": "Algérie"},
   ];
 
   Future<void> _handleRegister() async {
@@ -216,10 +238,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: FxSpacing.sm8),
               TextField(
                 controller: _confirmPasswordController,
-                obscureText: _isPasswordObscured,
+                obscureText: _isConfirmPasswordObscured,
                 style: FxTypography.bodyLarge.copyWith(color: Colors.white),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: "Répétez le mot de passe",
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isConfirmPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      color: FxColors.darkTextSecondary,
+                    ),
+                    onPressed: () => setState(() => _isConfirmPasswordObscured = !_isConfirmPasswordObscured),
+                  ),
                 ),
               ),
 

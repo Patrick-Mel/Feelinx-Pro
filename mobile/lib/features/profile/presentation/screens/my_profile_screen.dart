@@ -45,10 +45,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     }
 
     final photos = _profile?['photos'] as List? ?? [];
-    final defaultAvatar = (_profile?['gender'] == 'male')
-        ? "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop"
-        : "https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=800&auto=format&fit=crop";
-    final photoUrl = photos.isNotEmpty ? photos.first['url'] : defaultAvatar;
+    final String? photoUrl = (photos.isNotEmpty && photos.first['url'] != null) ? photos.first['url'] as String : null;
     final completion = _profile?['profile_completion'] ?? 85;
     final bio = _profile?['bio'] ?? '';
     final city = _profile?['city'] ?? 'Cameroun';

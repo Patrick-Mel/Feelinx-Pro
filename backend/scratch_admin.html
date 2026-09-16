@@ -1,0 +1,1256 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="fr" >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!--  Prevent admin panel being crawled by search engines -->
+    <meta name="robots" content="none, noarchive">
+    <script>
+        (function() {
+            var mode = localStorage.getItem('jazzmin-theme-mode') || 'auto';
+            if (mode === 'auto') {
+                mode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-bs-theme', mode);
+        })();
+    </script>
+
+    <title>Site d’administration | Feelinx Admin</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="/static/vendor/fontawesome-free/css/all.min.css">
+
+    <!-- Bootstrap and adminLTE -->
+    <link rel="stylesheet" href="/static/vendor/adminlte/css/adminlte.min.css" id="adminlte-css">
+
+    <!-- Bootswatch theme -->
+    <link rel="stylesheet"  id="jazzmin-theme" data-theme-base="/static/vendor/bootswatch" />
+    
+
+    <!-- Custom fixes for django -->
+    <link rel="stylesheet" href="/static/jazzmin/css/main.css">
+
+    
+
+    <!-- favicons -->
+    <link rel="shortcut icon" href="/static/vendor/adminlte/img/AdminLTELogo.png" type="image/png">
+    <link rel="icon" href="/static/vendor/adminlte/img/AdminLTELogo.png" sizes="32x32" type="image/png">
+
+    
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    
+
+     
+     
+</head>
+<body class="layout-fixed sidebar-expand-lg sidebar-open bg-body-tertiary   dashboard accent-danger  layout-navbar-fixed  layout-fixed theme-default" data-admin-utc-offset="3600">
+
+    <div class="app-wrapper">
+
+    
+        <nav class="app-header navbar navbar-expand bg-body navbar-dark navbar-primary" id="jazzy-navbar">
+        <div class="container-fluid">
+            <ul class="navbar-nav">
+
+                
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    </li>
+                
+
+                
+                
+                    <li class="nav-item d-none d-sm-inline-block">
+                        
+                            <a href="/admin/" class="nav-link" >Tableau de Bord</a>
+                        
+                    </li>
+                
+                    <li class="nav-item d-none d-sm-inline-block">
+                        
+                            <a href="/api/schema/swagger-ui/" class="nav-link" target="_blank">Documentation Swagger API</a>
+                        
+                    </li>
+                
+            </ul>
+
+            
+                
+                    <form action="/admin/profiles/profile/" method="GET" class="d-flex ms-2">
+                        <div class="input-group input-group-sm">
+                            <input class="form-control form-control-navbar" name="q" type="search" placeholder="Recherche Profils..." aria-label="Recherche Profils...">
+                            <button class="btn btn-navbar" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                
+                    <form action="/admin/accounts/user/" method="GET" class="d-flex ms-2">
+                        <div class="input-group input-group-sm">
+                            <input class="form-control form-control-navbar" name="q" type="search" placeholder="Recherche Utilisateurs..." aria-label="Recherche Utilisateurs...">
+                            <button class="btn btn-navbar" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                
+            
+
+            <ul class="navbar-nav ms-auto">
+
+                
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+                        <i class="fas fa-th-large"></i>
+                    </a>
+                </li>
+                
+                
+
+                
+
+                
+                    
+                    
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link btn" data-bs-toggle="dropdown" href="#" title="Choose language">
+                            <i class="fas fa-globe" aria-hidden="true"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end" id="jazzy-languagemenu">
+                            <form action="/i18n/setlang/" method="post">
+                                <input type="hidden" name="csrfmiddlewaretoken" value="0LOf0DODjYqS9Nr4SnsiArm69JLmtH9ZgR08pjtgGeSkQ5jqce63vfM5fMkS0GtB">
+                                <input name="next" type="hidden" value="/admin/" />
+                                
+                                    <button
+                                        type="submit"
+                                        name="language"
+                                        value="fr"
+                                        class="dropdown-item active"
+                                        lang="fr"
+                                    >
+                                        Français
+                                    </button>
+                                
+                                    <button
+                                        type="submit"
+                                        name="language"
+                                        value="en"
+                                        class="dropdown-item "
+                                        lang="en"
+                                    >
+                                        English
+                                    </button>
+                                
+                            </form>
+                        </div>
+                    </li>
+                
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link btn" data-bs-toggle="dropdown" href="#" title="+237689731055">
+                        <i class="far fa-user" aria-hidden="true"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end" id="jazzy-usermenu">
+                        <span class="dropdown-header">Compte utilisateur</span>
+                        <div class="dropdown-divider"></div>
+                        <a href="/admin/password_change/" class="dropdown-item">
+                            <i class="fas fa-key me-2"></i> Modifier le mot de passe
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <form id="logout-form" method="post" action="/admin/logout/">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="0LOf0DODjYqS9Nr4SnsiArm69JLmtH9ZgR08pjtgGeSkQ5jqce63vfM5fMkS0GtB">
+                            <button type="submit" class="dropdown-item"><i class="fas fa-users me-2"></i> Déconnexion</button>
+                        </form>
+                        
+                        
+                        <div class="dropdown-divider"></div>
+                        
+                            <a href="/admin/accounts/user/1d5436b2-a592-4d8a-9dc6-f971fb9e5276/change/" class="dropdown-item dropdown-footer">Voir le profil</a>
+                        
+                    </div>
+                </li>
+            </ul>
+        </div>
+        </nav>
+        
+        
+            
+
+            <aside class="app-sidebar bg-body-secondary shadow sidebar-dark-danger" id="jazzy-sidebar" data-bs-theme="dark">
+                <div class="sidebar-brand">
+                    <a href="/admin/" class="brand-link navbar-dark" id="jazzy-logo">
+                        <img src="/static/vendor/adminlte/img/AdminLTELogo.png" alt="Feelinx Pro Logo" class="img-circle brand-image opacity-75 shadow">
+                        <span class="brand-text fw-light">Feelinx Control Center</span>
+                    </a>
+                </div>
+
+                <div class="sidebar-wrapper">
+                    <div class="user-panel d-flex">
+                        <div class="image">
+                            
+                                <i class="fas fa-inverse user-profile fa-user-circle"></i>
+                            
+                        </div>
+                        <div class="info">
+                            
+                                <a href="/admin/accounts/user/1d5436b2-a592-4d8a-9dc6-f971fb9e5276/change/" class="d-block">+237689731055</a>
+                            
+                        </div>
+                    </div>
+
+                    <nav class="mt-2">
+                        <ul class="nav sidebar-menu flex-column " data-lte-toggle="treeview" role="navigation" aria-label="Main navigation" data-accordion="false" id="jazzy-navigation">
+
+                            <li class="nav-item">
+                                <a href="/admin/" class="nav-link">
+                                    <i class="nav-icon fas fa-th-large"></i>
+                                    <p>Tableau de bord</p>
+                                </a>
+                            </li>
+
+                            
+                                
+                                    <li class="nav-header">Accounts</li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/accounts/otpcode/" class="nav-link">
+                                                <i class="nav-icon fas fa-key"></i> <p>Codes OTP</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/accounts/user/" class="nav-link">
+                                                <i class="nav-icon fas fa-user-shield"></i> <p>Utilisateurs</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                
+                                    <li class="nav-header">Authentification et autorisation</li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/auth/group/" class="nav-link">
+                                                <i class="nav-icon fas fa-circle"></i> <p>Groupes</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                
+                                    <li class="nav-header">Chat</li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/chat/conversation/" class="nav-link">
+                                                <i class="nav-icon fas fa-comments"></i> <p>Conversations</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/chat/message/" class="nav-link">
+                                                <i class="nav-icon fas fa-paper-plane"></i> <p>Messages</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                
+                                    <li class="nav-header">Discovery</li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/discovery/boost/" class="nav-link">
+                                                <i class="nav-icon fas fa-circle"></i> <p>Boosts</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/discovery/match/" class="nav-link">
+                                                <i class="nav-icon fas fa-heart"></i> <p>Matchs</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/discovery/profileview/" class="nav-link">
+                                                <i class="nav-icon fas fa-eye"></i> <p>Profile views</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/discovery/swipe/" class="nav-link">
+                                                <i class="nav-icon fas fa-fire"></i> <p>Swipes</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                
+                                    <li class="nav-header">Liste des jetons bannis</li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/token_blacklist/blacklistedtoken/" class="nav-link">
+                                                <i class="nav-icon fas fa-circle"></i> <p>Blacklisted Tokens</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/token_blacklist/outstandingtoken/" class="nav-link">
+                                                <i class="nav-icon fas fa-circle"></i> <p>Outstanding Tokens</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                
+                                    <li class="nav-header">Payments</li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/payments/plan/" class="nav-link">
+                                                <i class="nav-icon fas fa-gem"></i> <p>Formules d&#x27;abonnement</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/payments/subscription/" class="nav-link">
+                                                <i class="nav-icon fas fa-crown"></i> <p>Subscriptions</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/payments/transaction/" class="nav-link">
+                                                <i class="nav-icon fas fa-credit-card"></i> <p>Transactions</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                
+                                    <li class="nav-header">Profiles</li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/profiles/interest/" class="nav-link">
+                                                <i class="nav-icon fas fa-tags"></i> <p>Centres d&#x27;intérêt</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/profiles/photo/" class="nav-link">
+                                                <i class="nav-icon fas fa-camera"></i> <p>Photos</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/profiles/profile/" class="nav-link">
+                                                <i class="nav-icon fas fa-user-circle"></i> <p>Profils</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                
+                                    <li class="nav-header">Safety</li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/safety/block/" class="nav-link">
+                                                <i class="nav-icon fas fa-circle"></i> <p>Blocks</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/safety/report/" class="nav-link">
+                                                <i class="nav-icon fas fa-shield-alt"></i> <p>Reports</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                        <li class="nav-item">
+                                            
+                                            <a href="/admin/safety/verification/" class="nav-link">
+                                                <i class="nav-icon fas fa-circle"></i> <p>Verifications</p>
+                                            </a>
+                                        
+                                        </li>
+                                    
+                                
+                            
+                        </ul>
+                    </nav>
+                </div>
+            </aside>
+        
+        
+    
+
+    <main class="app-main" >
+        
+            
+            <div class="app-content-header">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="mb-0"> Tableau de bord </h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="float-sm-end">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/admin/">Accueil</a></li>
+        <li class="breadcrumb-item">Tableau de bord</li>
+    </ol>
+</div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="app-content">
+                <div class="container-fluid">
+                    
+                        
+                    
+                    <div class="row">
+                        
+    
+    
+        
+    
+
+    <div class="col-lg-9 col-12">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="m-0">Accounts</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tbody>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/accounts/otpcode/">Codes OTP</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/accounts/otpcode/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/accounts/otpcode/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/accounts/user/">Utilisateurs</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/accounts/user/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/accounts/user/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
+
+                
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="m-0">Authentification et autorisation</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tbody>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/auth/group/">Groupes</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/auth/group/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/auth/group/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
+
+                
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="m-0">Chat</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tbody>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/chat/conversation/">Conversations</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/chat/conversation/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/chat/conversation/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/chat/message/">Messages</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/chat/message/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/chat/message/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
+
+                
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="m-0">Discovery</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tbody>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/discovery/boost/">Boosts</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/discovery/boost/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/discovery/boost/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/discovery/match/">Matchs</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/discovery/match/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/discovery/match/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/discovery/profileview/">Profile views</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/discovery/profileview/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/discovery/profileview/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/discovery/swipe/">Swipes</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/discovery/swipe/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/discovery/swipe/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                    
+
+                
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="m-0">Liste des jetons bannis</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tbody>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/token_blacklist/blacklistedtoken/">Blacklisted Tokens</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/token_blacklist/blacklistedtoken/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/token_blacklist/blacklistedtoken/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/token_blacklist/outstandingtoken/">Outstanding Tokens</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/token_blacklist/outstandingtoken/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
+
+                
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="m-0">Payments</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tbody>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/payments/plan/">Formules d&#x27;abonnement</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/payments/plan/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/payments/plan/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/payments/subscription/">Subscriptions</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/payments/subscription/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/payments/subscription/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/payments/transaction/">Transactions</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/payments/transaction/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/payments/transaction/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
+
+                
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="m-0">Profiles</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tbody>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/profiles/interest/">Centres d&#x27;intérêt</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/profiles/interest/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/profiles/interest/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/profiles/photo/">Photos</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/profiles/photo/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/profiles/photo/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/profiles/profile/">Profils</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/profiles/profile/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/profiles/profile/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
+
+                
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="m-0">Safety</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tbody>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/safety/block/">Blocks</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/safety/block/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/safety/block/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/safety/report/">Reports</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/safety/report/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/safety/report/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td>
+                                            <a href="/admin/safety/verification/">Verifications</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group float-end">
+                                                
+                                                    <a href="/admin/safety/verification/add/" class="btn btn-sm btn-success addlink">Ajouter</a>
+                                                
+                                                
+                                                    
+                                                        <a href="/admin/safety/verification/" class="btn btn-sm btn-info changelink">Modification</a>
+                                                    
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
+
+                
+                </div>
+        </div>
+
+    </div>
+    <div class="col-lg-3 col-12">
+        <div id="content-related">
+            <div class="module" id="recent-actions-module">
+                <h4 class="mb-3">Actions récentes</h4>
+                
+                
+                
+                    <p>Aucun(e) disponible</p>
+                
+            </div>
+        </div>
+    </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        
+    </main>
+
+
+    
+        <footer class="app-footer ">
+            <div class="float-end d-none d-sm-inline">
+                <b>Version de Jazzmin</b> 3.0.5
+            </div>
+            
+                <strong>Copyright &copy; 2026 Feelinx Ltd.</strong> Tous droits réservés.
+            
+        </footer>
+        
+            
+
+<aside class="control-sidebar control-sidebar-dark ui-customiser">
+    <div class="p-3 control-sidebar-content">
+        <h5>Customize</h5>
+        <hr class="mb-2">
+
+        <div class="mb-1">
+            <label for="jazzmin-theme-chooser">Theme:</label>
+            <select name="theme" id="jazzmin-theme-chooser">
+                <option selected="selected">default</option>
+                <option>cerulean</option>
+                <option>cosmo</option>
+                <option>cyborg</option>
+                <option>darkly</option>
+                <option>flatly</option>
+                <option>journal</option>
+                <option>litera</option>
+                <option>lumen</option>
+                <option>lux</option>
+                <option>materia</option>
+                <option>minty</option>
+                <option>morph</option>
+                <option>pulse</option>
+                <option>quartz</option>
+                <option>sandstone</option>
+                <option>simplex</option>
+                <option>sketchy</option>
+                <option>slate</option>
+                <option>solar</option>
+                <option>spacelab</option>
+                <option>superhero</option>
+                <option>united</option>
+                <option>vapor</option>
+                <option>yeti</option>
+                <option>zephyr</option>
+            </select>
+        </div>
+
+        <div class="mb-1">
+            <label for="jazzmin-theme-mode-chooser">Color scheme:</label>
+            <select name="default_theme_mode" id="jazzmin-theme-mode-chooser">
+                <option value="light" selected="selected">Light</option>
+                <option value="dark">Dark</option>
+                <option value="auto">System</option>
+            </select>
+        </div>
+
+        <hr />
+
+        <p class="mb-1">Small Text</p>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="body-small-text"><label for="body-small-text">Body</label></div>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="navbar-small-text"><label for="navbar-small-text">NavBar</label></div>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="sidebar-nav-small-text"><label for="sidebar-nav-small-text">SideBar</label></div>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="footer-small-text"><label for="footer-small-text">Footer</label></div>
+        <div class="mb-4"><input type="checkbox" value="1" class="me-1" id="brand-small-text"><label for="brand-small-text">Brand</label></div>
+
+        <p class="mb-1">SideBar Tweaks</p>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="sidebar-nav-flat-style"><label for="sidebar-nav-flat-style" title="Use a flat style sidebar">Flat style</label></div>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="sidebar-nav-legacy-style"><label for="sidebar-nav-legacy-style">Legacy style</label></div>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="sidebar-nav-compact"><label for="sidebar-nav-compact">Compact</label></div>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="sidebar-nav-child-indent"><label for="sidebar-nav-child-indent">Child indent</label></div>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="main-sidebar-disable-hover-focus-auto-expand"><label for="main-sidebar-disable-hover-focus-auto-expand">Disable auto-expand</label></div>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="sidebar-fixed"><label for="sidebar-fixed">Fixed SideBar</label></div>
+
+        <p class="mb-1">Misc</p>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="layout-boxed"><label for="layout-boxed">Boxed Layout</label></div>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="footer-fixed"><label for="footer-fixed">Fixed Footer</label></div>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="actions-fixed"><label for="actions-fixed">Sticky Actions <br />(Change form)</label></div>
+
+        <p class="mb-1">Navbar Tweaks</p>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="no-navbar-border"><label for="no-navbar-border">No navbar border</label></div>
+        <div class="mb-1"><input type="checkbox" value="1" class="me-1" id="navbar-fixed"><label for="navbar-fixed">Fixed NavBar</label></div>
+
+        <p class="mb-1">Button tweaks</p>
+
+        <label for="jazzmin-btn-style-primary">primary:</label>
+        <select name="btn-style-primary" id="jazzmin-btn-style-primary">
+            <option selected="selected" value="btn-outline-primary">Outline</option>
+            <option value="btn-primary">Solid</option>
+        </select>
+
+        <label for="jazzmin-btn-style-secondary">secondary:</label>
+        <select name="btn-style-secondary" id="jazzmin-btn-style-secondary">
+            <option selected="selected" value="btn-outline-secondary">Outline</option>
+            <option value="btn-secondary">Solid</option>
+        </select>
+
+        <label for="jazzmin-btn-style-info">info:</label>
+        <select name="btn-style-info" id="jazzmin-btn-style-info">
+            <option selected="selected" value="btn-outline-info">Outline</option>
+            <option value="btn-info">Solid</option>
+        </select>
+
+        <label for="jazzmin-btn-style-warning">warning:</label>
+        <select name="btn-style-warning" id="jazzmin-btn-style-warning">
+            <option selected="selected" value="btn-outline-warning">Outline</option>
+            <option value="btn-warning">Solid</option>
+        </select>
+
+        <label for="jazzmin-btn-style-danger">danger:</label>
+        <select name="btn-style-danger" id="jazzmin-btn-style-danger">
+            <option selected="selected" value="btn-outline-danger">Outline</option>
+            <option value="btn-danger">Solid</option>
+        </select>
+
+        <label for="jazzmin-btn-style-success">success:</label>
+        <select name="btn-style-success" id="jazzmin-btn-style-success">
+            <option selected="selected" value="btn-outline-success">Outline</option>
+            <option value="btn-success">Solid</option>
+        </select>
+
+        <hr />
+
+        <h6>Navbar Variants</h6>
+        <div class="d-flex">
+            <div class="d-flex flex-wrap mb-3 menu-items" id="navbar-variants">
+                <!-- dark -->
+                <div data-classes="navbar-primary navbar-dark" class="bg-primary elevation-2"></div>
+                <div data-classes="navbar-secondary navbar-dark" class="bg-secondary elevation-2"></div>
+                <div data-classes="navbar-info navbar-dark" class="bg-info elevation-2"></div>
+                <div data-classes="navbar-success navbar-dark" class="bg-success elevation-2"></div>
+                <div data-classes="navbar-danger navbar-dark" class="bg-danger elevation-2"></div>
+                <div data-classes="navbar-indigo navbar-dark" class="bg-indigo elevation-2"></div>
+                <div data-classes="navbar-purple navbar-dark" class="bg-purple elevation-2"></div>
+                <div data-classes="navbar-pink navbar-dark" class="bg-pink elevation-2"></div>
+                <div data-classes="navbar-navy navbar-dark" class="bg-navy elevation-2"></div>
+                <div data-classes="navbar-lightblue navbar-dark" class="bg-lightblue elevation-2"></div>
+                <div data-classes="navbar-teal navbar-dark" class="bg-teal elevation-2"></div>
+                <div data-classes="navbar-cyan navbar-dark" class="bg-cyan elevation-2"></div>
+                <div data-classes="navbar-dark" class="bg-dark elevation-2"></div>
+                <div data-classes="navbar-gray navbar-dark" class="bg-gray-dark elevation-2"></div>
+                <div data-classes="navbar-gray-dark navbar-dark" class="bg-gray elevation-2"></div>
+
+                <!-- light -->
+                <div data-classes="navbar-light" class="bg-light elevation-2"></div>
+                <div data-classes="navbar-warning navbar-light" class="bg-warning elevation-2"></div>
+                <div data-classes="navbar-white navbar-light" class="bg-white elevation-2"></div>
+                <div data-classes="navbar-orange navbar-light" class="bg-orange elevation-2"></div>
+            </div>
+        </div>
+        <h6>Accent Color Variants</h6>
+        <div class="d-flex"></div>
+        <div class="d-flex flex-wrap mb-3 menu-items" id="accent-colours">
+            <div data-classes="accent-primary" class="bg-primary elevation-2"></div>
+            <div data-classes="accent-warning" class="bg-warning elevation-2"></div>
+            <div data-classes="accent-info" class="bg-info elevation-2"></div>
+            <div data-classes="accent-danger" class="bg-danger elevation-2"></div>
+            <div data-classes="accent-success" class="bg-success elevation-2"></div>
+            <div data-classes="accent-indigo" class="bg-indigo elevation-2"></div>
+            <div data-classes="accent-lightblue" class="bg-lightblue elevation-2"></div>
+            <div data-classes="accent-navy" class="bg-navy elevation-2"></div>
+            <div data-classes="accent-purple" class="bg-purple elevation-2"></div>
+            <div data-classes="accent-fuchsia" class="bg-fuchsia elevation-2"></div>
+            <div data-classes="accent-pink" class="bg-pink elevation-2"></div>
+            <div data-classes="accent-maroon" class="bg-maroon elevation-2"></div>
+            <div data-classes="accent-orange" class="bg-orange elevation-2"></div>
+            <div data-classes="accent-lime" class="bg-lime elevation-2"></div>
+            <div data-classes="accent-teal" class="bg-teal elevation-2"></div>
+            <div data-classes="accent-olive" class="bg-olive elevation-2"></div>
+        </div>
+        <h6>Dark Sidebar Variants</h6>
+        <div class="d-flex"></div>
+        <div class="d-flex flex-wrap mb-3 menu-items" id="dark-sidebar-variants">
+            <div data-classes="sidebar-dark-primary" class="bg-primary elevation-2"></div>
+            <div data-classes="sidebar-dark-warning" class="bg-warning elevation-2"></div>
+            <div data-classes="sidebar-dark-info" class="bg-info elevation-2"></div>
+            <div data-classes="sidebar-dark-danger" class="bg-danger elevation-2"></div>
+            <div data-classes="sidebar-dark-success" class="bg-success elevation-2"></div>
+            <div data-classes="sidebar-dark-indigo" class="bg-indigo elevation-2"></div>
+            <div data-classes="sidebar-dark-lightblue" class="bg-lightblue elevation-2"></div>
+            <div data-classes="sidebar-dark-navy" class="bg-navy elevation-2"></div>
+            <div data-classes="sidebar-dark-purple" class="bg-purple elevation-2"></div>
+            <div data-classes="sidebar-dark-fuchsia" class="bg-fuchsia elevation-2"></div>
+            <div data-classes="sidebar-dark-pink" class="bg-pink elevation-2"></div>
+            <div data-classes="sidebar-dark-maroon" class="bg-maroon elevation-2"></div>
+            <div data-classes="sidebar-dark-orange" class="bg-orange elevation-2"></div>
+            <div data-classes="sidebar-dark-lime" class="bg-lime elevation-2"></div>
+            <div data-classes="sidebar-dark-teal" class="bg-teal elevation-2"></div>
+            <div data-classes="sidebar-dark-olive" class="bg-olive elevation-2"></div>
+        </div>
+        <h6>Light Sidebar Variants</h6>
+        <div class="d-flex"></div>
+        <div class="d-flex flex-wrap mb-3 menu-items" id="light-sidebar-variants">
+            <div data-classes="sidebar-light-primary" class="bg-primary elevation-2"></div>
+            <div data-classes="sidebar-light-warning" class="bg-warning elevation-2"></div>
+            <div data-classes="sidebar-light-info" class="bg-info elevation-2"></div>
+            <div data-classes="sidebar-light-danger" class="bg-danger elevation-2"></div>
+            <div data-classes="sidebar-light-success" class="bg-success elevation-2"></div>
+            <div data-classes="sidebar-light-indigo" class="bg-indigo elevation-2"></div>
+            <div data-classes="sidebar-light-lightblue" class="bg-lightblue elevation-2"></div>
+            <div data-classes="sidebar-light-navy" class="bg-navy elevation-2"></div>
+            <div data-classes="sidebar-light-purple" class="bg-purple elevation-2"></div>
+            <div data-classes="sidebar-light-fuchsia" class="bg-fuchsia elevation-2"></div>
+            <div data-classes="sidebar-light-pink" class="bg-pink elevation-2"></div>
+            <div data-classes="sidebar-light-maroon" class="bg-maroon elevation-2"></div>
+            <div data-classes="sidebar-light-orange" class="bg-orange elevation-2"></div>
+            <div data-classes="sidebar-light-lime" class="bg-lime elevation-2"></div>
+            <div data-classes="sidebar-light-teal" class="bg-teal elevation-2"></div>
+            <div data-classes="sidebar-light-olive" class="bg-olive elevation-2"></div>
+        </div>
+        <h6>Brand Logo Variants</h6>
+        <div class="d-flex"></div>
+        <div class="d-flex flex-wrap mb-3 menu-items" id="brand-logo-variants">
+            <div data-classes="navbar-primary" class="bg-primary elevation-2"></div>
+            <div data-classes="navbar-secondary" class="bg-secondary elevation-2"></div>
+            <div data-classes="navbar-info" class="bg-info elevation-2"></div>
+            <div data-classes="navbar-success" class="bg-success elevation-2"></div>
+            <div data-classes="navbar-danger" class="bg-danger elevation-2"></div>
+            <div data-classes="navbar-indigo" class="bg-indigo elevation-2"></div>
+            <div data-classes="navbar-purple" class="bg-purple elevation-2"></div>
+            <div data-classes="navbar-pink" class="bg-pink elevation-2"></div>
+            <div data-classes="navbar-navy" class="bg-navy elevation-2"></div>
+            <div data-classes="navbar-lightblue" class="bg-lightblue elevation-2"></div>
+            <div data-classes="navbar-teal" class="bg-teal elevation-2"></div>
+            <div data-classes="navbar-cyan" class="bg-cyan elevation-2"></div>
+            <div data-classes="navbar-dark" class="bg-dark elevation-2"></div>
+            <div data-classes="navbar-gray" class="bg-gray-dark elevation-2"></div>
+            <div data-classes="navbar-gray" class="bg-gray elevation-2"></div>
+            <div data-classes="navbar-light" class="bg-light elevation-2"></div>
+            <div data-classes="navbar-warning" class="bg-warning elevation-2"></div>
+            <div data-classes="navbar-white" class="bg-white elevation-2"></div>
+            <div data-classes="navbar-orange" class="bg-orange elevation-2"></div>
+            <div data-classes="">clear</div>
+        </div>
+        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#codeBox">Show code</button>
+    </div>
+</aside>
+
+        
+    
+
+
+    </div>
+
+
+<div id="codeBox" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Configuration de l'interface</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Copiez cette configuration dans votre fichier de paramètres pour conserver ces modifications de l'interface utilisateur</p>
+                <pre><code></code></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- jQuery -->
+<script src="/static/admin/js/vendor/jquery/jquery.js"></script>
+<!-- Bootstrap 5 -->
+<script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/static/vendor/adminlte/js/adminlte.min.js"></script>
+<!-- Django customisations -->
+<script src="/static/jazzmin/js/main.js"></script>
+
+
+
+
+<script>
+    window.ui_changes = {"navbar_small_text": false, "footer_small_text": false, "body_small_text": false, "brand_small_text": false, "brand_colour": "navbar-dark", "accent": "accent-danger", "navbar": "navbar-dark navbar-primary", "no_navbar_border": false, "navbar_fixed": true, "layout_boxed": false, "footer_fixed": false, "sidebar_fixed": true, "sidebar": "sidebar-dark-danger", "sidebar_nav_small_text": false, "sidebar_disable_expand": false, "sidebar_nav_child_indent": false, "sidebar_nav_compact_style": false, "sidebar_nav_legacy_style": false, "sidebar_nav_flat_style": false, "theme": "default", "default_theme_mode": "auto", "button_classes": {"primary": "btn-primary", "secondary": "btn-secondary", "info": "btn-info", "warning": "btn-warning", "danger": "btn-danger", "success": "btn-success"}};
+</script>
+<script src="/static/jazzmin/js/ui-builder.js"></script>
+
+
+
+
+</body>
+</html>

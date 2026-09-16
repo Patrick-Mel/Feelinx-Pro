@@ -18,7 +18,11 @@ class FeedView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        profile = request.user.profile
+        try:
+            profile = request.user.profile
+        except Exception:
+            return Response([], status=status.HTTP_200_OK)
+
         limit = int(request.query_params.get('limit', 20))
         profiles = FeedService.get_feed_profiles(profile, limit=limit)
         serializer = PublicProfileSerializer(profiles, many=True, context={'request': request})

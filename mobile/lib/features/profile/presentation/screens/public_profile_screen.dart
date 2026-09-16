@@ -102,9 +102,6 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
     }
 
     final photos = _profile?['photos'] as List? ?? [];
-    final defaultAvatar = (_profile?['gender'] == 'male')
-        ? "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop"
-        : "https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=800&auto=format&fit=crop";
 
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
@@ -168,9 +165,11 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                       },
                     )
                   else
-                    CachedNetworkImage(
-                      imageUrl: defaultAvatar,
-                      fit: BoxFit.cover,
+                    Container(
+                      color: FxColors.darkCard,
+                      child: const Center(
+                        child: Icon(Icons.person, size: 96, color: FxColors.darkTextSecondary),
+                      ),
                     ),
 
                   // Vignette Overlay
