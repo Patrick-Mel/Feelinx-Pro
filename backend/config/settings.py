@@ -241,9 +241,10 @@ ORANGE_MONEY_CLIENT_SECRET = os.environ.get('ORANGE_MONEY_CLIENT_SECRET', '')
 ORANGE_MONEY_MERCHANT_KEY = os.environ.get('ORANGE_MONEY_MERCHANT_KEY', '')
 ORANGE_MONEY_ENV = os.environ.get('ORANGE_MONEY_ENV', 'sandbox')
 
-# CORS Settings for Web Clients
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
+AUTHENTICATION_BACKENDS = [
+    'apps.accounts.backends.PhoneBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Jazzmin Modern Django Admin Theme Settings
 JAZZMIN_SETTINGS = {
@@ -251,8 +252,9 @@ JAZZMIN_SETTINGS = {
     "site_header": "Feelinx Pro",
     "site_brand": "Feelinx Control Center",
     "site_logo_classes": "img-circle",
-    "welcome_sign": "Bienvenue sur le centre de contrôle Feelinx 🚀",
+    "welcome_sign": "Bienvenue sur le centre de contrôle Feelinx",
     "copyright": "Feelinx Ltd",
+
     "search_model": ["profiles.Profile", "accounts.User"],
     "topmenu_links": [
         {"name": "Tableau de Bord", "url": "admin:index", "permissions": ["auth.view_user"]},
