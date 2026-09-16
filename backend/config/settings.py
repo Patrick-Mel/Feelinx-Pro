@@ -105,30 +105,43 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.asgi.application'
 
-# Database configuration: support Render DATABASE_URL, PostgreSQL, or SQLite fallback
+# Database configuration: support Railway/Render DATABASE_URL, POSTGRES_URL, PostgreSQL, or SQLite fallback
 import dj_database_url
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+db_url = (
+    os.environ.get('DATABASE_URL') or
+    os.environ.get('POSTGRES_URL') or
+    os.environ.get('DATABASE_PRIVATE_URL') or
+    os.environ.get('RAILWAY_DATABASE_URL')
+)
 
-if os.environ.get('DATABASE_URL'):
-    DATABASES['default'] = dj_database_url.config(
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-elif os.environ.get('DB_NAME'):
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER', ''),
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+if db_url:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=db_url,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
+elif os.environ.get('PGHOST') or os.environ.get('DB_NAME'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('PGDATABASE') or os.environ.get('DB_NAME', 'postgres'),
+            'USER': os.environ.get('PGUSER') or os.environ.get('DB_USER', 'postgres'),
+            'PASSWORD': os.environ.get('PGPASSWORD') or os.environ.get('DB_PASSWORD', ''),
+            'HOST': os.environ.get('PGHOST') or os.environ.get('DB_HOST', 'localhost'),
+            'PORT': os.environ.get('PGPORT') or os.environ.get('DB_PORT', '5432'),
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
 
 
 AUTH_USER_MODEL = 'accounts.User'
