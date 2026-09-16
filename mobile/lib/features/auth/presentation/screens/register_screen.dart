@@ -98,7 +98,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _errorMessage = null;
     });
 
-    final fullPhone = "$_selectedCountryCode$phone";
+    final prefix = countryCode.startsWith('+') ? countryCode : '+$countryCode';
+    final fullPhone = "$prefix$phone";
 
     try {
       final dio = DioClient().dio;
@@ -239,7 +240,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         child: Text(
                           "${detected['flag']} ${detected['name']}",
-                          style: FxTypography.labelMedium.copyWith(color: FxColors.primaryCoral, fontWeight: FontWeight.bold),
+                          style: FxTypography.bodyMedium.copyWith(color: FxColors.primaryCoral, fontWeight: FontWeight.bold, fontSize: 13),
                         ),
                       );
                     }
