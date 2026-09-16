@@ -105,7 +105,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.asgi.application'
 
-# Database configuration: Force 100% PostgreSQL (SQLite completely removed)
+# Database configuration: Auto-detect PostgreSQL or fallback to SQLite safely
 import dj_database_url
 
 db_url = (
@@ -123,17 +123,25 @@ if db_url:
             conn_health_checks=True,
         )
     }
-else:
+elif os.environ.get('PGHOST') or (os.environ.get('DB_HOST') and os.environ.get('DB_HOST') != 'localhost'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': os.environ.get('PGDATABASE') or os.environ.get('DB_NAME', 'postgres'),
             'USER': os.environ.get('PGUSER') or os.environ.get('DB_USER', 'postgres'),
-            'PASSWORD': os.environ.get('PGPASSWORD') or os.environ.get('DB_PASSWORD', 'postgres'),
-            'HOST': os.environ.get('PGHOST') or os.environ.get('DB_HOST', 'localhost'),
+            'PASSWORD': os.environ.get('PGPASSWORD') or os.environ.get('DB_PASSWORD', ''),
+            'HOST': os.environ.get('PGHOST') or os.environ.get('DB_HOST'),
             'PORT': os.environ.get('PGPORT') or os.environ.get('DB_PORT', '5432'),
         }
     }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
 
 
 
