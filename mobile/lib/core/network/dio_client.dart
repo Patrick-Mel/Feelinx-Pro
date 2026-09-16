@@ -10,9 +10,10 @@ class DioClient {
   factory DioClient() => _instance;
 
   DioClient._internal() {
-    final String defaultUrl = kIsWeb
-        ? 'http://127.0.0.1:8000/api/v1/'
-        : 'http://192.168.1.154:8000/api/v1/';
+    final String defaultUrl = kReleaseMode
+        ? 'https://feelinx-backend-production-9537.up.railway.app/api/v1/'
+        : (kIsWeb ? 'http://127.0.0.1:8000/api/v1/' : 'https://feelinx-backend-production-9537.up.railway.app/api/v1/');
+
 
     dio = Dio(
       BaseOptions(
