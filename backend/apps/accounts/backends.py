@@ -9,23 +9,28 @@ class PhoneBackend(ModelBackend):
 
         User = get_user_model()
         user = None
+        phone_clean = str(phone_number).strip().replace(' ', '').replace('-', '')
 
-        # 1. Try exact match
-        user = User.objects.filter(phone_number=phone_number).first()
+        # 1. Exact match
+        user = User.objects.filter(phone_number=phone_clean).first()
 
-        # 2. Try normalized phone number
+        # 2. Try with leading '+'
+        if not user and not phone_clean.startswith('+'):
+            user = User.objects.filter(phone_number='+' + phone_clean).first()
+
+        # 3. Normalized phone lookup
         if not user and hasattr(User.objects, 'normalize_phone'):
             try:
-                normalized_phone = User.objects.normalize_phone(phone_number)
-                user = User.objects.filter(phone_number=normalized_phone).first()
+                normalized = User.objects.normalize_phone(phone_number)
+                user = User.objects.filter(phone_number=normalized).first()
             except Exception:
                 pass
 
-        # 3. Try fallback match by trailing digits (for +237 / local variants)
+        # 4. Flexible suffix match (matches 689731055 inside +237689731055)
         if not user:
-            clean_digits = ''.join(c for c in phone_number if c.isdigit())
-            if len(clean_digits) >= 8:
-                user = User.objects.filter(phone_number__endswith=clean_digits[-8:]).first()
+            digits = ''.join(c for c in phone_clean if c.isdigit())
+            if len(digits) >= 8:
+                user = User.objects.filter(phone_number__icontains=digits[-8:]).first()
 
         if user and user.check_password(password) and self.user_can_authenticate(user):
             return user

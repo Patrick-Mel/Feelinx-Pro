@@ -312,14 +312,20 @@
                 <p class="brand-subtitle">Centre de contrôle & administration</p>
             </div>
 
-            {% if errors or form.non_field_errors %}
+            {% if errors or form.non_field_errors or form.errors %}
                 <div class="alert-error">
                     <i class="fas fa-exclamation-triangle" style="margin-top: 2px; font-size: 16px;"></i>
                     <div>
-                        <strong>Accès refusé :</strong> Identifiants invalides ou compte non autorisé. Veuillez vérifier votre numéro (+237...) et votre mot de passe.
+                        <strong>Accès refusé :</strong> Identifiants invalides ou compte non autorisé.
+                        {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors %}
+                                <div style="margin-top: 4px; font-weight: 500;">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}
+
 
             <form action="{{ app_path }}" method="post" id="login-form">
                 {% csrf_token %}
