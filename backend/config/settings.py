@@ -22,6 +22,16 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-feelinx-dev-secret-ke
 DEBUG = env_bool('DEBUG', True)
 ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', ['*'])
 
+CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS', [
+    'https://*.up.railway.app',
+    'https://feelinx-backend-production-9537.up.railway.app',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+])
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
 
 INSTALLED_APPS = []
 
