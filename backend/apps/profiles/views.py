@@ -100,6 +100,25 @@ class PhotoUploadView(APIView):
 class PhotoDetailView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
+    def patch(self, request, photo_id):
+        profile = request.user.profile
+        try:
+            photo = Photo.objects.get(id=photo_id, profile=profile)
+            if request.data.get('is_primary') is True:
+                profile.photos.update(is_primary=False)
+                photo.is_primary = True
+                photo.order = 0
+                photo.save()
+                # Shift other photo orders
+                for idx, p in enumerate(profile.photos.exclude(id=photo.id).order_by('order')):
+                    p.order = idx + 1
+                    p.save()
+
+            serializer = PhotoSerializer(photo, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Photo.DoesNotExist:
+            return Response({"success": False, "message": "Photo introuvable."}, status=status.HTTP_404_NOT_FOUND)
+
     def delete(self, request, photo_id):
         profile = request.user.profile
         try:

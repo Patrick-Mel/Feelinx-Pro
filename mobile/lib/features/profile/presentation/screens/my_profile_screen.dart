@@ -127,33 +127,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
 
-                // Free Unlimited Pass Card
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(colors: [FxColors.primaryCoral, FxColors.secondaryIndigo]),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.check_circle_outline, color: Colors.white, size: 36),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Application 100% Gratuite", style: FxTypography.titleMedium.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
-                            const SizedBox(height: 2),
-                            Text("Likes illimités, filtres avancés & visibilité totale offerts !", style: FxTypography.labelSmall.copyWith(color: Colors.white.withOpacity(0.9))),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
 
                 // Action List Tiles
                 _buildSettingTile(Icons.edit, "Modifier mon profil", () async {

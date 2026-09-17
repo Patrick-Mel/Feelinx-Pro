@@ -78,6 +78,25 @@ class _PhotosManagerScreenState extends State<PhotosManagerScreen> {
     }
   }
 
+  Future<void> _setPrimaryPhoto(String photoId) async {
+    try {
+      final dio = DioClient().dio;
+      final res = await dio.patch('profiles/me/photos/$photoId/', data: {'is_primary': true});
+      if (res.statusCode == 200 && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Photo de profil principale mise à jour !"), backgroundColor: FxColors.success),
+        );
+        _loadPhotos();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Impossible de définir cette photo comme principale."), backgroundColor: FxColors.error),
+        );
+      }
+    }
+  }
+
   Future<void> _deletePhoto(String photoId) async {
     try {
       final dio = DioClient().dio;
@@ -128,7 +147,7 @@ class _PhotosManagerScreenState extends State<PhotosManagerScreen> {
                     Text("Gère tes photos de profil", style: FxTypography.titleLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 4),
                     Text(
-                      "La première photo est ta photo principale. Ajoute jusqu'à 9 photos pour captiver tes matchs.",
+                      "Tappe sur une photo pour la définir comme photo principale. Tu peux ajouter jusqu'à 9 photos.",
                       style: FxTypography.bodyMedium.copyWith(color: textSecondary),
                     ),
                     const SizedBox(height: 20),
@@ -150,23 +169,28 @@ class _PhotosManagerScreenState extends State<PhotosManagerScreen> {
                         itemBuilder: (context, index) {
                           if (index < _photos.length) {
                             final photo = _photos[index];
-                            final isPrimary = index == 0;
-                            final resolvedUrl = DioClient.resolveImageUrl(photo['url']);
+                            final isPrimary = photo['is_primary'] == true || index == 0;
+                            final rawUrl = (photo['url'] != null && photo['url'].toString().isNotEmpty)
+                                ? photo['url'].toString()
+                                : (photo['image'] ?? '').toString();
+                            final resolvedUrl = DioClient.resolveImageUrl(rawUrl);
 
-                            return Stack(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
-                                    border: isPrimary ? Border.all(color: FxColors.primaryCoral, width: 3) : Border.all(color: borderBg),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(alpha: 0.1),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
+                            return GestureDetector(
+                              onTap: isPrimary ? null : () => _setPrimaryPhoto(photo['id']),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: isPrimary ? Border.all(color: FxColors.primaryCoral, width: 3) : Border.all(color: borderBg),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(alpha: 0.1),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(13),
                                     child: CachedNetworkImage(
@@ -220,7 +244,8 @@ class _PhotosManagerScreenState extends State<PhotosManagerScreen> {
                                   ),
                                 ),
                               ],
-                            );
+                            ),
+                          );
                           } else {
                             // Add button slot
                             return InkWell(

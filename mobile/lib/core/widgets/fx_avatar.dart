@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../theme/colors.dart';
+import '../network/dio_client.dart';
 
 class FxAvatar extends StatelessWidget {
   final String? imageUrl;
@@ -20,6 +21,11 @@ class FxAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final resolvedUrl = DioClient.resolveImageUrl(imageUrl);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardBg = isDark ? FxColors.darkCard : FxColors.lightCard;
+    final iconColor = isDark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+
     return GestureDetector(
       onTap: onTap,
       child: Stack(
@@ -35,15 +41,39 @@ class FxAvatar extends StatelessWidget {
                     ),
                   )
                 : null,
-            child: CircleAvatar(
-              radius: radius,
-              backgroundColor: FxColors.darkCard,
-              backgroundImage: (imageUrl != null && imageUrl!.isNotEmpty)
-                  ? CachedNetworkImageProvider(imageUrl!) as ImageProvider
-                  : null,
-              child: (imageUrl == null || imageUrl!.isEmpty)
-                  ? Icon(Icons.person, size: radius * 1.1, color: FxColors.darkTextSecondary)
-                  : null,
+            child: Container(
+              width: radius * 2,
+              height: radius * 2,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: cardBg,
+              ),
+              child: ClipOval(
+                child: (imageUrl != null && imageUrl!.isNotEmpty)
+                    ? CachedNetworkImage(
+                        imageUrl: resolvedUrl,
+                        fit: BoxFit.cover,
+                        width: radius * 2,
+                        height: radius * 2,
+                        placeholder: (context, url) => Container(
+                          color: cardBg,
+                          child: Center(
+                            child: SizedBox(
+                              width: radius * 0.8,
+                              height: radius * 0.8,
+                              child: CircularProgressIndicator(strokeWidth: 2, color: FxColors.primaryCoral),
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          color: cardBg,
+                          child: Icon(Icons.person, size: radius * 1.1, color: iconColor),
+                        ),
+                      )
+                    : Center(
+                        child: Icon(Icons.person, size: radius * 1.1, color: iconColor),
+                      ),
+              ),
             ),
           ),
           if (isOnline)

@@ -67,18 +67,32 @@ class DioClient {
       return 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800';
     }
 
-    if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://')) {
-      if (!kDebugMode && (rawUrl.contains('localhost') || rawUrl.contains('127.0.0.1'))) {
-        final path = Uri.parse(rawUrl).path;
+    String url = rawUrl.trim();
+
+    // Unwrap nested or encoded http/https URLs (e.g. /media/https%3A/images.unsplash...)
+    if (url.contains('http%3A') || url.contains('https%3A')) {
+      url = Uri.decodeFull(url);
+    }
+
+    int idxHttps = url.indexOf('https://');
+    int idxHttp = url.indexOf('http://');
+    int idx = (idxHttps != -1) ? idxHttps : idxHttp;
+    if (idx != -1) {
+      url = url.substring(idx);
+    }
+
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      if (!kDebugMode && (url.contains('localhost') || url.contains('127.0.0.1'))) {
+        final path = Uri.parse(url).path;
         return 'https://feelinx-backend-production-9537.up.railway.app$path';
       }
-      return rawUrl;
+      return url;
     }
 
-    if (rawUrl.startsWith('/')) {
-      return 'https://feelinx-backend-production-9537.up.railway.app$rawUrl';
+    if (url.startsWith('/')) {
+      return 'https://feelinx-backend-production-9537.up.railway.app$url';
     }
 
-    return 'https://feelinx-backend-production-9537.up.railway.app/media/$rawUrl';
+    return 'https://feelinx-backend-production-9537.up.railway.app/media/$url';
   }
 }

@@ -25,6 +25,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -144,140 +146,172 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: FxSpacing.xxl24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Progress Bar (Step Indicator: 2 Steps total)
-              Row(
-                children: List.generate(2, (index) {
-                  final isActive = index <= _currentStep;
-                  return Expanded(
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      height: 4,
-                      margin: EdgeInsets.only(right: index < 1 ? 8 : 0),
-                      decoration: BoxDecoration(
-                        color: isActive ? FxColors.primaryCoral : (isDark ? Colors.white24 : Colors.black12),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  );
-                }),
-              ),
-              const SizedBox(height: FxSpacing.md12),
-              Text(
-                "Étape ${_currentStep + 1} sur 2",
-                style: FxTypography.labelSmall.copyWith(color: FxColors.primaryCoral, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: FxSpacing.sm8),
-
-              if (_currentStep == 0) ...[
-                Text(
-                  "Quel est votre numéro ?",
-                  style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: FxSpacing.sm8),
-                Text(
-                  "Nous utiliserons ce numéro pour sécuriser votre compte Feelinx.",
-                  style: FxTypography.bodyMedium.copyWith(color: textSecondary),
-                ),
-              ] else ...[
-                Text(
-                  "Sécurisez votre compte",
-                  style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: FxSpacing.sm8),
-                Text(
-                  "Choisissez un mot de passe robuste d'au moins 6 caractères.",
-                  style: FxTypography.bodyMedium.copyWith(color: textSecondary),
-                ),
-              ],
-
-              const SizedBox(height: FxSpacing.xxxl32),
-
-              if (_errorMessage != null) ...[
-                Container(
-                  padding: const EdgeInsets.all(FxSpacing.md12),
-                  decoration: BoxDecoration(
-                    color: FxColors.error.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: FxColors.error.withValues(alpha: 0.4)),
-                  ),
-                  child: Row(
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.error_outline_rounded, color: FxColors.error, size: 20),
-                      const SizedBox(width: FxSpacing.sm8),
-                      Expanded(
-                        child: Text(
-                          _errorMessage!,
-                          style: TextStyle(color: FxColors.error, fontWeight: FontWeight.w600, fontSize: 13),
-                        ),
+                      // Progress Bar (Step Indicator: 2 Steps total)
+                      Row(
+                        children: List.generate(2, (index) {
+                          final isActive = index <= _currentStep;
+                          return Expanded(
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              height: 4,
+                              margin: EdgeInsets.only(right: index < 1 ? 8 : 0),
+                              decoration: BoxDecoration(
+                                color: isActive ? FxColors.primaryCoral : (isDark ? Colors.white24 : Colors.black12),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                          );
+                        }),
                       ),
+                      const SizedBox(height: FxSpacing.md12),
+                      Text(
+                        "Étape ${_currentStep + 1} sur 2",
+                        style: FxTypography.labelSmall.copyWith(color: FxColors.primaryCoral, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: FxSpacing.sm8),
+
+                      if (_currentStep == 0) ...[
+                        Text(
+                          "Quel est votre numéro ?",
+                          style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: FxSpacing.sm8),
+                        Text(
+                          "Nous utiliserons ce numéro pour sécuriser votre compte Feelinx.",
+                          style: FxTypography.bodyMedium.copyWith(color: textSecondary),
+                        ),
+                      ] else ...[
+                        Text(
+                          "Sécurisez votre compte",
+                          style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: FxSpacing.sm8),
+                        Text(
+                          "Choisissez un mot de passe robuste d'au moins 6 caractères.",
+                          style: FxTypography.bodyMedium.copyWith(color: textSecondary),
+                        ),
+                      ],
+
+                      const SizedBox(height: FxSpacing.xxxl32),
+
+                      if (_errorMessage != null) ...[
+                        Container(
+                          padding: const EdgeInsets.all(FxSpacing.md12),
+                          decoration: BoxDecoration(
+                            color: FxColors.error.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: FxColors.error.withValues(alpha: 0.4)),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.error_outline_rounded, color: FxColors.error, size: 20),
+                              const SizedBox(width: FxSpacing.sm8),
+                              Expanded(
+                                child: Text(
+                                  _errorMessage!,
+                                  style: TextStyle(color: FxColors.error, fontWeight: FontWeight.w600, fontSize: 13),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: FxSpacing.lg16),
+                      ],
+
+                      if (_currentStep == 0) ...[
+                        FxPhoneField(
+                          controller: _phoneController,
+                          countryCode: _countryCodeController.text,
+                          onCountryChanged: (code) {
+                            setState(() {
+                              _countryCodeController.text = code;
+                            });
+                          },
+                        ),
+                      ] else ...[
+                        FxTextField(
+                          label: "Mot de passe",
+                          hint: "••••••••••••",
+                          obscureText: !_isPasswordVisible,
+                          controller: _passwordController,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                              color: textSecondary,
+                              size: 22,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: FxSpacing.lg16),
+                        FxTextField(
+                          label: "Confirmer le mot de passe",
+                          hint: "••••••••••••",
+                          obscureText: !_isConfirmPasswordVisible,
+                          controller: _confirmPasswordController,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                              color: textSecondary,
+                              size: 22,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
-                const SizedBox(height: FxSpacing.lg16),
-              ],
+              ),
 
-              if (_currentStep == 0) ...[
-                FxPhoneField(
-                  controller: _phoneController,
-                  countryCode: _countryCodeController.text,
-                  onCountryChanged: (code) {
-                    setState(() {
-                      _countryCodeController.text = code;
-                    });
-                  },
-                ),
-                const SizedBox(height: FxSpacing.xl20),
-                FxButton(
-                  text: "CONTINUER",
-                  onPressed: _nextStep,
-                ),
-              ] else ...[
-                FxTextField(
-                  label: "Mot de passe",
-                  hint: "••••••••••••",
-                  obscureText: true,
-                  controller: _passwordController,
-                ),
-                const SizedBox(height: FxSpacing.lg16),
-                FxTextField(
-                  label: "Confirmer le mot de passe",
-                  hint: "••••••••••••",
-                  obscureText: true,
-                  controller: _confirmPasswordController,
-                ),
-                const SizedBox(height: FxSpacing.xxl24),
-                FxButton(
-                  text: "CRÉER MON COMPTE",
-                  isLoading: _isLoading,
-                  onPressed: _handleRegister,
-                ),
-              ],
-
-              const SizedBox(height: FxSpacing.xxxl32),
-
-              Center(
-                child: TextButton(
-                  onPressed: () => context.go('/auth/login'),
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Déjà membre ? ",
-                      style: FxTypography.bodyMedium.copyWith(color: textSecondary),
-                      children: const [
-                        TextSpan(
-                          text: "Se connecter",
-                          style: TextStyle(color: FxColors.primaryCoral, fontWeight: FontWeight.bold),
+              // Pinned Bottom Mobile Action Bar
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FxButton(
+                    text: _currentStep == 0 ? "CONTINUER" : "CRÉER MON COMPTE",
+                    isLoading: _isLoading,
+                    onPressed: _nextStep,
+                  ),
+                  const SizedBox(height: FxSpacing.lg16),
+                  Center(
+                    child: TextButton(
+                      onPressed: () => context.go('/auth/login'),
+                      child: RichText(
+                        text: TextSpan(
+                          text: "Déjà membre ? ",
+                          style: FxTypography.bodyMedium.copyWith(color: textSecondary),
+                          children: const [
+                            TextSpan(
+                              text: "Se connecter",
+                              style: TextStyle(color: FxColors.primaryCoral, fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                  const SizedBox(height: FxSpacing.md12),
+                ],
               ),
-              const SizedBox(height: FxSpacing.xxl24),
             ],
           ),
         ),
