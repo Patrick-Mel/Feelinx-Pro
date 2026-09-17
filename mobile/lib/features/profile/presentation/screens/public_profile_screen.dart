@@ -69,7 +69,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                 });
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Signalement envoyé. Merci de nous aider à garder Feelinx sûr ! 🛡️")),
+                    const SnackBar(content: Text("Signalement envoyé. Merci de nous aider à garder Feelinx sûr !")),
                   );
                 }
               } catch (_) {}
@@ -292,14 +292,14 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                   const SizedBox(height: 24),
 
                   // Interests Section
-                  Text("Centres d'intérêt", style: FxTypography.titleLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                  Text("Centres d'intérêt", style: FxTypography.titleLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 12),
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
                     children: ((_profile['interests'] as List? ?? [])).map((intItem) {
                       return FxChip(
-                        label: "${intItem['emoji']} ${intItem['name_fr']}",
+                        label: "${intItem['name_fr']}",
                         isSelected: true,
                       );
                     }).toList(),
@@ -313,7 +313,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                         child: ElevatedButton.icon(
                           onPressed: () {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Vous avez envoyé un Like à ${_profile['first_name']} ! ❤️")),
+                              SnackBar(content: Text("Vous avez envoyé un Like à ${_profile['first_name']} !")),
                             );
                           },
                           style: ElevatedButton.styleFrom(

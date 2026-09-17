@@ -42,9 +42,16 @@ class _MatchesScreenState extends State<MatchesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = isDark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+    final cardBg = isDark ? FxColors.darkSurface : FxColors.lightSurface;
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text("Matchs", style: TextStyle(fontWeight: FontWeight.w800)),
+        title: Text("Matchs", style: TextStyle(fontWeight: FontWeight.w800, color: textPrimary)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -88,7 +95,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
               ),
               const SizedBox(height: 24),
 
-              Text("Nouveaux Matchs", style: FxTypography.titleLarge),
+              Text("Nouveaux Matchs", style: FxTypography.titleLarge.copyWith(color: textPrimary)),
               const SizedBox(height: 16),
 
               _isLoading
@@ -106,9 +113,9 @@ class _MatchesScreenState extends State<MatchesScreen> {
                   : _matches.isEmpty
                       ? Container(
                           padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(color: FxColors.darkSurface, borderRadius: BorderRadius.circular(16)),
-                          child: const Center(
-                            child: Text("Aucun match pour le moment. Continue à swiper !", style: TextStyle(color: FxColors.darkTextSecondary)),
+                          decoration: BoxDecoration(color: cardBg, borderRadius: BorderRadius.circular(16)),
+                          child: Center(
+                            child: Text("Aucun match pour le moment. Continue à swiper !", style: TextStyle(color: textSecondary)),
                           ),
                         )
                       : SizedBox(
@@ -137,7 +144,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
                                         isVerified: other['is_verified'] == true,
                                       ),
                                       const SizedBox(height: 6),
-                                      Text(other['first_name'] ?? 'Membre', style: FxTypography.labelSmall),
+                                      Text(other['first_name'] ?? 'Membre', style: FxTypography.labelSmall.copyWith(color: textPrimary)),
                                     ],
                                   ),
                                 ),

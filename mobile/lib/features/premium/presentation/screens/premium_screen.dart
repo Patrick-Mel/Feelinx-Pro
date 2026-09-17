@@ -28,12 +28,14 @@ class _PremiumScreenState extends State<PremiumScreen> {
     String providerTitle = "Paiement Mobile Money";
     if (provider == 'mtn') providerTitle = "Paiement MTN MoMo";
     else if (provider == 'orange') providerTitle = "Paiement Orange Money";
-    else if (provider == 'mock') providerTitle = "Paiement de Test (Instantané)";
+
+    final theme = Theme.of(context);
+    final textSecondary = theme.brightness == Brightness.dark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -51,13 +53,13 @@ class _PremiumScreenState extends State<PremiumScreen> {
                 children: [
                   const Icon(Icons.payment, color: FxColors.primaryCoral, size: 24),
                   const SizedBox(width: 8),
-                  Text(providerTitle, style: FxTypography.titleLarge),
+                  Text(providerTitle, style: FxTypography.titleLarge.copyWith(color: theme.colorScheme.onSurface)),
                 ],
               ),
               const SizedBox(height: 8),
               Text(
                 "Entrez votre numéro de téléphone. Une demande de validation vous sera envoyée.",
-                style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary),
+                style: FxTypography.bodyMedium.copyWith(color: textSecondary),
               ),
               const SizedBox(height: 20),
               FxPhoneField(controller: _momoPhoneController),
@@ -118,9 +120,16 @@ class _PremiumScreenState extends State<PremiumScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardBg = isDark ? FxColors.darkCard : FxColors.lightCard;
+    final borderBg = isDark ? FxColors.darkBorder : FxColors.lightBorder;
+    final textPrimary = theme.colorScheme.onSurface;
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text("Feelinx Premium", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text("Feelinx Premium", style: TextStyle(fontWeight: FontWeight.bold, color: textPrimary)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -156,17 +165,17 @@ class _PremiumScreenState extends State<PremiumScreen> {
               ),
               const SizedBox(height: 28),
 
-              Text("Avantages inclus", style: FxTypography.titleLarge),
+              Text("Avantages inclus", style: FxTypography.titleLarge.copyWith(color: textPrimary)),
               const SizedBox(height: 16),
-              _buildFeatureRow(Icons.favorite, "Likes illimités sans restriction par 24h"),
-              _buildFeatureRow(Icons.visibility, "Voir qui vous a liké en temps réel"),
-              _buildFeatureRow(Icons.star, "5 Super Likes offerts chaque semaine"),
-              _buildFeatureRow(Icons.bolt, "1 Boost mensuel offert pour 3x plus de visibilité"),
-              _buildFeatureRow(Icons.replay, "Annulation du dernier passage à tout moment"),
-              _buildFeatureRow(Icons.shield, "Mode incognito et filtres de recherche avancés"),
+              _buildFeatureRow(Icons.favorite, "Likes illimités sans restriction par 24h", textPrimary),
+              _buildFeatureRow(Icons.visibility, "Voir qui vous a liké en temps réel", textPrimary),
+              _buildFeatureRow(Icons.star, "5 Super Likes offerts chaque semaine", textPrimary),
+              _buildFeatureRow(Icons.bolt, "1 Boost mensuel offert pour 3x plus de visibilité", textPrimary),
+              _buildFeatureRow(Icons.replay, "Annulation du dernier passage à tout moment", textPrimary),
+              _buildFeatureRow(Icons.shield, "Mode incognito et filtres de recherche avancés", textPrimary),
               const SizedBox(height: 28),
 
-              Text("Choix de la formule", style: FxTypography.titleLarge),
+              Text("Choix de la formule", style: FxTypography.titleLarge.copyWith(color: textPrimary)),
               const SizedBox(height: 16),
               Row(
                 children: _plans.map((p) {
@@ -178,10 +187,10 @@ class _PremiumScreenState extends State<PremiumScreen> {
                         margin: const EdgeInsets.symmetric(horizontal: 4),
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: isSelected ? FxColors.primaryCoral.withValues(alpha: 0.15) : FxColors.darkCard,
+                          color: isSelected ? FxColors.primaryCoral.withValues(alpha: 0.15) : cardBg,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: isSelected ? FxColors.primaryCoral : FxColors.darkBorder,
+                            color: isSelected ? FxColors.primaryCoral : borderBg,
                             width: isSelected ? 2 : 1,
                           ),
                         ),
@@ -194,7 +203,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                                 decoration: BoxDecoration(color: FxColors.accentGold, borderRadius: BorderRadius.circular(8)),
                                 child: const Text("POPULAIRE", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.black)),
                               ),
-                            Text(p['title'], style: FxTypography.titleMedium),
+                            Text(p['title'], style: FxTypography.titleMedium.copyWith(color: textPrimary)),
                             const SizedBox(height: 4),
                             Text(p['price'], style: FxTypography.bodyMedium.copyWith(color: FxColors.primaryCoral, fontWeight: FontWeight.bold)),
                           ],
@@ -206,7 +215,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
               ),
               const SizedBox(height: 32),
 
-              Text("Mode de paiement sécurisé", style: FxTypography.titleMedium),
+              Text("Mode de paiement sécurisé", style: FxTypography.titleMedium.copyWith(color: textPrimary)),
               const SizedBox(height: 12),
               Row(
                 children: [
@@ -227,11 +236,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              FxButton(
-                text: "Paiement de Test (Instantané)",
-                onPressed: () => _openPaymentSheet('mock'),
-              ),
+              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -239,14 +244,14 @@ class _PremiumScreenState extends State<PremiumScreen> {
     );
   }
 
-  Widget _buildFeatureRow(IconData icon, String text) {
+  Widget _buildFeatureRow(IconData icon, String text, Color textPrimary) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
           Icon(icon, color: FxColors.accentGold, size: 22),
           const SizedBox(width: 12),
-          Expanded(child: Text(text, style: FxTypography.bodyLarge)),
+          Expanded(child: Text(text, style: FxTypography.bodyLarge.copyWith(color: textPrimary))),
         ],
       ),
     );

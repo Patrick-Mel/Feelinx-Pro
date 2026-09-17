@@ -25,8 +25,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   List<dynamic> _blockedUsers = [];
 
   final List<Map<String, String>> _languages = const [
-    {"code": "fr", "label": "Français 🇫🇷"},
-    {"code": "en", "label": "English 🇬🇧"},
+    {"code": "fr", "label": "Français"},
+    {"code": "en", "label": "English"},
   ];
 
   @override
@@ -182,7 +182,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                       ),
                                       const SizedBox(height: 2),
                                       Text(
-                                        selectedLanguage == 'fr' ? "Français 🇫🇷" : "English 🇬🇧",
+                                        selectedLanguage == 'fr' ? "Français" : "English",
                                         style: TextStyle(color: textSecondary, fontSize: 12),
                                       ),
                                     ],

@@ -16,6 +16,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  int _currentStep = 0;
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _countryCodeController = TextEditingController(text: "+237");
@@ -28,33 +29,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? _errorMessage;
 
   static const List<Map<String, String>> _countryList = [
-    {"code": "+237", "flag": "🇨🇲", "name": "Cameroun"},
-    {"code": "+225", "flag": "🇨🇮", "name": "Côte d'Ivoire"},
-    {"code": "+221", "flag": "🇸🇳", "name": "Sénégal"},
-    {"code": "+242", "flag": "🇨🇬", "name": "Congo"},
-    {"code": "+243", "flag": "🇨🇩", "name": "RDC"},
-    {"code": "+241", "flag": "🇬🇦", "name": "Gabon"},
-    {"code": "+235", "flag": "🇹🇩", "name": "Tchad"},
-    {"code": "+236", "flag": "🇨🇫", "name": "Centrafrique"},
-    {"code": "+223", "flag": "🇲🇱", "name": "Mali"},
-    {"code": "+226", "flag": "🇧🇫", "name": "Burkina Faso"},
-    {"code": "+228", "flag": "🇹🇬", "name": "Togo"},
-    {"code": "+229", "flag": "🇧🇯", "name": "Bénin"},
-    {"code": "+224", "flag": "🇬🇳", "name": "Guinée"},
-    {"code": "+250", "flag": "🇷🇼", "name": "Rwanda"},
-    {"code": "+257", "flag": "🇧🇮", "name": "Burundi"},
-    {"code": "+227", "flag": "🇳🇪", "name": "Niger"},
-    {"code": "+234", "flag": "🇳🇬", "name": "Nigéria"},
-    {"code": "+233", "flag": "🇬🇭", "name": "Ghana"},
-    {"code": "+254", "flag": "🇰🇪", "name": "Kenya"},
-    {"code": "+27",  "flag": "🇿🇦", "name": "Afrique du Sud"},
-    {"code": "+33",  "flag": "🇫🇷", "name": "France"},
-    {"code": "+1",   "flag": "🇨🇦", "name": "Canada / USA"},
-    {"code": "+32",  "flag": "🇧🇪", "name": "Belgique"},
-    {"code": "+41",  "flag": "🇨🇭", "name": "Suisse"},
-    {"code": "+212", "flag": "🇲🇦", "name": "Maroc"},
-    {"code": "+216", "flag": "🇹🇳", "name": "Tunisie"},
-    {"code": "+213", "flag": "🇩🇿", "name": "Algérie"},
+    {"code": "+237", "name": "Cameroun"},
+    {"code": "+225", "name": "Côte d'Ivoire"},
+    {"code": "+221", "name": "Sénégal"},
+    {"code": "+242", "name": "Congo"},
+    {"code": "+243", "name": "RDC"},
+    {"code": "+241", "name": "Gabon"},
+    {"code": "+235", "name": "Tchad"},
+    {"code": "+236", "name": "Centrafrique"},
+    {"code": "+223", "name": "Mali"},
+    {"code": "+226", "name": "Burkina Faso"},
+    {"code": "+228", "name": "Togo"},
+    {"code": "+229", "name": "Bénin"},
+    {"code": "+224", "name": "Guinée"},
+    {"code": "+250", "name": "Rwanda"},
+    {"code": "+257", "name": "Burundi"},
+    {"code": "+227", "name": "Niger"},
+    {"code": "+234", "name": "Nigéria"},
+    {"code": "+233", "name": "Ghana"},
+    {"code": "+254", "name": "Kenya"},
+    {"code": "+27",  "name": "Afrique du Sud"},
+    {"code": "+33",  "name": "France"},
+    {"code": "+1",   "name": "Canada / USA"},
+    {"code": "+32",  "name": "Belgique"},
+    {"code": "+41",  "name": "Suisse"},
+    {"code": "+212", "name": "Maroc"},
+    {"code": "+216", "name": "Tunisie"},
+    {"code": "+213", "name": "Algérie"},
   ];
 
   Map<String, String> _getDetectedCountry(String rawCode) {
@@ -67,7 +68,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return c;
       }
     }
-    return {"code": clean, "flag": "🌐", "name": "International"};
+    return {"code": clean, "name": "International"};
+  }
+
+  void _nextStep() {
+    setState(() => _errorMessage = null);
+    if (_currentStep == 0) {
+      if (_firstNameController.text.trim().isEmpty || _lastNameController.text.trim().isEmpty) {
+        setState(() => _errorMessage = "Veuillez saisir votre prénom et votre nom.");
+        return;
+      }
+      setState(() => _currentStep = 1);
+    } else if (_currentStep == 1) {
+      if (_phoneController.text.trim().isEmpty) {
+        setState(() => _errorMessage = "Veuillez entrer un numéro de téléphone valide.");
+        return;
+      }
+      setState(() => _currentStep = 2);
+    }
+  }
+
+  void _previousStep() {
+    setState(() {
+      _errorMessage = null;
+      if (_currentStep > 0) {
+        _currentStep--;
+      } else {
+        context.go('/onboarding');
+      }
+    });
   }
 
   Future<void> _handleRegister() async {
@@ -78,8 +107,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
 
-    if (firstName.isEmpty || lastName.isEmpty || phone.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      setState(() => _errorMessage = "Veuillez remplir tous les champs (Prénom, Nom, Téléphone, Mot de passe).");
+    if (password.isEmpty || confirmPassword.isEmpty) {
+      setState(() => _errorMessage = "Veuillez remplir le mot de passe.");
       return;
     }
 
@@ -138,8 +167,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final isDark = theme.brightness == Brightness.dark;
     final textPrimary = theme.colorScheme.onSurface;
     final textSecondary = isDark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
-    final containerBg = theme.colorScheme.surface;
-    final borderBg = isDark ? FxColors.darkBorder : FxColors.lightBorder;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -148,7 +175,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: textPrimary, size: 20),
-          onPressed: () => context.go('/onboarding'),
+          onPressed: _previousStep,
         ),
       ),
       body: SafeArea(
@@ -157,16 +184,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Progress Bar (Step Indicator)
+              Row(
+                children: List.generate(3, (index) {
+                  final isActive = index <= _currentStep;
+                  return Expanded(
+                    child: Container(
+                      height: 4,
+                      margin: EdgeInsets.only(right: index < 2 ? 6 : 0),
+                      decoration: BoxDecoration(
+                        color: isActive ? FxColors.primaryCoral : (isDark ? Colors.white24 : Colors.black12),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  );
+                }),
+              ),
               const SizedBox(height: FxSpacing.md12),
               Text(
-                "Créer un compte Feelinx",
-                style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
+                "Étape ${_currentStep + 1} sur 3",
+                style: FxTypography.labelSmall.copyWith(color: FxColors.primaryCoral, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: FxSpacing.sm8),
-              Text(
-                "Rejoignez la communauté de rencontres la plus exclusive et authentique.",
-                style: FxTypography.bodyMedium.copyWith(color: textSecondary),
-              ),
+
+              if (_currentStep == 0) ...[
+                Text(
+                  "Comment vous vous appelez ?",
+                  style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: FxSpacing.sm8),
+                Text(
+                  "Votre prénom sera affiché sur votre profil Feelinx.",
+                  style: FxTypography.bodyMedium.copyWith(color: textSecondary),
+                ),
+              ] else if (_currentStep == 1) ...[
+                Text(
+                  "Quel est votre numéro ?",
+                  style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: FxSpacing.sm8),
+                Text(
+                  "Nous utiliserons ce numéro pour sécuriser votre compte.",
+                  style: FxTypography.bodyMedium.copyWith(color: textSecondary),
+                ),
+              ] else ...[
+                Text(
+                  "Sécurisez votre compte",
+                  style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: FxSpacing.sm8),
+                Text(
+                  "Choisissez un mot de passe robuste d'au moins 6 caractères.",
+                  style: FxTypography.bodyMedium.copyWith(color: textSecondary),
+                ),
+              ],
               const SizedBox(height: FxSpacing.xxxl32),
 
               if (_errorMessage != null) ...[
@@ -194,146 +265,138 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: FxSpacing.lg16),
               ],
 
-              // Prénom & Nom Fields
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Prénom", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: FxSpacing.sm8),
-                        TextField(
-                          controller: _firstNameController,
-                          style: FxTypography.bodyLarge.copyWith(color: textPrimary),
-                          decoration: InputDecoration(hintText: "ex. Manuella", hintStyle: TextStyle(color: textSecondary)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: FxSpacing.md12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Nom", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: FxSpacing.sm8),
-                        TextField(
-                          controller: _lastNameController,
-                          style: FxTypography.bodyLarge.copyWith(color: textPrimary),
-                          decoration: InputDecoration(hintText: "ex. Ndongo", hintStyle: TextStyle(color: textSecondary)),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: FxSpacing.xl20),
+              // STEP 0: Identité
+              if (_currentStep == 0) ...[
+                Text("Prénom", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
+                const SizedBox(height: FxSpacing.sm8),
+                TextField(
+                  controller: _firstNameController,
+                  style: FxTypography.bodyLarge.copyWith(color: textPrimary),
+                  decoration: InputDecoration(hintText: "ex. Manuella", hintStyle: TextStyle(color: textSecondary)),
+                ),
+                const SizedBox(height: FxSpacing.xl20),
+                Text("Nom", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
+                const SizedBox(height: FxSpacing.sm8),
+                TextField(
+                  controller: _lastNameController,
+                  style: FxTypography.bodyLarge.copyWith(color: textPrimary),
+                  decoration: InputDecoration(hintText: "ex. Ndongo", hintStyle: TextStyle(color: textSecondary)),
+                ),
+                const SizedBox(height: FxSpacing.xxl24),
+                FxButton(
+                  text: "Continuer",
+                  onPressed: _nextStep,
+                ),
+              ],
 
-              // Phone Field with Custom Country Code Input & Live Detection Badge
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Numéro de téléphone", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
-                  Builder(
-                    builder: (context) {
-                      final detected = _getDetectedCountry(_countryCodeController.text);
-                      return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: FxColors.primaryCoral.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: FxColors.primaryCoral.withOpacity(0.4)),
+              // STEP 1: Numéro de téléphone
+              if (_currentStep == 1) ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Numéro de téléphone", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
+                    Builder(
+                      builder: (context) {
+                        final detected = _getDetectedCountry(_countryCodeController.text);
+                        return Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: FxColors.primaryCoral.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: FxColors.primaryCoral.withOpacity(0.4)),
+                          ),
+                          child: Text(
+                            detected['name']!,
+                            style: FxTypography.bodyMedium.copyWith(color: FxColors.primaryCoral, fontWeight: FontWeight.bold, fontSize: 13),
+                          ),
+                        );
+                      }
+                    ),
+                  ],
+                ),
+                const SizedBox(height: FxSpacing.sm8),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 95,
+                      child: TextField(
+                        controller: _countryCodeController,
+                        keyboardType: TextInputType.phone,
+                        onChanged: (_) => setState(() {}),
+                        style: FxTypography.bodyLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
+                        decoration: InputDecoration(
+                          hintText: "+237",
+                          hintStyle: TextStyle(color: textSecondary),
                         ),
-                        child: Text(
-                          "${detected['flag']} ${detected['name']}",
-                          style: FxTypography.bodyMedium.copyWith(color: FxColors.primaryCoral, fontWeight: FontWeight.bold, fontSize: 13),
-                        ),
-                      );
-                    }
-                  ),
-                ],
-              ),
-              const SizedBox(height: FxSpacing.sm8),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 95,
-                    child: TextField(
-                      controller: _countryCodeController,
-                      keyboardType: TextInputType.phone,
-                      onChanged: (_) => setState(() {}),
-                      style: FxTypography.bodyLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
-                      decoration: InputDecoration(
-                        hintText: "+237",
-                        hintStyle: TextStyle(color: textSecondary),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: FxSpacing.sm8),
-                  Expanded(
-                    child: TextField(
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      style: FxTypography.bodyLarge.copyWith(color: textPrimary),
-                      decoration: InputDecoration(
-                        hintText: "690000000",
-                        hintStyle: TextStyle(color: textSecondary),
+                    const SizedBox(width: FxSpacing.sm8),
+                    Expanded(
+                      child: TextField(
+                        controller: _phoneController,
+                        keyboardType: TextInputType.phone,
+                        style: FxTypography.bodyLarge.copyWith(color: textPrimary),
+                        decoration: InputDecoration(
+                          hintText: "690000000",
+                          hintStyle: TextStyle(color: textSecondary),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: FxSpacing.xl20),
+                  ],
+                ),
+                const SizedBox(height: FxSpacing.xxl24),
+                FxButton(
+                  text: "Continuer",
+                  onPressed: _nextStep,
+                ),
+              ],
 
-              // Password Field
-              Text("Mot de passe", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
-              const SizedBox(height: FxSpacing.sm8),
-              TextField(
-                controller: _passwordController,
-                obscureText: _isPasswordObscured,
-                style: FxTypography.bodyLarge.copyWith(color: textPrimary),
-                decoration: InputDecoration(
-                  hintText: "Au moins 6 caractères",
-                  hintStyle: TextStyle(color: textSecondary),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                      color: textSecondary,
+              // STEP 2: Mot de passe
+              if (_currentStep == 2) ...[
+                Text("Mot de passe", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
+                const SizedBox(height: FxSpacing.sm8),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: _isPasswordObscured,
+                  style: FxTypography.bodyLarge.copyWith(color: textPrimary),
+                  decoration: InputDecoration(
+                    hintText: "Au moins 6 caractères",
+                    hintStyle: TextStyle(color: textSecondary),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                        color: textSecondary,
+                      ),
+                      onPressed: () => setState(() => _isPasswordObscured = !_isPasswordObscured),
                     ),
-                    onPressed: () => setState(() => _isPasswordObscured = !_isPasswordObscured),
                   ),
                 ),
-              ),
-              const SizedBox(height: FxSpacing.xl20),
-
-              // Confirm Password Field
-              Text("Confirmer le mot de passe", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
-              const SizedBox(height: FxSpacing.sm8),
-              TextField(
-                controller: _confirmPasswordController,
-                obscureText: _isConfirmPasswordObscured,
-                style: FxTypography.bodyLarge.copyWith(color: textPrimary),
-                decoration: InputDecoration(
-                  hintText: "Répétez le mot de passe",
-                  hintStyle: TextStyle(color: textSecondary),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isConfirmPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                      color: textSecondary,
+                const SizedBox(height: FxSpacing.xl20),
+                Text("Confirmer le mot de passe", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
+                const SizedBox(height: FxSpacing.sm8),
+                TextField(
+                  controller: _confirmPasswordController,
+                  obscureText: _isConfirmPasswordObscured,
+                  style: FxTypography.bodyLarge.copyWith(color: textPrimary),
+                  decoration: InputDecoration(
+                    hintText: "Répétez le mot de passe",
+                    hintStyle: TextStyle(color: textSecondary),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isConfirmPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                        color: textSecondary,
+                      ),
+                      onPressed: () => setState(() => _isConfirmPasswordObscured = !_isConfirmPasswordObscured),
                     ),
-                    onPressed: () => setState(() => _isConfirmPasswordObscured = !_isConfirmPasswordObscured),
                   ),
                 ),
-              ),
-
-              const SizedBox(height: FxSpacing.xxl24),
-
-              FxButton(
-                text: "Créer mon compte",
-                isLoading: _isLoading,
-                onPressed: _handleRegister,
-              ),
+                const SizedBox(height: FxSpacing.xxl24),
+                FxButton(
+                  text: "Créer mon compte",
+                  isLoading: _isLoading,
+                  onPressed: _handleRegister,
+                ),
+              ],
 
               const SizedBox(height: FxSpacing.xxxl32),
 

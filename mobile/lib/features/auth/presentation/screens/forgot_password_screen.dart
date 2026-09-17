@@ -27,12 +27,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   String? _successMessage;
 
   final List<Map<String, String>> _countries = const [
-    {"code": "+237", "flag": "🇨🇲", "name": "Cameroun"},
-    {"code": "+225", "flag": "🇨🇮", "name": "Côte d'Ivoire"},
-    {"code": "+221", "flag": "🇸🇳", "name": "Sénégal"},
-    {"code": "+242", "flag": "🇨🇬", "name": "Congo"},
-    {"code": "+243", "flag": "🇨🇩", "name": "RDC"},
-    {"code": "+33",  "flag": "🇫🇷", "name": "France"},
+    {"code": "+237", "name": "Cameroun"},
+    {"code": "+225", "name": "Côte d'Ivoire"},
+    {"code": "+221", "name": "Sénégal"},
+    {"code": "+242", "name": "Congo"},
+    {"code": "+243", "name": "RDC"},
+    {"code": "+33",  "name": "France"},
   ];
 
   Future<void> _requestResetCode() async {
@@ -218,7 +218,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           items: _countries.map((c) {
                             return DropdownMenuItem<String>(
                               value: c["code"],
-                              child: Text("${c["flag"]} ${c["code"]}"),
+                              child: Text(c["code"]!),
                             );
                           }).toList(),
                         ),

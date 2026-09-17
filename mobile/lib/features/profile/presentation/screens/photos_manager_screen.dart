@@ -61,7 +61,7 @@ class _PhotosManagerScreenState extends State<PhotosManagerScreen> {
       final res = await dio.post('profiles/me/photos/', data: formData);
       if (res.statusCode == 201 && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Photo ajoutée avec succès ! 🎉"), backgroundColor: FxColors.success),
+          const SnackBar(content: Text("Photo ajoutée avec succès !"), backgroundColor: FxColors.success),
         );
         _loadPhotos();
       }

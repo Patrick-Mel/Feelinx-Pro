@@ -131,7 +131,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      "🛡️ Conseil Sécurité : Ne partage jamais d'argent ni d'informations bancaires.",
+                      "Conseil Sécurité : Ne partage jamais d'argent ni d'informations bancaires.",
                       style: FxTypography.labelSmall.copyWith(color: FxColors.darkTextSecondary),
                     ),
                   ),

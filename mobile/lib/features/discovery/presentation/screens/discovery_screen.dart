@@ -98,7 +98,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
       final res = await dio.post('discovery/boost/');
       if (res.statusCode == 200 && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("⚡ Boost activé pour 30 minutes !")),
+          const SnackBar(content: Text("Boost activé pour 30 minutes !")),
         );
       }
     } catch (_) {
@@ -122,7 +122,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("🎉", style: TextStyle(fontSize: 48)),
+              const Icon(Icons.stars, size: 64, color: FxColors.accentGold),
               const SizedBox(height: 12),
               Text("C'est un Match !", style: FxTypography.displayMedium.copyWith(color: FxColors.primaryCoral)),
               const SizedBox(height: 8),

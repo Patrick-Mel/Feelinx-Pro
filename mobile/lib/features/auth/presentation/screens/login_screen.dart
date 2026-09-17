@@ -24,12 +24,12 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _errorMessage;
 
   final List<Map<String, String>> _countries = const [
-    {"code": "+237", "flag": "🇨🇲", "name": "Cameroun"},
-    {"code": "+225", "flag": "🇨🇮", "name": "Côte d'Ivoire"},
-    {"code": "+221", "flag": "🇸🇳", "name": "Sénégal"},
-    {"code": "+242", "flag": "🇨🇬", "name": "Congo"},
-    {"code": "+243", "flag": "🇨🇩", "name": "RDC"},
-    {"code": "+33",  "flag": "🇫🇷", "name": "France"},
+    {"code": "+237", "name": "Cameroun"},
+    {"code": "+225", "name": "Côte d'Ivoire"},
+    {"code": "+221", "name": "Sénégal"},
+    {"code": "+242", "name": "Congo"},
+    {"code": "+243", "name": "RDC"},
+    {"code": "+33",  "name": "France"},
   ];
 
   Future<void> _handleLogin() async {
@@ -170,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         items: _countries.map((c) {
                           return DropdownMenuItem<String>(
                             value: c["code"],
-                            child: Text("${c["flag"]} ${c["code"]}", style: TextStyle(color: textPrimary)),
+                            child: Text(c["code"]!, style: TextStyle(color: textPrimary)),
                           );
                         }).toList(),
                       ),
@@ -234,40 +234,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: "Se connecter",
                 isLoading: _isLoading,
                 onPressed: _handleLogin,
-              ),
-
-              const SizedBox(height: FxSpacing.lg16),
-
-              // Alternative login option by SMS
-              Container(
-                width: double.infinity,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: textPrimary.withOpacity(0.06),
-                  borderRadius: BorderRadius.circular(FxRadius.medium16),
-                  border: Border.all(color: borderBg),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(FxRadius.medium16),
-                    onTap: () => context.go('/auth/phone'),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.sms_outlined, size: 18, color: FxColors.accentGold),
-                        const SizedBox(width: FxSpacing.sm8),
-                        Text(
-                          "Connexion rapide (via SMS)",
-                          style: FxTypography.bodyMedium.copyWith(
-                            color: textPrimary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
               ),
 
               const SizedBox(height: FxSpacing.xxxl32),

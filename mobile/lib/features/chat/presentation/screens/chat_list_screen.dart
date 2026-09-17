@@ -42,9 +42,16 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = isDark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+    final borderBg = isDark ? FxColors.darkBorder : FxColors.lightBorder;
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text("Messages", style: TextStyle(fontWeight: FontWeight.w800)),
+        title: Text("Messages", style: TextStyle(fontWeight: FontWeight.w800, color: textPrimary)),
       ),
       body: SafeArea(
         child: _isLoading
@@ -65,7 +72,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 : ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemCount: _conversations.length,
-                    separatorBuilder: (_, __) => const Divider(color: FxColors.darkBorder, height: 1),
+                    separatorBuilder: (_, __) => Divider(color: borderBg, height: 1),
                     itemBuilder: (context, index) {
                       final conv = _conversations[index];
                       final other = conv['other_profile'];
@@ -82,11 +89,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           isVerified: other['is_verified'] == true,
                           isOnline: true,
                         ),
-                        title: Text(other['first_name'] ?? 'Membre', style: FxTypography.titleMedium),
+                        title: Text(other['first_name'] ?? 'Membre', style: FxTypography.titleMedium.copyWith(color: textPrimary)),
                         subtitle: Text(
-                          lastMsg != null ? lastMsg['content'] : 'Nouveau match ! Dis-lui bonjour 👋',
+                          lastMsg != null ? lastMsg['content'] : 'Nouveau match ! Dis-lui bonjour',
                           style: FxTypography.bodyMedium.copyWith(
-                            color: unreadCount > 0 ? FxColors.darkTextPrimary : FxColors.darkTextSecondary,
+                            color: unreadCount > 0 ? textPrimary : textSecondary,
                             fontWeight: unreadCount > 0 ? FontWeight.w600 : FontWeight.w400,
                           ),
                           maxLines: 1,
@@ -96,7 +103,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            const Text("12:30", style: TextStyle(fontSize: 11, color: FxColors.darkTextSecondary)),
+                            Text("12:30", style: TextStyle(fontSize: 11, color: textSecondary)),
                             if (unreadCount > 0) ...[
                               const SizedBox(height: 4),
                               Container(

@@ -171,7 +171,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 }, textPrimary, cardBg, borderBg, textSecondary),
                 _buildSettingTile(
                   Icons.verified_user,
-                  _profile?['is_verified'] == true ? "Compte Certifié 🛡️" : "Certification de compte",
+                  _profile?['is_verified'] == true ? "Compte Certifié" : "Certification de compte",
                   () async {
                     await context.push('/safety/verification');
                     _fetchMyProfile();

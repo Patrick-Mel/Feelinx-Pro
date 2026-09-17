@@ -77,51 +77,76 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final textColor = theme.colorScheme.onSurface;
+
     return Scaffold(
-      backgroundColor: FxColors.darkBackground,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Ambient Glowing Pulsing Aura
+          // Ambient Glowing Pulsing Aura Rings
           AnimatedBuilder(
             animation: _auraPulse,
             builder: (context, child) {
-              return Center(
-                child: Container(
-                  width: 320 * _auraPulse.value,
-                  height: 320 * _auraPulse.value,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(
-                      colors: [
-                        FxColors.primaryCoral.withOpacity(0.35),
-                        FxColors.secondaryIndigo.withOpacity(0.20),
-                        Colors.transparent,
-                      ],
-                      stops: const [0.0, 0.5, 1.0],
+              final scale = _auraPulse.value;
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Outer Ambient Glow Ring
+                  Container(
+                    width: 360 * scale,
+                    height: 360 * scale,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          FxColors.primaryCoral.withOpacity(isDark ? 0.25 : 0.18),
+                          FxColors.secondaryIndigo.withOpacity(isDark ? 0.15 : 0.10),
+                          Colors.transparent,
+                        ],
+                        stops: const [0.0, 0.55, 1.0],
+                      ),
                     ),
                   ),
-                ),
+                  // Inner Vivid Glow Ring
+                  Container(
+                    width: 200 * (2.0 - scale),
+                    height: 200 * (2.0 - scale),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          FxColors.tinderPink.withOpacity(isDark ? 0.35 : 0.22),
+                          FxColors.accentGold.withOpacity(isDark ? 0.15 : 0.08),
+                          Colors.transparent,
+                        ],
+                        stops: const [0.0, 0.6, 1.0],
+                      ),
+                    ),
+                  ),
+                ],
               );
             },
           ),
 
-          // Central Animated Logo & Branding
+          // Central Animated Logo & Grandiose Branding
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const FeelinxLogoAnimated(
-                  size: 130.0,
+                  size: 140.0,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
                 Text(
                   "DES LIENS QUI SE RESSENTENT",
                   style: TextStyle(
                     fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 2.8,
-                    color: Colors.white.withOpacity(0.7),
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 3.5,
+                    color: textColor.withOpacity(0.7),
                   ),
                 ),
               ],

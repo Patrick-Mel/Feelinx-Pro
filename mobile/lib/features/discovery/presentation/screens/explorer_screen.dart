@@ -21,11 +21,11 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
   String _selectedFilter = 'all';
 
   final List<Map<String, String>> _categories = const [
-    {"code": "all", "label": "🔥 Tous les profils"},
-    {"code": "serious", "label": "💘 Looking for Love"},
-    {"code": "casual", "label": "☕ Coffee Date"},
-    {"code": "verified", "label": "🛡️ Profils Vérifiés"},
-    {"code": "networking", "label": "💼 Networking Pro"},
+    {"code": "all", "label": "Tous les profils"},
+    {"code": "serious", "label": "Looking for Love"},
+    {"code": "casual", "label": "Coffee Date"},
+    {"code": "verified", "label": "Profils Vérifiés"},
+    {"code": "networking", "label": "Networking Pro"},
   ];
 
   @override
