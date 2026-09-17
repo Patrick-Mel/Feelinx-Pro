@@ -4,7 +4,7 @@
 <html lang="{{ LANGUAGE_CODE|default:"fr" }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>{% trans "Connexion" %} | Feelinx Control Center</title>
 
@@ -21,9 +21,9 @@
             --primary-gradient: linear-gradient(135deg, #FF4E64 0%, #6C4AB6 100%);
             --accent-glow: rgba(255, 78, 100, 0.4);
             --bg-dark: #070A12;
-            --card-bg: rgba(15, 23, 42, 0.82);
+            --card-bg: rgba(15, 23, 42, 0.88);
             --card-border: rgba(255, 255, 255, 0.14);
-            --input-bg: rgba(30, 41, 59, 0.75);
+            --input-bg: rgba(30, 41, 59, 0.85);
             --text-main: #F8FAFC;
             --text-sub: #94A3B8;
         }
@@ -32,57 +32,60 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
         }
 
-        body {
+        html, body {
+            width: 100vw;
+            max-width: 100%;
+            overflow-x: hidden !important;
             background-color: var(--bg-dark);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow-x: hidden;
             position: relative;
             color: var(--text-main);
-            padding: 20px;
+            padding: 16px;
         }
 
         /* Ambient Glowing Background Orbs */
         .bg-orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(130px);
+            filter: blur(120px);
             z-index: 0;
-            opacity: 0.5;
+            opacity: 0.45;
+            pointer-events: none;
             animation: pulseOrb 10s infinite alternate ease-in-out;
         }
 
         .orb-1 {
-            width: 480px;
-            height: 480px;
+            width: 380px;
+            height: 380px;
             background: #FF4E64;
-            top: -120px;
-            left: -100px;
+            top: -100px;
+            left: -80px;
         }
 
         .orb-2 {
-            width: 520px;
-            height: 520px;
+            width: 420px;
+            height: 420px;
             background: #6C4AB6;
-            bottom: -150px;
-            right: -100px;
+            bottom: -120px;
+            right: -80px;
             animation-delay: -5s;
         }
 
         @keyframes pulseOrb {
-            0% { transform: scale(1) translate(0, 0); opacity: 0.4; }
-            100% { transform: scale(1.18) translate(35px, -25px); opacity: 0.65; }
+            0% { transform: scale(1) translate(0, 0); opacity: 0.35; }
+            100% { transform: scale(1.15) translate(25px, -20px); opacity: 0.6; }
         }
 
         /* Glassmorphism Card Container */
         .login-container {
             width: 100%;
-            max-width: 450px;
+            max-width: 440px;
             z-index: 10;
         }
 
@@ -92,27 +95,23 @@
             -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--card-border);
             border-radius: 28px;
-            padding: 44px 36px;
+            padding: 40px 32px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 35px var(--accent-glow);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .glass-card:hover {
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), 0 0 45px rgba(255, 78, 100, 0.5);
         }
 
         /* Brand Logo & Header */
         .brand-header {
             text-align: center;
-            margin-bottom: 34px;
+            margin-bottom: 30px;
         }
 
         .brand-logo-wrapper {
-            width: 76px;
-            height: 76px;
-            margin: 0 auto 18px;
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 16px;
             background: var(--primary-gradient);
-            border-radius: 22px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -121,37 +120,37 @@
         }
 
         .brand-logo-svg {
-            width: 42px;
-            height: 42px;
+            width: 38px;
+            height: 38px;
             fill: #FFFFFF;
         }
 
         .brand-title {
             font-family: 'Outfit', sans-serif;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 800;
             letter-spacing: -0.5px;
             background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .brand-subtitle {
-            font-size: 14px;
+            font-size: 13.5px;
             color: var(--text-sub);
             font-weight: 500;
         }
 
         /* Form Controls */
         .form-group {
-            margin-bottom: 22px;
+            margin-bottom: 20px;
             position: relative;
         }
 
         .form-label {
             display: block;
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 600;
             color: #E2E8F0;
             margin-bottom: 8px;
@@ -162,24 +161,25 @@
             position: relative;
             display: flex;
             align-items: center;
+            width: 100%;
         }
 
         .input-icon {
             position: absolute;
             left: 16px;
             color: var(--text-sub);
-            font-size: 16px;
+            font-size: 15px;
             pointer-events: none;
             transition: color 0.2s ease;
         }
 
         .form-input {
             width: 100%;
-            height: 52px;
-            padding: 12px 50px 12px 46px;
+            height: 50px;
+            padding: 12px 46px 12px 44px;
             background: var(--input-bg);
             border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 16px;
+            border-radius: 14px;
             color: #FFFFFF;
             font-size: 15px;
             outline: none;
@@ -188,7 +188,7 @@
 
         .form-input:focus {
             border-color: #FF4E64;
-            background: rgba(30, 41, 59, 0.95);
+            background: rgba(30, 41, 59, 0.98);
             box-shadow: 0 0 0 4px rgba(255, 78, 100, 0.22);
         }
 
@@ -199,41 +199,42 @@
         /* Toggle Password Eye Icon Button */
         .password-toggle-btn {
             position: absolute;
-            right: 14px;
+            right: 12px;
             background: none;
             border: none;
             color: var(--text-sub);
-            font-size: 17px;
+            font-size: 16px;
             cursor: pointer;
-            padding: 6px;
+            padding: 8px;
+            min-width: 44px;
+            min-height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: color 0.2s ease, transform 0.2s ease;
+            transition: color 0.2s ease;
             border-radius: 8px;
         }
 
         .password-toggle-btn:hover {
             color: #FF4E64;
-            transform: scale(1.12);
         }
 
         /* Submit Button */
         .btn-submit {
             width: 100%;
-            height: 54px;
+            height: 52px;
             background: var(--primary-gradient);
             border: none;
-            border-radius: 16px;
+            border-radius: 14px;
             color: #FFFFFF;
             font-family: 'Outfit', sans-serif;
-            font-size: 16.5px;
+            font-size: 16px;
             font-weight: 700;
             letter-spacing: 0.5px;
             cursor: pointer;
             box-shadow: 0 10px 24px var(--accent-glow);
             transition: all 0.3s ease;
-            margin-top: 12px;
+            margin-top: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -255,7 +256,7 @@
             border: 1px solid rgba(239, 68, 68, 0.4);
             border-radius: 14px;
             padding: 14px 16px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             color: #FCA5A5;
             font-size: 13.5px;
             line-height: 1.45;
@@ -272,8 +273,8 @@
 
         .footer-note {
             text-align: center;
-            margin-top: 26px;
-            font-size: 12.5px;
+            margin-top: 24px;
+            font-size: 12px;
             color: var(--text-sub);
         }
 
@@ -281,14 +282,22 @@
             color: #E2E8F0;
         }
 
-        /* Responsive Breakpoint */
+        /* Mobile Optimization (< 480px) */
         @media (max-width: 480px) {
             .glass-card {
-                padding: 32px 24px;
+                padding: 28px 20px;
                 border-radius: 22px;
             }
             .brand-title {
-                font-size: 24px;
+                font-size: 22px;
+            }
+            .brand-logo-wrapper {
+                width: 64px;
+                height: 64px;
+            }
+            .brand-logo-svg {
+                width: 32px;
+                height: 32px;
             }
         }
     </style>
@@ -303,7 +312,6 @@
             
             <div class="brand-header">
                 <div class="brand-logo-wrapper">
-                    <!-- Feelinx Heart Connection SVG Logo -->
                     <svg class="brand-logo-svg" viewBox="0 0 24 24">
                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                     </svg>
@@ -325,7 +333,6 @@
                     </div>
                 </div>
             {% endif %}
-
 
             <form action="{{ app_path }}" method="post" id="login-form">
                 {% csrf_token %}

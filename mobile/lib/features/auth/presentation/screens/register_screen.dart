@@ -102,7 +102,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _handleRegister() async {
     final firstName = _firstNameController.text.trim();
-    final lastName = _lastNameController.text.trim();
     final countryCode = _countryCodeController.text.trim();
     final phone = _phoneController.text.trim();
     final password = _passwordController.text;
