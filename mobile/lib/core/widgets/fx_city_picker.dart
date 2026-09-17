@@ -14,10 +14,11 @@ class FxCityPickerTile extends StatelessWidget {
   });
 
   void _openCityModal(BuildContext context) {
+    final theme = Theme.of(context);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: FxColors.darkSurface,
+      backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -33,10 +34,17 @@ class FxCityPickerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardBg = theme.cardTheme.color ?? (isDark ? FxColors.darkCard : FxColors.lightCard);
+    final borderBg = isDark ? FxColors.darkBorder : FxColors.lightBorder;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = isDark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Ville d'Afrique", style: FxTypography.titleMedium),
+        Text("Ville d'Afrique", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         InkWell(
           onTap: () => _openCityModal(context),
@@ -44,9 +52,9 @@ class FxCityPickerTile extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
-              color: FxColors.darkCard,
+              color: cardBg,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: FxColors.darkBorder),
+              border: Border.all(color: borderBg),
             ),
             child: Row(
               children: [
@@ -56,11 +64,11 @@ class FxCityPickerTile extends StatelessWidget {
                   child: Text(
                     selectedCity.isEmpty ? "Sélectionner une ville" : selectedCity,
                     style: FxTypography.bodyLarge.copyWith(
-                      color: selectedCity.isEmpty ? FxColors.darkTextSecondary : FxColors.darkTextPrimary,
+                      color: selectedCity.isEmpty ? textSecondary : textPrimary,
                     ),
                   ),
                 ),
-                const Icon(Icons.keyboard_arrow_down, color: FxColors.darkTextSecondary),
+                Icon(Icons.keyboard_arrow_down, color: textSecondary),
               ],
             ),
           ),
@@ -114,6 +122,13 @@ class _CitySearchSheetState extends State<_CitySearchSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardBg = theme.cardTheme.color ?? (isDark ? FxColors.darkCard : FxColors.lightCard);
+    final borderBg = isDark ? FxColors.darkBorder : FxColors.lightBorder;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = isDark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+
     return DraggableScrollableSheet(
       initialChildSize: 0.85,
       maxChildSize: 0.95,
@@ -130,25 +145,26 @@ class _CitySearchSheetState extends State<_CitySearchSheet> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: FxColors.darkBorder,
+                    color: borderBg,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
               ),
               const SizedBox(height: 16),
-              Text("Sélectionner ta ville", style: FxTypography.titleLarge),
+              Text("Sélectionner ta ville", style: FxTypography.titleLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
               TextField(
                 controller: _searchController,
-                style: FxTypography.bodyLarge,
+                style: FxTypography.bodyLarge.copyWith(color: textPrimary),
                 decoration: InputDecoration(
                   hintText: "Rechercher une ville africaine...",
+                  hintStyle: TextStyle(color: textSecondary),
                   prefixIcon: const Icon(Icons.search, color: FxColors.primaryCoral),
                   filled: true,
-                  fillColor: FxColors.darkCard,
+                  fillColor: cardBg,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+                    borderSide: BorderSide(color: borderBg),
                   ),
                 ),
               ),
@@ -158,7 +174,7 @@ class _CitySearchSheetState extends State<_CitySearchSheet> {
                     ? Center(
                         child: Text(
                           "Aucune ville trouvée",
-                          style: FxTypography.bodyLarge.copyWith(color: FxColors.darkTextSecondary),
+                          style: FxTypography.bodyLarge.copyWith(color: textSecondary),
                         ),
                       )
                     : ListView.builder(
@@ -170,13 +186,13 @@ class _CitySearchSheetState extends State<_CitySearchSheet> {
                           return ListTile(
                             leading: Icon(
                               Icons.location_on,
-                              color: isSelected ? FxColors.primaryCoral : FxColors.darkTextSecondary,
+                              color: isSelected ? FxColors.primaryCoral : textSecondary,
                             ),
                             title: Text(
                               city,
                               style: FxTypography.bodyLarge.copyWith(
                                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                color: isSelected ? FxColors.primaryCoral : FxColors.darkTextPrimary,
+                                color: isSelected ? FxColors.primaryCoral : textPrimary,
                               ),
                             ),
                             trailing: isSelected

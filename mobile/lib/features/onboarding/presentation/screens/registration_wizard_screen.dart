@@ -98,17 +98,24 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = isDark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+    final borderBg = isDark ? FxColors.darkBorder : FxColors.lightBorder;
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         leading: _currentStep > 0
-            ? IconButton(icon: const Icon(Icons.arrow_back), onPressed: _prevStep)
+            ? IconButton(icon: Icon(Icons.arrow_back, color: textPrimary), onPressed: _prevStep)
             : null,
         title: ClipRRect(
           borderRadius: BorderRadius.circular(4),
           child: LinearProgressIndicator(
             value: (_currentStep + 1) / _totalSteps,
             minHeight: 6,
-            backgroundColor: FxColors.darkBorder,
+            backgroundColor: borderBg,
             valueColor: const AlwaysStoppedAnimation<Color>(FxColors.primaryCoral),
           ),
         ),
@@ -127,9 +134,9 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Mon prénom est", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
+                        Text("Mon prénom est", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.sm8),
-                        Text("C'est ainsi qu'il apparaîtra sur ton profil.", style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+                        Text("C'est ainsi qu'il apparaîtra sur ton profil.", style: TextStyle(color: textSecondary)),
                         const SizedBox(height: FxSpacing.xxxl32),
                         FxTextField(
                           label: "Ton prénom",
@@ -148,9 +155,9 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Ma date de naissance est", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
+                        Text("Ma date de naissance est", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.sm8),
-                        Text("Ton âge sera public. Seules les personnes majeures peuvent s'inscrire.", style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+                        Text("Ton âge sera public. Seules les personnes majeures peuvent s'inscrire.", style: TextStyle(color: textSecondary)),
                         const SizedBox(height: FxSpacing.xxxl32),
                         OutlinedButton(
                           style: OutlinedButton.styleFrom(
@@ -178,17 +185,17 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Mon genre est", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
+                        Text("Mon genre est", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.xxxl32),
                         RadioListTile<String>(
-                          title: const Text("Femme", style: TextStyle(fontWeight: FontWeight.bold)),
+                          title: Text("Femme", style: TextStyle(color: textPrimary, fontWeight: FontWeight.bold)),
                           value: 'female',
                           groupValue: _gender,
                           activeColor: FxColors.primaryCoral,
                           onChanged: (v) => setState(() => _gender = v!),
                         ),
                         RadioListTile<String>(
-                          title: const Text("Homme", style: TextStyle(fontWeight: FontWeight.bold)),
+                          title: Text("Homme", style: TextStyle(color: textPrimary, fontWeight: FontWeight.bold)),
                           value: 'male',
                           groupValue: _gender,
                           activeColor: FxColors.primaryCoral,
@@ -200,17 +207,17 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Je cherche...", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
+                        Text("Je cherche...", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.xxxl32),
                         RadioListTile<String>(
-                          title: const Text("Des hommes", style: TextStyle(fontWeight: FontWeight.bold)),
+                          title: Text("Des hommes", style: TextStyle(color: textPrimary, fontWeight: FontWeight.bold)),
                           value: 'male',
                           groupValue: _seeking,
                           activeColor: FxColors.primaryCoral,
                           onChanged: (v) => setState(() => _seeking = v!),
                         ),
                         RadioListTile<String>(
-                          title: const Text("Des femmes", style: TextStyle(fontWeight: FontWeight.bold)),
+                          title: Text("Des femmes", style: TextStyle(color: textPrimary, fontWeight: FontWeight.bold)),
                           value: 'female',
                           groupValue: _seeking,
                           activeColor: FxColors.primaryCoral,
@@ -222,7 +229,7 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Mon intention est", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
+                        Text("Mon intention est", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.lg16),
                         ..._intentionsList.map((item) {
                           final isSelected = _intention == item["code"];
@@ -241,9 +248,9 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Ma ville est", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
+                        Text("Ma ville est", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.sm8),
-                        Text("Sélectionne ta ville de résidence au Cameroun ou en Afrique.", style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+                        Text("Sélectionne ta ville de résidence au Cameroun ou en Afrique.", style: TextStyle(color: textSecondary)),
                         const SizedBox(height: FxSpacing.xxxl32),
                         FxCityPickerTile(
                           selectedCity: _city,
@@ -255,9 +262,9 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Mes centres d'intérêt", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
+                        Text("Mes centres d'intérêt", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.sm8),
-                        Text("Choisis au moins 3 passions qui te définissent.", style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+                        Text("Choisis au moins 3 passions qui te définissent.", style: TextStyle(color: textSecondary)),
                         const SizedBox(height: FxSpacing.lg16),
                         Wrap(
                           spacing: 8,
@@ -285,7 +292,7 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("À propos de moi", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
+                        Text("À propos de moi", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.xxxl32),
                         FxTextField(
                           label: "Ma biographie",

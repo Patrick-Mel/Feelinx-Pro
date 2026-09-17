@@ -115,7 +115,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
         child: Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: FxColors.darkSurface,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: FxColors.primaryCoral, width: 2),
           ),
@@ -266,9 +266,14 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
     final activePhotoIdx = _photoIndices[profileId] ?? 0;
     final photoUrl = (photos.isNotEmpty && activePhotoIdx < photos.length) ? photos[activePhotoIdx]['url'] : '';
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardBg = theme.cardTheme.color ?? (isDark ? FxColors.darkCard : FxColors.lightCard);
+    final surfaceBg = theme.colorScheme.surface;
+
     return Container(
       decoration: BoxDecoration(
-        color: FxColors.darkSurface,
+        color: surfaceBg,
         borderRadius: BorderRadius.circular(32),
         boxShadow: FxShadows.softShadow(Colors.black),
       ),
@@ -283,7 +288,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
               fit: BoxFit.cover,
             )
           else
-            Container(color: FxColors.darkCard, child: const Icon(Icons.person, size: 100)),
+            Container(color: cardBg, child: Icon(Icons.person, size: 100, color: theme.colorScheme.onSurface.withOpacity(0.5))),
 
           // Tap left / right side photo navigation detector
           if (photos.length > 1)

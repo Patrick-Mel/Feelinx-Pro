@@ -76,9 +76,15 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final textPrimary = theme.colorScheme.onSurface;
+    final cardBg = theme.cardTheme.color ?? (isDark ? FxColors.darkCard : FxColors.lightCard);
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text("Explorer", style: TextStyle(fontWeight: FontWeight.w800)),
+        title: Text("Explorer", style: TextStyle(fontWeight: FontWeight.w800, color: textPrimary)),
       ),
       body: SafeArea(
         child: Column(
@@ -121,7 +127,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                         itemBuilder: (_, __) => const FxShimmerBox(width: double.infinity, height: 200, borderRadius: 16),
                       )
                     : _filteredProfiles.isEmpty
-                        ? const Center(child: Text("Aucun profil correspondant dans ce canal."))
+                        ? Center(child: Text("Aucun profil correspondant dans ce canal.", style: TextStyle(color: textPrimary)))
                         : GridView.builder(
                             padding: const EdgeInsets.all(16),
                             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -141,7 +147,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                                 onTap: () => context.push('/profile/public/${p['id']}'),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: FxColors.darkCard,
+                                    color: cardBg,
                                     borderRadius: BorderRadius.circular(16),
                                     image: (photoUrl != null && photoUrl.isNotEmpty)
                                         ? DecorationImage(

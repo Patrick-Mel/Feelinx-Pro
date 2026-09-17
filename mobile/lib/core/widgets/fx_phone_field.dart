@@ -3,39 +3,9 @@ import 'package:flutter/services.dart';
 import '../theme/colors.dart';
 import '../theme/tokens.dart';
 import '../theme/typography.dart';
+import '../utils/country_registry.dart';
 
-class CountryInfo {
-  final String name;
-  final String code;
-  const CountryInfo(this.name, this.code);
-}
-
-const List<CountryInfo> africanCountries = [
-  CountryInfo("Cameroun", "+237"),
-  CountryInfo("Côte d'Ivoire", "+225"),
-  CountryInfo("Sénégal", "+221"),
-  CountryInfo("Gabon", "+241"),
-  CountryInfo("Congo", "+242"),
-  CountryInfo("RDC", "+243"),
-  CountryInfo("Togo", "+228"),
-  CountryInfo("Bénin", "+229"),
-  CountryInfo("Burkina Faso", "+226"),
-  CountryInfo("Mali", "+223"),
-  CountryInfo("Niger", "+227"),
-  CountryInfo("Tchad", "+235"),
-  CountryInfo("RCA", "+236"),
-  CountryInfo("Rwanda", "+250"),
-  CountryInfo("Burundi", "+257"),
-  CountryInfo("Guinée Eq.", "+240"),
-  CountryInfo("Maroc", "+212"),
-  CountryInfo("Algérie", "+213"),
-  CountryInfo("Tunisie", "+216"),
-  CountryInfo("Nigeria", "+234"),
-  CountryInfo("Ghana", "+233"),
-  CountryInfo("Kenya", "+254"),
-];
-
-class FxPhoneField extends StatelessWidget {
+class FxPhoneField extends StatefulWidget {
   final TextEditingController controller;
   final String countryCode;
   final ValueChanged<String>? onCountryChanged;
@@ -51,90 +21,226 @@ class FxPhoneField extends StatelessWidget {
     this.errorText,
   });
 
-  void _selectCountry(BuildContext context) {
+  @override
+  State<FxPhoneField> createState() => _FxPhoneFieldState();
+}
+
+class _FxPhoneFieldState extends State<FxPhoneField> {
+  late TextEditingController _codeController;
+
+  @override
+  void initState() {
+    super.initState();
+    _codeController = TextEditingController(text: widget.countryCode);
+  }
+
+  @override
+  void didUpdateWidget(covariant FxPhoneField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.countryCode != widget.countryCode && _codeController.text != widget.countryCode) {
+      _codeController.text = widget.countryCode;
+    }
+  }
+
+  @override
+  void dispose() {
+    _codeController.dispose();
+    super.dispose();
+  }
+
+  void _openCountryPickerModal(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final surfaceBg = theme.colorScheme.surface;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = isDark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+    final borderBg = isDark ? FxColors.darkBorder : FxColors.lightBorder;
+
+    final searchController = TextEditingController();
+    List<CountryData> filtered = List.from(CountryRegistry.allCountries);
+
     showModalBottomSheet(
       context: context,
-      backgroundColor: FxColors.darkSurface,
+      isScrollControlled: true,
+      backgroundColor: surfaceBg,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Sélectionner un pays", style: FxTypography.titleLarge),
-            const SizedBox(height: 12),
-            Expanded(
-              child: ListView.builder(
-                itemCount: africanCountries.length,
-                itemBuilder: (context, index) {
-                  final c = africanCountries[index];
-                  final isSelected = c.code == countryCode;
-                  return ListTile(
-                    title: Text(c.name, style: FxTypography.bodyLarge),
-                    trailing: Text(
-                      c.code,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: isSelected ? FxColors.primaryCoral : FxColors.darkTextSecondary,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            void filterList(String query) {
+              setModalState(() {
+                final q = query.toLowerCase().trim();
+                filtered = CountryRegistry.allCountries.where((c) {
+                  return c.name.toLowerCase().contains(q) || c.code.contains(q);
+                }).toList();
+              });
+            }
+
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.65,
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: borderBg,
+                        borderRadius: BorderRadius.circular(2),
                       ),
                     ),
-                    onTap: () {
-                      if (onCountryChanged != null) onCountryChanged!(c.code);
-                      Navigator.pop(context);
-                    },
-                  );
-                },
+                  ),
+                  const SizedBox(height: 16),
+                  Text("Sélectionnez votre pays", style: FxTypography.titleLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 12),
+
+                  // Search input
+                  TextField(
+                    controller: searchController,
+                    onChanged: filterList,
+                    style: TextStyle(color: textPrimary),
+                    decoration: InputDecoration(
+                      hintText: "Rechercher par pays ou indicatif (ex. +237, Cameroun)...",
+                      hintStyle: TextStyle(color: textSecondary, fontSize: 13),
+                      prefixIcon: Icon(Icons.search, color: textSecondary),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  Expanded(
+                    child: filtered.isEmpty
+                        ? Center(
+                            child: Text("Aucun pays correspondant.", style: TextStyle(color: textSecondary)),
+                          )
+                        : ListView.separated(
+                            itemCount: filtered.length,
+                            separatorBuilder: (_, __) => Divider(color: borderBg, height: 1),
+                            itemBuilder: (context, index) {
+                              final c = filtered[index];
+                              final isSelected = c.code == _codeController.text.trim();
+
+                              return ListTile(
+                                title: Text(c.name, style: TextStyle(color: textPrimary, fontWeight: isSelected ? FontWeight.bold : FontWeight.w500)),
+                                trailing: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: isSelected ? FxColors.primaryCoral.withOpacity(0.15) : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    c.code,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: isSelected ? FxColors.primaryCoral : textSecondary,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    _codeController.text = c.code;
+                                  });
+                                  if (widget.onCountryChanged != null) {
+                                    widget.onCountryChanged!(c.code);
+                                  }
+                                  Navigator.pop(ctx);
+                                },
+                              );
+                            },
+                          ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ),
+            );
+          },
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = isDark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+
+    final detectedCountry = CountryRegistry.findByCode(_codeController.text);
+    final isValid = detectedCountry != null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Live Country Badge Header
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            InkWell(
-              onTap: () => _selectCountry(context),
-              borderRadius: BorderRadius.circular(FxRadius.medium16),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(FxRadius.medium16),
-                  border: Border.all(color: FxColors.darkBorder),
-                ),
-                child: Row(
-                  children: [
-                    Text(countryCode, style: FxTypography.titleMedium),
-                    const SizedBox(width: 4),
-                    const Icon(Icons.arrow_drop_down, color: FxColors.darkTextSecondary),
-                  ],
+            Text("Numéro de téléphone", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: isValid ? FxColors.primaryCoral.withOpacity(0.12) : FxColors.error.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: isValid ? FxColors.primaryCoral.withOpacity(0.4) : FxColors.error.withOpacity(0.4)),
+              ),
+              child: Text(
+                isValid ? detectedCountry.name : "Indicatif invalide",
+                style: FxTypography.bodyMedium.copyWith(
+                  color: isValid ? FxColors.primaryCoral : FxColors.error,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+          ],
+        ),
+        const SizedBox(height: FxSpacing.sm8),
+
+        Row(
+          children: [
+            // Code Input / Selector Box
+            InkWell(
+              onTap: () => _openCountryPickerModal(context),
+              child: SizedBox(
+                width: 100,
+                child: TextField(
+                  controller: _codeController,
+                  keyboardType: TextInputType.phone,
+                  onChanged: (val) {
+                    setState(() {});
+                    final found = CountryRegistry.findByCode(val);
+                    if (found != null && widget.onCountryChanged != null) {
+                      widget.onCountryChanged!(found.code);
+                    }
+                  },
+                  style: FxTypography.bodyLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
+                  decoration: InputDecoration(
+                    hintText: "+237",
+                    hintStyle: TextStyle(color: textSecondary),
+                    suffixIcon: Icon(Icons.arrow_drop_down, color: textSecondary, size: 18),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: FxSpacing.sm8),
+
+            // Main Phone Number Input
             Expanded(
               child: TextField(
-                controller: controller,
-                onChanged: onChanged,
+                controller: widget.controller,
+                onChanged: widget.onChanged,
                 keyboardType: TextInputType.phone,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(10),
-                ],
-                style: FxTypography.bodyLarge,
+                style: FxTypography.bodyLarge.copyWith(color: textPrimary),
                 decoration: InputDecoration(
-                  hintText: "690 00 00 00",
-                  errorText: errorText,
+                  hintText: "690000000",
+                  hintStyle: TextStyle(color: textSecondary),
+                  errorText: widget.errorText,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 ),
               ),
             ),

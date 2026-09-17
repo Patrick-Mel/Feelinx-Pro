@@ -7,6 +7,7 @@ import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/tokens.dart';
 import '../../../../core/theme/typography.dart';
 import '../../../../core/widgets/fx_button.dart';
+import '../../../../core/widgets/fx_phone_field.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -291,58 +292,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
               // STEP 1: Numéro de téléphone
               if (_currentStep == 1) ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Numéro de téléphone", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
-                    Builder(
-                      builder: (context) {
-                        final detected = _getDetectedCountry(_countryCodeController.text);
-                        return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: FxColors.primaryCoral.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: FxColors.primaryCoral.withOpacity(0.4)),
-                          ),
-                          child: Text(
-                            detected['name']!,
-                            style: FxTypography.bodyMedium.copyWith(color: FxColors.primaryCoral, fontWeight: FontWeight.bold, fontSize: 13),
-                          ),
-                        );
-                      }
-                    ),
-                  ],
-                ),
-                const SizedBox(height: FxSpacing.sm8),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 95,
-                      child: TextField(
-                        controller: _countryCodeController,
-                        keyboardType: TextInputType.phone,
-                        onChanged: (_) => setState(() {}),
-                        style: FxTypography.bodyLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
-                        decoration: InputDecoration(
-                          hintText: "+237",
-                          hintStyle: TextStyle(color: textSecondary),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: FxSpacing.sm8),
-                    Expanded(
-                      child: TextField(
-                        controller: _phoneController,
-                        keyboardType: TextInputType.phone,
-                        style: FxTypography.bodyLarge.copyWith(color: textPrimary),
-                        decoration: InputDecoration(
-                          hintText: "690000000",
-                          hintStyle: TextStyle(color: textSecondary),
-                        ),
-                      ),
-                    ),
-                  ],
+                FxPhoneField(
+                  controller: _phoneController,
+                  countryCode: _countryCodeController.text,
+                  onCountryChanged: (code) => setState(() => _countryCodeController.text = code),
                 ),
                 const SizedBox(height: FxSpacing.xxl24),
                 FxButton(

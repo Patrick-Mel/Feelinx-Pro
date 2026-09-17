@@ -91,9 +91,16 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = isDark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+    final cardBg = theme.cardTheme.color ?? (isDark ? FxColors.darkCard : FxColors.lightCard);
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text("Certification de compte", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text("Certification de compte", style: TextStyle(fontWeight: FontWeight.bold, color: textPrimary)),
       ),
       body: SafeArea(
         child: Padding(
@@ -113,13 +120,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 const SizedBox(height: 24),
                 Text(
                   "Compte Officiellement Certifié",
-                  style: FxTypography.displayMedium,
+                  style: FxTypography.displayMedium.copyWith(color: textPrimary),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 12),
                 Text(
                   "Le badge de certification bleue est affiché sur votre profil pour garantir votre authenticité.",
-                  style: FxTypography.bodyLarge.copyWith(color: FxColors.darkTextSecondary),
+                  style: FxTypography.bodyLarge.copyWith(color: textSecondary),
                   textAlign: TextAlign.center,
                 ),
                 const Spacer(),
@@ -132,7 +139,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   width: 220,
                   height: 220,
                   decoration: BoxDecoration(
-                    color: FxColors.darkCard,
+                    color: cardBg,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: FxColors.primaryCoral.withValues(alpha: 0.3), width: 2),
                   ),
@@ -148,7 +155,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                             const SizedBox(height: 12),
                             Text(
                               "Aperçu du Selfie",
-                              style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary),
+                              style: FxTypography.bodyMedium.copyWith(color: textSecondary),
                             ),
                           ],
                         ),
@@ -156,13 +163,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 const SizedBox(height: 24),
                 Text(
                   _capturedSelfie == null ? "Prenez une photo de vérification" : "Selfie prêt pour validation",
-                  style: FxTypography.titleLarge,
+                  style: FxTypography.titleLarge.copyWith(color: textPrimary),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   "Prenez une photo claire de votre visage pour confirmer votre identité.",
-                  style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary),
+                  style: FxTypography.bodyMedium.copyWith(color: textSecondary),
                   textAlign: TextAlign.center,
                 ),
                 const Spacer(),

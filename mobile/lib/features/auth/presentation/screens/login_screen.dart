@@ -7,6 +7,7 @@ import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/tokens.dart';
 import '../../../../core/theme/typography.dart';
 import '../../../../core/widgets/fx_button.dart';
+import '../../../../core/widgets/fx_phone_field.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -147,48 +148,10 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
 
               // Phone Field
-              Text("Numéro de téléphone", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
-              const SizedBox(height: FxSpacing.sm8),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: containerBg,
-                      borderRadius: BorderRadius.circular(FxRadius.medium16),
-                      border: Border.all(color: borderBg),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _selectedCountryCode,
-                        dropdownColor: containerBg,
-                        style: FxTypography.bodyMedium.copyWith(color: textPrimary),
-                        icon: Icon(Icons.keyboard_arrow_down, color: textSecondary, size: 18),
-                        onChanged: (val) {
-                          if (val != null) setState(() => _selectedCountryCode = val);
-                        },
-                        items: _countries.map((c) {
-                          return DropdownMenuItem<String>(
-                            value: c["code"],
-                            child: Text(c["code"]!, style: TextStyle(color: textPrimary)),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: FxSpacing.sm8),
-                  Expanded(
-                    child: TextField(
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      style: FxTypography.bodyLarge.copyWith(color: textPrimary),
-                      decoration: InputDecoration(
-                        hintText: "690000000",
-                        hintStyle: TextStyle(color: textSecondary),
-                      ),
-                    ),
-                  ),
-                ],
+              FxPhoneField(
+                controller: _phoneController,
+                countryCode: _selectedCountryCode,
+                onCountryChanged: (code) => setState(() => _selectedCountryCode = code),
               ),
               const SizedBox(height: FxSpacing.xl20),
 

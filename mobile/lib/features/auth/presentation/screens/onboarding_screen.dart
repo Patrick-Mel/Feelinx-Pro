@@ -68,6 +68,175 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
+  void _openLoginOptionsModal(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final surfaceBg = theme.colorScheme.surface;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = isDark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+    final borderBg = isDark ? FxColors.darkBorder : FxColors.lightBorder;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: surfaceBg,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (ctx) {
+        return Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: borderBg,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                "Connexion à Feelinx",
+                style: FxTypography.displayMedium.copyWith(
+                  color: textPrimary,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                "Choisissez votre méthode de connexion préférée.",
+                style: FxTypography.bodyMedium.copyWith(color: textSecondary),
+              ),
+              const SizedBox(height: 28),
+
+              // Option 1: Connexion avec mot de passe
+              InkWell(
+                onTap: () {
+                  Navigator.pop(ctx);
+                  context.go('/auth/login');
+                },
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: isDark ? FxColors.darkCard : FxColors.lightCard,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: borderBg),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: FxColors.primaryCoral.withOpacity(0.12),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.lock_outline, color: FxColors.primaryCoral, size: 22),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Se connecter avec un mot de passe",
+                              style: TextStyle(color: textPrimary, fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              "Connexion classique avec votre numéro et mot de passe",
+                              style: TextStyle(color: textSecondary, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(Icons.chevron_right, color: textSecondary),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Option 2: Connexion avec le numéro (SMS OTP)
+              InkWell(
+                onTap: () {
+                  Navigator.pop(ctx);
+                  context.go('/auth/phone');
+                },
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: isDark ? FxColors.darkCard : FxColors.lightCard,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: borderBg),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: FxColors.secondaryIndigo.withOpacity(0.15),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.phone_iphone, color: FxColors.secondaryIndigo, size: 22),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Se connecter avec le numéro",
+                              style: TextStyle(color: textPrimary, fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              "Recevez un code de confirmation instantané par SMS",
+                              style: TextStyle(color: textSecondary, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(Icons.chevron_right, color: textSecondary),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Problèmes de connexion link
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    context.go('/auth/forgot-password');
+                  },
+                  child: Text(
+                    "Problèmes de connexion ?",
+                    style: TextStyle(
+                      color: FxColors.primaryCoral,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -208,41 +377,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                   const SizedBox(height: FxSpacing.xxxl32),
 
-                  // Action Buttons (Tinder Welcome Stack)
+                  // Action Buttons (Only 2 Main Buttons)
                   FxButton(
                     text: "CRÉER UN COMPTE",
                     onPressed: () => context.go('/auth/register'),
                   ),
                   const SizedBox(height: 12),
                   FxButton(
-                    text: "CONNEXION AVEC LE NUMÉRO",
+                    text: "SE CONNECTER",
                     variant: FxButtonVariant.outline,
-                    onPressed: () => context.go('/auth/phone'),
+                    onPressed: () => _openLoginOptionsModal(context),
                   ),
-                  const SizedBox(height: 12),
-                  TextButton(
-                    onPressed: () => context.go('/auth/login'),
-                    child: const Text(
-                      "Se connecter avec un mot de passe",
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 20),
+
+                  // Exact Disclaimer Text Requested
                   Text(
-                    "En appuyant sur Connexion ou Inscription, vous acceptez nos Conditions. Découvrez comment nous traitons vos données dans notre Politique de confidentialité et notre Politique relative aux cookies.",
+                    "En appuyant sur connexion ou Inscription, vous acceptez nos conditions. Découvrez comment nous traitons vos données dans notre politique de confidentialité et notre politique de cookies.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 11,
-                      color: Colors.white.withOpacity(0.65),
-                      height: 1.35,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextButton(
-                    onPressed: () => context.go('/auth/forgot-password'),
-                    child: Text(
-                      "Problèmes de connexion ?",
-                      style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12, decoration: TextDecoration.underline),
+                      color: Colors.white.withOpacity(0.68),
+                      height: 1.4,
                     ),
                   ),
                   const SizedBox(height: FxSpacing.sm8),

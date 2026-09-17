@@ -101,9 +101,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = isDark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+    final cardBg = theme.cardTheme.color ?? (isDark ? FxColors.darkCard : FxColors.lightCard);
+    final borderBg = isDark ? FxColors.darkBorder : FxColors.lightBorder;
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text("Modifier mon profil", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text("Modifier mon profil", style: TextStyle(fontWeight: FontWeight.bold, color: textPrimary)),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -120,7 +128,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    Text("Genre", style: FxTypography.titleMedium),
+                    Text("Genre", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     Row(
                       children: [
@@ -151,25 +159,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    Text("À propos de toi", style: FxTypography.titleMedium),
+                    Text("À propos de toi", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _bioController,
                       maxLines: 4,
-                      style: FxTypography.bodyLarge,
+                      style: FxTypography.bodyLarge.copyWith(color: textPrimary),
                       decoration: InputDecoration(
                         hintText: "Décris ta personnalité, tes passions et ce que tu recherches...",
+                        hintStyle: TextStyle(color: textSecondary),
                         filled: true,
-                        fillColor: FxColors.darkCard,
+                        fillColor: cardBg,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
+                          borderSide: BorderSide(color: borderBg),
                         ),
                       ),
                     ),
                     const SizedBox(height: 20),
 
-                    Text("Intention de recherche", style: FxTypography.titleMedium),
+                    Text("Intention de recherche", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,

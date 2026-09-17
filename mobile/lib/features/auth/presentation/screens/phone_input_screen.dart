@@ -106,7 +106,9 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
               Center(
                 child: Text(
                   "En continuant, vous acceptez nos CGU et Politique de confidentialité.",
-                  style: FxTypography.labelSmall.copyWith(color: FxColors.darkTextSecondary),
+                  style: FxTypography.labelSmall.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
