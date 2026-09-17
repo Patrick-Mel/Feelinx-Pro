@@ -133,7 +133,7 @@ class Photo(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['order', 'uploaded_at']
+        ordering = ['-is_primary', 'order', 'uploaded_at']
 
     def __str__(self):
         return f"Photo {self.order} de {self.profile.first_name}"

@@ -40,26 +40,30 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
   Future<void> _takeSelfie() async {
     final picker = ImagePicker();
-    final photo = await picker.pickImage(
-      source: ImageSource.camera,
-      preferredCameraDevice: CameraDevice.front,
-      imageQuality: 85,
-    );
-    if (photo != null && mounted) {
-      setState(() {
-        _capturedSelfie = photo;
-      });
+    try {
+      final photo = await picker.pickImage(
+        source: ImageSource.camera,
+        preferredCameraDevice: CameraDevice.front,
+        imageQuality: 85,
+      );
+      if (photo != null && mounted) {
+        setState(() {
+          _capturedSelfie = photo;
+        });
+      }
+    } catch (_) {
+      try {
+        final photo = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+        if (photo != null && mounted) {
+          setState(() {
+            _capturedSelfie = photo;
+          });
+        }
+      } catch (_) {}
     }
   }
 
   Future<void> _submitSelfie() async {
-    if (_capturedSelfie == null && !_isVerified) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Veuillez d'abord prendre un selfie.")),
-      );
-      return;
-    }
-
     setState(() => _isLoading = true);
     try {
       final dio = DioClient().dio;
@@ -70,7 +74,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Votre compte est désormais certifié et vérifié."),
+            content: Text("Félicitations ! Votre compte est désormais certifié avec le badge bleu 🛡️"),
             backgroundColor: FxColors.success,
           ),
         );
