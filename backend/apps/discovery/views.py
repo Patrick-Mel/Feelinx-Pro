@@ -157,3 +157,20 @@ class MatchListView(generics.ListAPIView):
             is_active=True,
             profile_b=profile
         )
+
+
+class UnmatchView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request, match_id):
+        profile = request.user.profile
+        try:
+            match_obj = Match.objects.get(id=match_id)
+            if match_obj.profile_a != profile and match_obj.profile_b != profile:
+                return Response({"success": False, "message": "Non autorisé."}, status=status.HTTP_403_FORBIDDEN)
+
+            match_obj.is_active = False
+            match_obj.save()
+            return Response({"success": True, "message": "Match supprimé."}, status=status.HTTP_200_OK)
+        except Match.DoesNotExist:
+            return Response({"success": False, "message": "Match introuvable."}, status=status.HTTP_404_NOT_FOUND)
