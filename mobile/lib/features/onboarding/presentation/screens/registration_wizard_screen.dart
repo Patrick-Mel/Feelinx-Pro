@@ -130,187 +130,242 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                   controller: _pageController,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    // Step 1: Prénom et Nom
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Mon prénom est", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
-                        const SizedBox(height: FxSpacing.sm8),
-                        Text("C'est ainsi qu'il apparaîtra sur ton profil.", style: TextStyle(color: textSecondary)),
-                        const SizedBox(height: FxSpacing.xxxl32),
-                        FxTextField(
-                          label: "Ton prénom",
-                          hint: "ex. Manuella",
-                          controller: _firstNameController,
-                        ),
-                        const SizedBox(height: FxSpacing.lg16),
-                        FxTextField(
-                          label: "Ton nom de famille",
-                          hint: "ex. Ndongo",
-                          controller: _lastNameController,
-                        ),
-                      ],
+                    // Step 1: Prénom et Nom (Demande unique)
+                    SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Mon prénom est", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 30)),
+                          const SizedBox(height: FxSpacing.sm8),
+                          Text("C'est ainsi qu'il apparaîtra sur ton profil.", style: TextStyle(color: textSecondary)),
+                          const SizedBox(height: FxSpacing.xxxl32),
+                          FxTextField(
+                            label: "Ton prénom",
+                            hint: "ex. Manuella",
+                            controller: _firstNameController,
+                          ),
+                          const SizedBox(height: FxSpacing.lg16),
+                          FxTextField(
+                            label: "Ton nom de famille (facultatif)",
+                            hint: "ex. Ndongo",
+                            controller: _lastNameController,
+                          ),
+                        ],
+                      ),
                     ),
                     // Step 2: Date de naissance
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Ma date de naissance est", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
-                        const SizedBox(height: FxSpacing.sm8),
-                        Text("Ton âge sera public. Seules les personnes majeures peuvent s'inscrire.", style: TextStyle(color: textSecondary)),
-                        const SizedBox(height: FxSpacing.xxxl32),
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            minimumSize: const Size.fromHeight(54),
-                            shape: const StadiumBorder(),
-                            side: BorderSide(color: FxColors.primaryCoral, width: 1.5),
+                    SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Ma date de naissance est", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 30)),
+                          const SizedBox(height: FxSpacing.sm8),
+                          Text("Ton âge sera public. Seules les personnes majeures peuvent s'inscrire.", style: TextStyle(color: textSecondary)),
+                          const SizedBox(height: FxSpacing.xxxl32),
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: const Size.fromHeight(54),
+                              shape: const StadiumBorder(),
+                              side: const BorderSide(color: FxColors.primaryCoral, width: 1.5),
+                            ),
+                            onPressed: () async {
+                              final picked = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime(2000, 1, 1),
+                                firstDate: DateTime(1950),
+                                lastDate: DateTime(2008, 1, 1),
+                              );
+                              if (picked != null) setState(() => _birthDate = picked);
+                            },
+                            child: Text(
+                              _birthDate == null ? "Sélectionner ma date" : "${_birthDate!.day}/${_birthDate!.month}/${_birthDate!.year}",
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: FxColors.primaryCoral),
+                            ),
                           ),
-                          onPressed: () async {
-                            final picked = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime(2000, 1, 1),
-                              firstDate: DateTime(1950),
-                              lastDate: DateTime(2008, 1, 1),
-                            );
-                            if (picked != null) setState(() => _birthDate = picked);
-                          },
-                          child: Text(
-                            _birthDate == null ? "Sélectionner ma date" : "${_birthDate!.day}/${_birthDate!.month}/${_birthDate!.year}",
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: FxColors.primaryCoral),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    // Step 3: Genre
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Mon genre est", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
-                        const SizedBox(height: FxSpacing.xxxl32),
-                        RadioListTile<String>(
-                          title: Text("Femme", style: TextStyle(color: textPrimary, fontWeight: FontWeight.bold)),
-                          value: 'female',
-                          groupValue: _gender,
-                          activeColor: FxColors.primaryCoral,
-                          onChanged: (v) => setState(() => _gender = v!),
-                        ),
-                        RadioListTile<String>(
-                          title: Text("Homme", style: TextStyle(color: textPrimary, fontWeight: FontWeight.bold)),
-                          value: 'male',
-                          groupValue: _gender,
-                          activeColor: FxColors.primaryCoral,
-                          onChanged: (v) => setState(() => _gender = v!),
-                        ),
-                      ],
+                    // Step 3: Je suis... (Homme / Femme)
+                    SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Je suis...", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
+                          const SizedBox(height: FxSpacing.xxxl32),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: isDark ? FxColors.darkCard : FxColors.lightCard,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: _gender == 'female' ? FxColors.primaryCoral : borderBg, width: _gender == 'female' ? 2 : 1),
+                            ),
+                            child: RadioListTile<String>(
+                              title: Text("Une femme", style: TextStyle(color: textPrimary, fontWeight: FontWeight.bold, fontSize: 16)),
+                              value: 'female',
+                              groupValue: _gender,
+                              activeColor: FxColors.primaryCoral,
+                              onChanged: (v) => setState(() => _gender = v!),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: isDark ? FxColors.darkCard : FxColors.lightCard,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: _gender == 'male' ? FxColors.primaryCoral : borderBg, width: _gender == 'male' ? 2 : 1),
+                            ),
+                            child: RadioListTile<String>(
+                              title: Text("Un homme", style: TextStyle(color: textPrimary, fontWeight: FontWeight.bold, fontSize: 16)),
+                              value: 'male',
+                              groupValue: _gender,
+                              activeColor: FxColors.primaryCoral,
+                              onChanged: (v) => setState(() => _gender = v!),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     // Step 4: Recherche
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Je cherche...", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
-                        const SizedBox(height: FxSpacing.xxxl32),
-                        RadioListTile<String>(
-                          title: Text("Des hommes", style: TextStyle(color: textPrimary, fontWeight: FontWeight.bold)),
-                          value: 'male',
-                          groupValue: _seeking,
-                          activeColor: FxColors.primaryCoral,
-                          onChanged: (v) => setState(() => _seeking = v!),
-                        ),
-                        RadioListTile<String>(
-                          title: Text("Des femmes", style: TextStyle(color: textPrimary, fontWeight: FontWeight.bold)),
-                          value: 'female',
-                          groupValue: _seeking,
-                          activeColor: FxColors.primaryCoral,
-                          onChanged: (v) => setState(() => _seeking = v!),
-                        ),
-                      ],
+                    SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Je cherche...", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
+                          const SizedBox(height: FxSpacing.xxxl32),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: isDark ? FxColors.darkCard : FxColors.lightCard,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: _seeking == 'male' ? FxColors.primaryCoral : borderBg, width: _seeking == 'male' ? 2 : 1),
+                            ),
+                            child: RadioListTile<String>(
+                              title: Text("Des hommes", style: TextStyle(color: textPrimary, fontWeight: FontWeight.bold, fontSize: 16)),
+                              value: 'male',
+                              groupValue: _seeking,
+                              activeColor: FxColors.primaryCoral,
+                              onChanged: (v) => setState(() => _seeking = v!),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: isDark ? FxColors.darkCard : FxColors.lightCard,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: _seeking == 'female' ? FxColors.primaryCoral : borderBg, width: _seeking == 'female' ? 2 : 1),
+                            ),
+                            child: RadioListTile<String>(
+                              title: Text("Des femmes", style: TextStyle(color: textPrimary, fontWeight: FontWeight.bold, fontSize: 16)),
+                              value: 'female',
+                              groupValue: _seeking,
+                              activeColor: FxColors.primaryCoral,
+                              onChanged: (v) => setState(() => _seeking = v!),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     // Step 5: Intention
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Mon intention est", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
-                        const SizedBox(height: FxSpacing.lg16),
-                        ..._intentionsList.map((item) {
-                          final isSelected = _intention == item["code"];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: FxChip(
-                              label: item["label"]!,
-                              isSelected: isSelected,
-                              onTap: () => setState(() => _intention = item["code"]!),
-                            ),
-                          );
-                        }),
-                      ],
+                    SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Mon intention est", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 30)),
+                          const SizedBox(height: FxSpacing.lg16),
+                          ..._intentionsList.map((item) {
+                            final isSelected = _intention == item["code"];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: FxChip(
+                                label: item["label"]!,
+                                isSelected: isSelected,
+                                onTap: () => setState(() => _intention = item["code"]!),
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
                     ),
                     // Step 6: Ville Africaine
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Ma ville est", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
-                        const SizedBox(height: FxSpacing.sm8),
-                        Text("Sélectionne ta ville de résidence au Cameroun ou en Afrique.", style: TextStyle(color: textSecondary)),
-                        const SizedBox(height: FxSpacing.xxxl32),
-                        FxCityPickerTile(
-                          selectedCity: _city,
-                          onCitySelected: (v) => setState(() => _city = v),
-                        ),
-                      ],
+                    SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Ma ville", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
+                          const SizedBox(height: FxSpacing.sm8),
+                          Text("Sélectionne ta ville de résidence actuelle.", style: TextStyle(color: textSecondary)),
+                          const SizedBox(height: FxSpacing.lg16),
+                          FxCityPickerTile(
+                            selectedCity: _city,
+                            onCitySelected: (c) => setState(() => _city = c),
+                          ),
+                        ],
+                      ),
                     ),
-                    // Step 7: Intérêts
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Mes centres d'intérêt", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
-                        const SizedBox(height: FxSpacing.sm8),
-                        Text("Choisis au moins 3 passions qui te définissent.", style: TextStyle(color: textSecondary)),
-                        const SizedBox(height: FxSpacing.lg16),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: _interestsList.map((item) {
-                            final isSel = _selectedInterests.contains(item["code"]);
-                            return FxChip(
-                              label: item["label"]!,
-                              isSelected: isSel,
-                              onTap: () {
-                                setState(() {
-                                  if (isSel) {
-                                    _selectedInterests.remove(item["code"]);
-                                  } else {
-                                    _selectedInterests.add(item["code"]!);
-                                  }
-                                });
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      ],
+                    // Step 7: Bio
+                    SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("À propos de moi", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 30)),
+                          const SizedBox(height: FxSpacing.sm8),
+                          Text("Décris-toi en quelques mots pour te démarquer.", style: TextStyle(color: textSecondary)),
+                          const SizedBox(height: FxSpacing.xxxl32),
+                          TextFormField(
+                            controller: _bioController,
+                            maxLines: 4,
+                            style: TextStyle(color: textPrimary),
+                            decoration: InputDecoration(
+                              hintText: "J'aime la musique, les voyages et les belles conversations...",
+                              hintStyle: TextStyle(color: textSecondary),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    // Step 8: Bio
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("À propos de moi", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 32)),
-                        const SizedBox(height: FxSpacing.xxxl32),
-                        FxTextField(
-                          label: "Ma biographie",
-                          hint: "Parle de tes passions, de ton style de vie...",
-                          controller: _bioController,
-                          maxLines: 4,
-                          maxLength: 500,
-                        ),
-                      ],
+                    // Step 8: Passions
+                    SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Mes centres d'intérêt", style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.w900, fontSize: 28)),
+                          const SizedBox(height: FxSpacing.sm8),
+                          Text("Choisis tes passions préférées.", style: TextStyle(color: textSecondary)),
+                          const SizedBox(height: FxSpacing.lg16),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: _interestsList.map((item) {
+                              final isSelected = _selectedInterests.contains(item["code"]);
+                              return FxChip(
+                                label: item["label"]!,
+                                isSelected: isSelected,
+                                onTap: () {
+                                  setState(() {
+                                    if (isSelected) {
+                                      _selectedInterests.remove(item["code"]);
+                                    } else {
+                                      _selectedInterests.add(item["code"]!);
+                                    }
+                                  });
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
+
+              // Pinned Mobile Bottom Action Bar
+              const SizedBox(height: 12),
               FxButton(
-                text: _currentStep == _totalSteps - 1 ? "Finaliser mon profil" : "Continuer",
+                text: _currentStep == _totalSteps - 1 ? "DÉCOUVRIR MES MATCHS" : "CONTINUER",
                 isLoading: _isLoading,
                 onPressed: _nextStep,
               ),
+              const SizedBox(height: 8),
             ],
           ),
         ),

@@ -61,7 +61,11 @@ class _MatchesScreenState extends State<MatchesScreen> {
             children: [
               // Qui m'a liké / Super Likes banner
               InkWell(
-                onTap: () => context.push('/premium'),
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Tous tes likes et matchs sont 100% gratuits et visibles !")),
+                  );
+                },
                 borderRadius: BorderRadius.circular(16),
                 child: Container(
                   padding: const EdgeInsets.all(16),
@@ -84,7 +88,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
                           children: [
                             Text("$_likesReceivedCount personnes t'ont liké(e) !", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
                             const SizedBox(height: 2),
-                            Text("Passe à Feelinx Premium pour voir qui !", style: FxTypography.labelSmall.copyWith(color: Colors.white.withOpacity(0.8))),
+                            Text("Découvre tes coups de cœur gratuitement !", style: FxTypography.labelSmall.copyWith(color: Colors.white.withOpacity(0.9))),
                           ],
                         ),
                       ),
@@ -127,7 +131,8 @@ class _MatchesScreenState extends State<MatchesScreen> {
                               final m = _matches[index];
                               final other = m['other_profile'];
                               final photos = other['photos'] as List? ?? [];
-                              final photoUrl = photos.isNotEmpty ? photos.first['url'] : '';
+                              final rawPhotoUrl = photos.isNotEmpty ? (photos.first['url'] ?? photos.first['image'] ?? '') : '';
+                              final photoUrl = DioClient.resolveImageUrl(rawPhotoUrl);
 
                               return GestureDetector(
                                 onTap: () {

@@ -44,7 +44,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     }
 
     final photos = _profile?['photos'] as List? ?? [];
-    final String? photoUrl = (photos.isNotEmpty && photos.first['url'] != null) ? photos.first['url'] as String : null;
+    final rawUrl = photos.isNotEmpty ? (photos.first['url'] ?? photos.first['image'] ?? '') : '';
+    final String? photoUrl = rawUrl.isNotEmpty ? DioClient.resolveImageUrl(rawUrl) : null;
     final completion = _profile?['profile_completion'] ?? 85;
     final bio = _profile?['bio'] ?? '';
     final city = _profile?['city'] ?? 'Cameroun';
@@ -128,33 +129,28 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // Premium Banner Card
-                InkWell(
-                  onTap: () => context.push('/premium'),
-                  borderRadius: BorderRadius.circular(16),
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(colors: [FxColors.accentGold, FxColors.primaryCoral]),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.workspace_premium, color: Colors.white, size: 36),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Feelinx Premium", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
-                              const SizedBox(height: 2),
-                              Text("Likes illimités, voir qui vous a liké & plus encore", style: FxTypography.labelSmall.copyWith(color: Colors.white.withOpacity(0.9))),
-                            ],
-                          ),
+                // Free Unlimited Pass Card
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(colors: [FxColors.primaryCoral, FxColors.secondaryIndigo]),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.check_circle_outline, color: Colors.white, size: 36),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Application 100% Gratuite", style: FxTypography.titleMedium.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 2),
+                            Text("Likes illimités, filtres avancés & visibilité totale offerts !", style: FxTypography.labelSmall.copyWith(color: Colors.white.withOpacity(0.9))),
+                          ],
                         ),
-                        const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 24),

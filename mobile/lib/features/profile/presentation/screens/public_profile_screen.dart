@@ -157,8 +157,10 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                       itemCount: photos.length,
                       onPageChanged: (idx) => setState(() => _currentPhotoIndex = idx),
                       itemBuilder: (context, index) {
+                        final rawPhotoUrl = photos[index]['url'] ?? photos[index]['image'] ?? '';
+                        final photoUrl = DioClient.resolveImageUrl(rawPhotoUrl);
                         return CachedNetworkImage(
-                          imageUrl: photos[index]['url'],
+                          imageUrl: photoUrl,
                           fit: BoxFit.cover,
                         );
                       },
@@ -198,7 +200,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                           photos.length,
                           (idx) => Container(
                             margin: const EdgeInsets.symmetric(horizontal: 3),
-                            width: _currentPhotoIndex == idx ? 24 : 6,
+                            width: _currentPhotoIndex == idx ? 20 : 6,
                             height: 6,
                             decoration: BoxDecoration(
                               color: _currentPhotoIndex == idx ? FxColors.primaryCoral : Colors.white.withOpacity(0.5),
@@ -208,6 +210,43 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                         ),
                       ),
                     ),
+
+                  // Back Button
+                  Positioned(
+                    top: 48,
+                    left: 16,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.black.withOpacity(0.5),
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ),
+                  ),
+
+                  // Basic Profile Info overlay on cover
+                  Positioned(
+                    bottom: 24,
+                    left: 20,
+                    right: 20,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              "${_profile['first_name']}, ${_profile['age'] ?? 24}",
+                              style: FxTypography.displayMedium.copyWith(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+                            ),
+                            if (_profile['is_verified'] == true) ...[
+                              const SizedBox(width: 8),
+                              const Icon(Icons.verified, color: FxColors.info, size: 24),
+                            ],
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -220,23 +259,6 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        "${_profile['first_name']}, ${_profile['age'] ?? 24}",
-                        style: FxTypography.displayMedium.copyWith(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
-                      ),
-                      if (_profile['is_verified'] == true) ...[
-                        const SizedBox(width: 8),
-                        const Icon(Icons.verified, color: FxColors.info, size: 24),
-                      ],
-                      if (_profile['is_premium'] == true) ...[
-                        const SizedBox(width: 6),
-                        const Icon(Icons.workspace_premium, color: FxColors.accentGold, size: 22),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 6),
                   Row(
                     children: [
                       const Icon(Icons.location_on, size: 18, color: FxColors.primaryCoral),

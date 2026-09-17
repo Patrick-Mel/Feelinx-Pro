@@ -140,7 +140,8 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                             itemBuilder: (context, index) {
                               final p = _filteredProfiles[index];
                               final photos = p['photos'] as List? ?? [];
-                              final photoUrl = photos.isNotEmpty ? photos.first['url'] : '';
+                              final rawPhotoUrl = photos.isNotEmpty ? (photos.first['url'] ?? photos.first['image'] ?? '') : '';
+                              final photoUrl = DioClient.resolveImageUrl(rawPhotoUrl);
                               final displayName = p['full_name'] ?? p['first_name'] ?? 'Membre';
 
                               return GestureDetector(
@@ -149,7 +150,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                                   decoration: BoxDecoration(
                                     color: cardBg,
                                     borderRadius: BorderRadius.circular(16),
-                                    image: (photoUrl != null && photoUrl.isNotEmpty)
+                                    image: (photoUrl.isNotEmpty)
                                         ? DecorationImage(
                                             image: CachedNetworkImageProvider(photoUrl),
                                             fit: BoxFit.cover,

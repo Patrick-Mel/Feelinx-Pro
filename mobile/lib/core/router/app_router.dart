@@ -19,7 +19,6 @@ import '../../features/profile/presentation/screens/my_profile_screen.dart';
 import '../../features/profile/presentation/screens/public_profile_screen.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/profile/presentation/screens/photos_manager_screen.dart';
-import '../../features/premium/presentation/screens/premium_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../../features/safety/presentation/screens/verification_screen.dart';
 import '../widgets/fx_nav_bar.dart';
@@ -259,7 +258,7 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/premium',
-      builder: (context, state) => const PremiumScreen(),
+      redirect: (context, state) => '/profile',
     ),
     GoRoute(
       path: '/safety/verification',

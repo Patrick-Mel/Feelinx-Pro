@@ -210,7 +210,6 @@ class Command(BaseCommand):
                 "latitude": 3.8780,
                 "longitude": 11.5121,
                 "is_verified": True,
-                "is_premium": True,
             }
         )
         admin_profile.first_name = "Beerus"
@@ -251,8 +250,7 @@ class Command(BaseCommand):
                     "neighborhood": location["neighborhood"],
                     "latitude": location["lat"] + random.uniform(-0.015, 0.015),
                     "longitude": location["lng"] + random.uniform(-0.015, 0.015),
-                    "is_verified": (i % 3 == 0),
-                    "is_premium": (i % 6 == 0),
+            "is_verified": (i % 3 == 0),
                     "personality_answers": {"q1": "night", "q2": "beach", "q3": "spicy"},
                 }
             )
@@ -263,10 +261,12 @@ class Command(BaseCommand):
             profile.neighborhood = location["neighborhood"]
             profile.save()
 
-            # Attach 2 photos
+            # Attach 2 strictly unique photos
             avatar_pool = AVATARS_FEMALE if is_female else AVATARS_MALE
-            primary_url = avatar_pool[i % len(avatar_pool)]
-            secondary_url = avatar_pool[(i + 1) % len(avatar_pool)]
+            base_url_1 = avatar_pool[i % len(avatar_pool)]
+            base_url_2 = avatar_pool[(i + 7) % len(avatar_pool)]
+            primary_url = f"{base_url_1}&sig={i}&profile={profile.id}"
+            secondary_url = f"{base_url_2}&sig={i + 1000}&profile={profile.id}"
 
             Photo.objects.filter(profile=profile).delete()
             Photo.objects.create(profile=profile, image=primary_url, is_primary=True, order=0)

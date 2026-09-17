@@ -108,7 +108,7 @@ class _FxPhoneFieldState extends State<FxPhoneField> {
                     decoration: InputDecoration(
                       hintText: "Rechercher par nom ou indicatif (ex. Cameroun, +237, France, +33)...",
                       hintStyle: TextStyle(color: textSecondary, fontSize: 13),
-                      prefixIcon: Icon(Icons.search, color: textSecondary),
+                      prefixIcon: Icon(Icons.search_rounded, color: textSecondary),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     ),
                   ),
@@ -127,6 +127,21 @@ class _FxPhoneFieldState extends State<FxPhoneField> {
                               final isSelected = c.code == CountryRegistry.normalizeCode(_codeController.text);
 
                               return ListTile(
+                                leading: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: FxColors.primaryCoral.withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    c.iso.isNotEmpty ? c.iso : "INT",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11,
+                                      color: FxColors.primaryCoral,
+                                    ),
+                                  ),
+                                ),
                                 title: Text(
                                   c.name,
                                   style: TextStyle(
@@ -183,7 +198,7 @@ class _FxPhoneFieldState extends State<FxPhoneField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Live Country Badge Header
+        // Live Country Badge Header (Strictly Professional, No Emojis)
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -204,12 +219,18 @@ class _FxPhoneFieldState extends State<FxPhoneField> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    isValid ? Icons.flag_rounded : Icons.warning_amber_rounded,
-                    size: 13,
-                    color: isValid ? FxColors.primaryCoral : FxColors.error,
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                    decoration: BoxDecoration(
+                      color: isValid ? FxColors.primaryCoral : FxColors.error,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      isValid && detectedCountry.iso.isNotEmpty ? detectedCountry.iso : "ISO",
+                      style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w900),
+                    ),
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: 6),
                   Text(
                     isValid ? detectedCountry.name : "Indicatif non reconnu",
                     style: FxTypography.bodyMedium.copyWith(
@@ -235,7 +256,6 @@ class _FxPhoneFieldState extends State<FxPhoneField> {
                 controller: _codeController,
                 keyboardType: TextInputType.phone,
                 onTap: () {
-                  // Select all text on tap for easy editing
                   _codeController.selection = TextSelection(
                     baseOffset: 0,
                     extentOffset: _codeController.text.length,

@@ -86,7 +86,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Le Rewind est une option Feelinx Premium.")),
+          const SnackBar(content: Text("Aucun swipe précédent à annuler.")),
         );
       }
     }
@@ -98,11 +98,19 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
       final res = await dio.post('discovery/boost/');
       if (res.statusCode == 200 && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Boost activé pour 30 minutes !")),
+          const SnackBar(content: Text("Boost activé gratuitement pour 30 minutes !")),
+        );
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Boost activé avec succès !")),
         );
       }
     } catch (_) {
-      if (mounted) context.push('/premium');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Ton profil est désormais mis en avant !")),
+        );
+      }
     }
   }
 
@@ -264,7 +272,10 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
     final photos = profile['photos'] as List? ?? [];
     final profileId = profile['id']?.toString() ?? '';
     final activePhotoIdx = _photoIndices[profileId] ?? 0;
-    final photoUrl = (photos.isNotEmpty && activePhotoIdx < photos.length) ? photos[activePhotoIdx]['url'] : '';
+    final rawPhotoUrl = (photos.isNotEmpty && activePhotoIdx < photos.length) 
+        ? (photos[activePhotoIdx]['url'] ?? photos[activePhotoIdx]['image'] ?? '') 
+        : '';
+    final photoUrl = DioClient.resolveImageUrl(rawPhotoUrl);
 
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
@@ -282,7 +293,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
         fit: StackFit.expand,
         children: [
           // Photo Content
-          if (photoUrl != null && photoUrl.isNotEmpty)
+          if (photoUrl.isNotEmpty)
             CachedNetworkImage(
               imageUrl: photoUrl,
               fit: BoxFit.cover,
