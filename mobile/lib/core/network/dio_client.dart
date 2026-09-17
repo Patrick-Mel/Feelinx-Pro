@@ -14,7 +14,6 @@ class DioClient {
         ? 'https://feelinx-backend-production-9537.up.railway.app/api/v1/'
         : (kIsWeb ? 'http://127.0.0.1:8000/api/v1/' : 'https://feelinx-backend-production-9537.up.railway.app/api/v1/');
 
-
     dio = Dio(
       BaseOptions(
         baseUrl: defaultUrl,
@@ -60,5 +59,26 @@ class DioClient {
 
   void updateBaseUrl(String newUrl) {
     dio.options.baseUrl = newUrl;
+  }
+
+  /// Utility to turn relative image paths or broken localhost paths into valid accessible HTTPS image URLs
+  static String resolveImageUrl(String? rawUrl) {
+    if (rawUrl == null || rawUrl.isEmpty) {
+      return 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800';
+    }
+
+    if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://')) {
+      if (!kDebugMode && (rawUrl.contains('localhost') || rawUrl.contains('127.0.0.1'))) {
+        final path = Uri.parse(rawUrl).path;
+        return 'https://feelinx-backend-production-9537.up.railway.app$path';
+      }
+      return rawUrl;
+    }
+
+    if (rawUrl.startsWith('/')) {
+      return 'https://feelinx-backend-production-9537.up.railway.app$rawUrl';
+    }
+
+    return 'https://feelinx-backend-production-9537.up.railway.app/media/$rawUrl';
   }
 }

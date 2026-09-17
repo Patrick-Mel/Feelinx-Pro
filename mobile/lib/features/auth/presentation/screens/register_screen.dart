@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../../../core/network/dio_client.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/tokens.dart';
 import '../../../../core/theme/typography.dart';
 import '../../../../core/widgets/fx_button.dart';
+import '../../../../core/widgets/fx_text_field.dart';
 import '../../../../core/widgets/fx_phone_field.dart';
+import '../../../../core/network/dio_client.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -18,90 +19,48 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   int _currentStep = 0;
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
-  final _countryCodeController = TextEditingController(text: "+237");
-  final _phoneController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  bool _isPasswordObscured = true;
-  bool _isConfirmPasswordObscured = true;
+
+  final TextEditingController _countryCodeController = TextEditingController(text: "+237");
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
   bool _isLoading = false;
   String? _errorMessage;
 
-  static const List<Map<String, String>> _countryList = [
-    {"code": "+237", "name": "Cameroun"},
-    {"code": "+225", "name": "Côte d'Ivoire"},
-    {"code": "+221", "name": "Sénégal"},
-    {"code": "+242", "name": "Congo"},
-    {"code": "+243", "name": "RDC"},
-    {"code": "+241", "name": "Gabon"},
-    {"code": "+235", "name": "Tchad"},
-    {"code": "+236", "name": "Centrafrique"},
-    {"code": "+223", "name": "Mali"},
-    {"code": "+226", "name": "Burkina Faso"},
-    {"code": "+228", "name": "Togo"},
-    {"code": "+229", "name": "Bénin"},
-    {"code": "+224", "name": "Guinée"},
-    {"code": "+250", "name": "Rwanda"},
-    {"code": "+257", "name": "Burundi"},
-    {"code": "+227", "name": "Niger"},
-    {"code": "+234", "name": "Nigéria"},
-    {"code": "+233", "name": "Ghana"},
-    {"code": "+254", "name": "Kenya"},
-    {"code": "+27",  "name": "Afrique du Sud"},
-    {"code": "+33",  "name": "France"},
-    {"code": "+1",   "name": "Canada / USA"},
-    {"code": "+32",  "name": "Belgique"},
-    {"code": "+41",  "name": "Suisse"},
-    {"code": "+212", "name": "Maroc"},
-    {"code": "+216", "name": "Tunisie"},
-    {"code": "+213", "name": "Algérie"},
-  ];
-
-  Map<String, String> _getDetectedCountry(String rawCode) {
-    String clean = rawCode.replaceAll(RegExp(r'[^\d+]'), '');
-    if (!clean.startsWith('+')) {
-      clean = '+$clean';
-    }
-    for (var c in _countryList) {
-      if (clean == c['code'] || clean.startsWith(c['code']!)) {
-        return c;
-      }
-    }
-    return {"code": clean, "name": "International"};
+  @override
+  void dispose() {
+    _countryCodeController.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 
   void _nextStep() {
     setState(() => _errorMessage = null);
+
     if (_currentStep == 0) {
-      if (_firstNameController.text.trim().isEmpty || _lastNameController.text.trim().isEmpty) {
-        setState(() => _errorMessage = "Veuillez saisir votre prénom et votre nom.");
+      if (_phoneController.text.trim().isEmpty) {
+        setState(() => _errorMessage = "Veuillez entrer votre numéro de téléphone.");
         return;
       }
       setState(() => _currentStep = 1);
-    } else if (_currentStep == 1) {
-      if (_phoneController.text.trim().isEmpty) {
-        setState(() => _errorMessage = "Veuillez entrer un numéro de téléphone valide.");
-        return;
-      }
-      setState(() => _currentStep = 2);
+    } else {
+      _handleRegister();
     }
   }
 
-  void _previousStep() {
-    setState(() {
-      _errorMessage = null;
-      if (_currentStep > 0) {
+  void _prevStep() {
+    if (_currentStep > 0) {
+      setState(() {
+        _errorMessage = null;
         _currentStep--;
-      } else {
-        context.go('/onboarding');
-      }
-    });
+      });
+    }
   }
 
   Future<void> _handleRegister() async {
-    final firstName = _firstNameController.text.trim();
     final countryCode = _countryCodeController.text.trim();
     final phone = _phoneController.text.trim();
     final password = _passwordController.text;
@@ -174,8 +133,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: textPrimary, size: 20),
-          onPressed: _previousStep,
+          icon: Icon(Icons.arrow_back, color: textPrimary),
+          onPressed: () {
+            if (_currentStep > 0) {
+              _prevStep();
+            } else {
+              context.go('/onboarding');
+            }
+          },
         ),
       ),
       body: SafeArea(
@@ -184,14 +149,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Progress Bar (Step Indicator)
+              // Progress Bar (Step Indicator: 2 Steps total)
               Row(
-                children: List.generate(3, (index) {
+                children: List.generate(2, (index) {
                   final isActive = index <= _currentStep;
                   return Expanded(
-                    child: Container(
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
                       height: 4,
-                      margin: EdgeInsets.only(right: index < 2 ? 6 : 0),
+                      margin: EdgeInsets.only(right: index < 1 ? 8 : 0),
                       decoration: BoxDecoration(
                         color: isActive ? FxColors.primaryCoral : (isDark ? Colors.white24 : Colors.black12),
                         borderRadius: BorderRadius.circular(2),
@@ -202,29 +168,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: FxSpacing.md12),
               Text(
-                "Étape ${_currentStep + 1} sur 3",
+                "Étape ${_currentStep + 1} sur 2",
                 style: FxTypography.labelSmall.copyWith(color: FxColors.primaryCoral, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: FxSpacing.sm8),
 
               if (_currentStep == 0) ...[
                 Text(
-                  "Comment vous vous appelez ?",
-                  style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: FxSpacing.sm8),
-                Text(
-                  "Votre prénom sera affiché sur votre profil Feelinx.",
-                  style: FxTypography.bodyMedium.copyWith(color: textSecondary),
-                ),
-              ] else if (_currentStep == 1) ...[
-                Text(
                   "Quel est votre numéro ?",
                   style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: FxSpacing.sm8),
                 Text(
-                  "Nous utiliserons ce numéro pour sécuriser votre compte.",
+                  "Nous utiliserons ce numéro pour sécuriser votre compte Feelinx.",
                   style: FxTypography.bodyMedium.copyWith(color: textSecondary),
                 ),
               ] else ...[
@@ -238,25 +194,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: FxTypography.bodyMedium.copyWith(color: textSecondary),
                 ),
               ],
+
               const SizedBox(height: FxSpacing.xxxl32),
 
               if (_errorMessage != null) ...[
                 Container(
-                  width: double.infinity,
                   padding: const EdgeInsets.all(FxSpacing.md12),
                   decoration: BoxDecoration(
-                    color: FxColors.error.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(FxRadius.medium16),
-                    border: Border.all(color: FxColors.error.withOpacity(0.4)),
+                    color: FxColors.error.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: FxColors.error.withValues(alpha: 0.4)),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.error_outline, color: FxColors.error, size: 20),
+                      const Icon(Icons.error_outline_rounded, color: FxColors.error, size: 20),
                       const SizedBox(width: FxSpacing.sm8),
                       Expanded(
                         child: Text(
                           _errorMessage!,
-                          style: FxTypography.bodyMedium.copyWith(color: FxColors.error),
+                          style: TextStyle(color: FxColors.error, fontWeight: FontWeight.w600, fontSize: 13),
                         ),
                       ),
                     ],
@@ -265,86 +221,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: FxSpacing.lg16),
               ],
 
-              // STEP 0: Identité
               if (_currentStep == 0) ...[
-                Text("Prénom", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
-                const SizedBox(height: FxSpacing.sm8),
-                TextField(
-                  controller: _firstNameController,
-                  style: FxTypography.bodyLarge.copyWith(color: textPrimary),
-                  decoration: InputDecoration(hintText: "ex. Manuella", hintStyle: TextStyle(color: textSecondary)),
-                ),
-                const SizedBox(height: FxSpacing.xl20),
-                Text("Nom", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
-                const SizedBox(height: FxSpacing.sm8),
-                TextField(
-                  controller: _lastNameController,
-                  style: FxTypography.bodyLarge.copyWith(color: textPrimary),
-                  decoration: InputDecoration(hintText: "ex. Ndongo", hintStyle: TextStyle(color: textSecondary)),
-                ),
-                const SizedBox(height: FxSpacing.xxl24),
-                FxButton(
-                  text: "Continuer",
-                  onPressed: _nextStep,
-                ),
-              ],
-
-              // STEP 1: Numéro de téléphone
-              if (_currentStep == 1) ...[
                 FxPhoneField(
                   controller: _phoneController,
                   countryCode: _countryCodeController.text,
-                  onCountryChanged: (code) => setState(() => _countryCodeController.text = code),
-                ),
-                const SizedBox(height: FxSpacing.xxl24),
-                FxButton(
-                  text: "Continuer",
-                  onPressed: _nextStep,
-                ),
-              ],
-
-              // STEP 2: Mot de passe
-              if (_currentStep == 2) ...[
-                Text("Mot de passe", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
-                const SizedBox(height: FxSpacing.sm8),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: _isPasswordObscured,
-                  style: FxTypography.bodyLarge.copyWith(color: textPrimary),
-                  decoration: InputDecoration(
-                    hintText: "Au moins 6 caractères",
-                    hintStyle: TextStyle(color: textSecondary),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                        color: textSecondary,
-                      ),
-                      onPressed: () => setState(() => _isPasswordObscured = !_isPasswordObscured),
-                    ),
-                  ),
+                  onCountryChanged: (code) {
+                    setState(() {
+                      _countryCodeController.text = code;
+                    });
+                  },
                 ),
                 const SizedBox(height: FxSpacing.xl20),
-                Text("Confirmer le mot de passe", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
-                const SizedBox(height: FxSpacing.sm8),
-                TextField(
+                FxButton(
+                  text: "CONTINUER",
+                  onPressed: _nextStep,
+                ),
+              ] else ...[
+                FxTextField(
+                  label: "Mot de passe",
+                  hint: "••••••••••••",
+                  obscureText: true,
+                  controller: _passwordController,
+                ),
+                const SizedBox(height: FxSpacing.lg16),
+                FxTextField(
+                  label: "Confirmer le mot de passe",
+                  hint: "••••••••••••",
+                  obscureText: true,
                   controller: _confirmPasswordController,
-                  obscureText: _isConfirmPasswordObscured,
-                  style: FxTypography.bodyLarge.copyWith(color: textPrimary),
-                  decoration: InputDecoration(
-                    hintText: "Répétez le mot de passe",
-                    hintStyle: TextStyle(color: textSecondary),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isConfirmPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                        color: textSecondary,
-                      ),
-                      onPressed: () => setState(() => _isConfirmPasswordObscured = !_isConfirmPasswordObscured),
-                    ),
-                  ),
                 ),
                 const SizedBox(height: FxSpacing.xxl24),
                 FxButton(
-                  text: "Créer mon compte",
+                  text: "CRÉER MON COMPTE",
                   isLoading: _isLoading,
                   onPressed: _handleRegister,
                 ),
@@ -352,18 +260,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
               const SizedBox(height: FxSpacing.xxxl32),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Vous avez déjà un compte ? ", style: FxTypography.bodyMedium.copyWith(color: textSecondary)),
-                  GestureDetector(
-                    onTap: () => context.go('/auth/login'),
-                    child: Text(
-                      "Se connecter",
-                      style: FxTypography.bodyMedium.copyWith(color: FxColors.primaryCoral, fontWeight: FontWeight.bold),
+              Center(
+                child: TextButton(
+                  onPressed: () => context.go('/auth/login'),
+                  child: RichText(
+                    text: TextSpan(
+                      text: "Déjà membre ? ",
+                      style: FxTypography.bodyMedium.copyWith(color: textSecondary),
+                      children: const [
+                        TextSpan(
+                          text: "Se connecter",
+                          style: TextStyle(color: FxColors.primaryCoral, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
               const SizedBox(height: FxSpacing.xxl24),
             ],

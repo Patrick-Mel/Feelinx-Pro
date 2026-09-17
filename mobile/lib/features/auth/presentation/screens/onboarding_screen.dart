@@ -114,7 +114,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 "Choisissez votre méthode de connexion préférée.",
                 style: FxTypography.bodyMedium.copyWith(color: textSecondary),
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 24),
 
               // Option 1: Connexion avec mot de passe
               InkWell(
@@ -135,10 +135,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: FxColors.primaryCoral.withOpacity(0.12),
+                          color: FxColors.primaryCoral.withValues(alpha: 0.12),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.lock_outline, color: FxColors.primaryCoral, size: 22),
+                        child: const Icon(Icons.lock_outline_rounded, color: FxColors.primaryCoral, size: 22),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -151,20 +151,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              "Connexion classique avec votre numéro et mot de passe",
+                              "Connexion classique avec votre mot de passe",
                               style: TextStyle(color: textSecondary, fontSize: 12),
                             ),
                           ],
                         ),
                       ),
-                      Icon(Icons.chevron_right, color: textSecondary),
+                      Icon(Icons.chevron_right_rounded, color: textSecondary),
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 12),
 
-              // Option 2: Connexion avec le numéro (SMS OTP)
+              // Option 2: Connexion avec le numéro
               InkWell(
                 onTap: () {
                   Navigator.pop(ctx);
@@ -183,10 +183,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: FxColors.secondaryIndigo.withOpacity(0.15),
+                          color: FxColors.secondaryIndigo.withValues(alpha: 0.12),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.phone_iphone, color: FxColors.secondaryIndigo, size: 22),
+                        child: const Icon(Icons.phone_android_rounded, color: FxColors.secondaryIndigo, size: 22),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -205,7 +205,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ],
                         ),
                       ),
-                      Icon(Icons.chevron_right, color: textSecondary),
+                      Icon(Icons.chevron_right_rounded, color: textSecondary),
                     ],
                   ),
                 ),
@@ -219,7 +219,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Navigator.pop(ctx);
                     context.go('/auth/forgot-password');
                   },
-                  child: Text(
+                  child: const Text(
                     "Problèmes de connexion ?",
                     style: TextStyle(
                       color: FxColors.primaryCoral,
@@ -272,7 +272,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             center: Alignment.center,
                             radius: 1.2,
                             colors: [
-                              FxColors.secondaryIndigo.withOpacity(0.2),
+                              FxColors.secondaryIndigo.withValues(alpha: 0.2),
                               FxColors.darkBackground,
                             ],
                           ),
@@ -287,9 +287,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          FxColors.darkBackground.withOpacity(0.35),
-                          FxColors.darkBackground.withOpacity(0.65),
-                          FxColors.darkBackground.withOpacity(0.98),
+                          FxColors.darkBackground.withValues(alpha: 0.35),
+                          FxColors.darkBackground.withValues(alpha: 0.65),
+                          FxColors.darkBackground.withValues(alpha: 0.98),
                         ],
                         stops: const [0.0, 0.45, 0.82],
                       ),
@@ -347,7 +347,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           _heroSlides[_currentSlide]["subtitle"]!,
                           textAlign: TextAlign.center,
                           style: FxTypography.bodyMedium.copyWith(
-                            color: Colors.white.withOpacity(0.85),
+                            color: Colors.white.withValues(alpha: 0.85),
                             height: 1.4,
                           ),
                         ),
@@ -368,7 +368,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         width: _currentSlide == idx ? 28 : 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: _currentSlide == idx ? FxColors.primaryCoral : Colors.white.withOpacity(0.3),
+                          color: _currentSlide == idx ? FxColors.primaryCoral : Colors.white.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -377,16 +377,35 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                   const SizedBox(height: FxSpacing.xxxl32),
 
-                  // Action Buttons (Only 2 Main Buttons)
+                  // Action Buttons (Only 2 Main Buttons - High Contrast)
                   FxButton(
                     text: "CRÉER UN COMPTE",
                     onPressed: () => context.go('/auth/register'),
                   ),
                   const SizedBox(height: 12),
-                  FxButton(
-                    text: "SE CONNECTER",
-                    variant: FxButtonVariant.outline,
-                    onPressed: () => _openLoginOptionsModal(context),
+                  
+                  // High Contrast Glassmorphic "SE CONNECTER" Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.white.withValues(alpha: 0.15),
+                        elevation: 0,
+                        shape: const StadiumBorder(),
+                        side: const BorderSide(color: Colors.white, width: 1.8),
+                      ),
+                      onPressed: () => _openLoginOptionsModal(context),
+                      child: const Text(
+                        "SE CONNECTER",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 20),
 
@@ -396,7 +415,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 11,
-                      color: Colors.white.withOpacity(0.68),
+                      color: Colors.white.withValues(alpha: 0.75),
                       height: 1.4,
                     ),
                   ),
