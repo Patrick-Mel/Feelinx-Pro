@@ -186,6 +186,38 @@ class Command(BaseCommand):
         )
         self.stdout.write("[OK] Nouveaux tarifs d'abonnement configurés (1000, 2500, 10000 FCFA).")
 
+        # 2.5 Create Superuser Admin Account
+        admin_user, _ = User.objects.get_or_create(phone_number="+237689731055")
+        admin_user.is_staff = True
+        admin_user.is_superuser = True
+        admin_user.is_active = True
+        admin_user.is_phone_verified = True
+        admin_user.set_password("Beerus sam@17")
+        admin_user.save()
+
+        admin_profile, _ = Profile.objects.get_or_create(
+            user=admin_user,
+            defaults={
+                "first_name": "Beerus",
+                "last_name": "Admin",
+                "birth_date": date(1995, 1, 1),
+                "gender": "male",
+                "seeking": "female",
+                "intention": "networking",
+                "bio": "Superutilisateur Administrateur Feelinx Control Center.",
+                "city": "Yaoundé (Cameroun)",
+                "neighborhood": "Bastos",
+                "latitude": 3.8780,
+                "longitude": 11.5121,
+                "is_verified": True,
+                "is_premium": True,
+            }
+        )
+        admin_profile.first_name = "Beerus"
+        admin_profile.last_name = "Admin"
+        admin_profile.save()
+        self.stdout.write(self.style.SUCCESS("[OK] Compte Superutilisateur Admin créé (+237689731055 / Beerus sam@17)."))
+
         # 3. Create 300 Demo Profiles
         profiles_created = []
 

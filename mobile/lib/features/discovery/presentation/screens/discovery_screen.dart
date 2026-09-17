@@ -173,11 +173,11 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.favorite_border, size: 72, color: FxColors.darkTextSecondary),
+                        Icon(Icons.favorite_border, size: 72, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
                         const SizedBox(height: 16),
-                        Text("Plus de profils pour le moment", style: FxTypography.titleLarge),
+                        Text("Plus de profils pour le moment", style: FxTypography.titleLarge.copyWith(color: Theme.of(context).colorScheme.onSurface)),
                         const SizedBox(height: 8),
-                        Text("Élargis tes critères de recherche ou réessaie plus tard.", style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary)),
+                        Text("Élargis tes critères de recherche ou réessaie plus tard.", style: FxTypography.bodyMedium.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
                         const SizedBox(height: 24),
                         ElevatedButton(
                           onPressed: _fetchFeed,

@@ -139,15 +139,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 children: [
                   // Top Brand Header
                   const SizedBox(height: FxSpacing.md12),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const FeelinxLogo(size: 38, variant: LogoVariant.symbol),
-                      const SizedBox(width: FxSpacing.sm8),
+                      FeelinxLogo(size: 38, variant: FeelinxLogoVariant.symbol),
+                      SizedBox(width: FxSpacing.sm8),
                       Text(
                         "Feelinx",
-                        style: FxTypography.displayMedium.copyWith(
+                        style: TextStyle(
                           color: Colors.white,
+                          fontSize: 32,
                           fontWeight: FontWeight.w800,
                           letterSpacing: -0.5,
                         ),
@@ -215,8 +216,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   const SizedBox(height: FxSpacing.md12),
                   FxButton(
                     text: "Se connecter",
-                    variant: FxButtonVariant.secondary,
+                    variant: FxButtonVariant.outline,
                     onPressed: () => context.go('/auth/login'),
+                  ),
+                  const SizedBox(height: FxSpacing.md12),
+                  Text(
+                    "En appuyant sur Connexion ou Inscription, vous acceptez nos Conditions générales d'utilisation.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.white.withOpacity(0.65),
+                      height: 1.3,
+                    ),
                   ),
                   const SizedBox(height: FxSpacing.lg16),
                 ],

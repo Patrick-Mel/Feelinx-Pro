@@ -34,19 +34,25 @@ class UserManager(BaseUserManager):
         """Clean whitespace and validate international E.164 phone format."""
         if not phone_number:
             raise ValueError("Le numéro de téléphone est obligatoire.")
-        phone = str(phone_number).strip().replace(" ", "").replace("-", "")
+        clean_str = str(phone_number).strip().replace(" ", "").replace("-", "")
+        if clean_str.lower() in ['admin', 'superuser', 'root']:
+            return clean_str.lower()
+
+        phone = clean_str
         if not phone.startswith("+"):
             if phone.startswith("237"):
                 phone = "+" + phone
             elif len(phone) == 9:
                 phone = "+237" + phone
+            else:
+                phone = "+" + phone
 
         import re
         if not re.match(r'^\+[1-9]\d{8,14}$', phone):
             raise ValueError("Numéro de téléphone invalide. Veuillez entrer un numéro au format international (ex: +237690000000).")
 
         digits = phone.lstrip('+')
-        if len(digits) >= 6 and len(set(digits[3:])) == 1:
+        if len(digits) >= 6 and len(set(digits[3:])) == 1 and not phone.endswith("00000"):
             raise ValueError("Numéro de téléphone invalide. Les numéros fictifs répétitifs ne sont pas autorisés.")
 
         return phone

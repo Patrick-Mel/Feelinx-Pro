@@ -47,19 +47,36 @@ class FeelinxLogo extends StatelessWidget {
         );
 
       case FeelinxLogoVariant.wordmark:
+        final textColor = overrideColor ?? (colorMode == FeelinxColorMode.white
+            ? Colors.white
+            : (colorMode == FeelinxColorMode.monochromeBlack
+                ? Colors.black
+                : Theme.of(context).colorScheme.onSurface));
+
+        if (colorMode == FeelinxColorMode.gradient) {
+          return ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [FxColors.primaryCoral, FxColors.secondaryIndigo, FxColors.accentGold],
+            ).createShader(bounds),
+            child: Text(
+              "Feelinx",
+              style: TextStyle(
+                fontSize: size,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -1.2,
+                color: Colors.white,
+              ),
+            ),
+          );
+        }
+
         return Text(
           "Feelinx",
           style: TextStyle(
             fontSize: size,
             fontWeight: FontWeight.w800,
             letterSpacing: -1.2,
-            foreground: Paint()
-              ..shader = (colorMode == FeelinxColorMode.gradient
-                  ? const LinearGradient(
-                      colors: [FxColors.primaryCoral, FxColors.secondaryIndigo, FxColors.accentGold],
-                    ).createShader(Rect.fromLTWH(0, 0, size * 3, size))
-                  : null)
-              ..color = overrideColor ?? (colorMode == FeelinxColorMode.white ? Colors.white : FxColors.darkBackground),
+            color: textColor,
           ),
         );
 
