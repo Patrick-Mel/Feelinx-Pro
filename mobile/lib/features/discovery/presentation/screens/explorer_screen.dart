@@ -15,9 +15,18 @@ class ExplorerScreen extends StatefulWidget {
 }
 
 class _ExplorerScreenState extends State<ExplorerScreen> {
-  List<dynamic> _profiles = [];
+  List<dynamic> _allProfiles = [];
+  List<dynamic> _filteredProfiles = [];
   bool _isLoading = true;
-  String _selectedFilter = 'near_me';
+  String _selectedFilter = 'all';
+
+  final List<Map<String, String>> _categories = const [
+    {"code": "all", "label": "🔥 Tous les profils"},
+    {"code": "serious", "label": "💘 Looking for Love"},
+    {"code": "casual", "label": "☕ Coffee Date"},
+    {"code": "verified", "label": "🛡️ Profils Vérifiés"},
+    {"code": "networking", "label": "💼 Networking Pro"},
+  ];
 
   @override
   void initState() {
@@ -39,13 +48,30 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
           list = data['results'];
         }
         setState(() {
-          _profiles = list;
+          _allProfiles = list;
+          _applyFilter(_selectedFilter);
           _isLoading = false;
         });
       }
     } catch (_) {
       if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  void _applyFilter(String filterCode) {
+    setState(() {
+      _selectedFilter = filterCode;
+      if (filterCode == 'all') {
+        _filteredProfiles = List.from(_allProfiles);
+      } else if (filterCode == 'verified') {
+        _filteredProfiles = _allProfiles.where((p) => p['is_verified'] == true).toList();
+      } else {
+        _filteredProfiles = _allProfiles.where((p) => p['intention'] == filterCode).toList();
+        if (_filteredProfiles.isEmpty) {
+          _filteredProfiles = List.from(_allProfiles);
+        }
+      }
+    });
   }
 
   @override
@@ -57,24 +83,27 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Filter Bar
+            // Tinder Explore Category Chips
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Row(
-                children: [
-                  FxChip(label: "Près de moi", isSelected: _selectedFilter == 'near_me', onTap: () => setState(() => _selectedFilter = 'near_me')),
-                  const SizedBox(width: 8),
-                  FxChip(label: "Nouveaux", isSelected: _selectedFilter == 'new', onTap: () => setState(() => _selectedFilter = 'new')),
-                  const SizedBox(width: 8),
-                  FxChip(label: "En ligne", isSelected: _selectedFilter == 'online', onTap: () => setState(() => _selectedFilter = 'online')),
-                  const SizedBox(width: 8),
-                  FxChip(label: "Même intention", isSelected: _selectedFilter == 'intention', onTap: () => setState(() => _selectedFilter = 'intention')),
-                ],
+                children: _categories.map((cat) {
+                  final isSelected = _selectedFilter == cat['code'];
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: FxChip(
+                      label: cat['label']!,
+                      isSelected: isSelected,
+                      onTap: () => _applyFilter(cat['code']!),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
-            const SizedBox(height: 8),
-            // Grid
+            const SizedBox(height: 4),
+
+            // Profile Grid
             Expanded(
               child: RefreshIndicator(
                 onRefresh: _fetchFeed,
@@ -91,64 +120,73 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                         itemCount: 6,
                         itemBuilder: (_, __) => const FxShimmerBox(width: double.infinity, height: 200, borderRadius: 16),
                       )
-                    : GridView.builder(
-                      padding: const EdgeInsets.all(16),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.75,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                      ),
-                      itemCount: _profiles.length,
-                      itemBuilder: (context, index) {
-                        final p = _profiles[index];
-                        final photos = p['photos'] as List? ?? [];
-                        final photoUrl = photos.isNotEmpty ? photos.first['url'] : '';
+                    : _filteredProfiles.isEmpty
+                        ? const Center(child: Text("Aucun profil correspondant dans ce canal."))
+                        : GridView.builder(
+                            padding: const EdgeInsets.all(16),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.75,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                            ),
+                            itemCount: _filteredProfiles.length,
+                            itemBuilder: (context, index) {
+                              final p = _filteredProfiles[index];
+                              final photos = p['photos'] as List? ?? [];
+                              final photoUrl = photos.isNotEmpty ? photos.first['url'] : '';
+                              final displayName = p['full_name'] ?? p['first_name'] ?? 'Membre';
 
-                        return GestureDetector(
-                          onTap: () => context.push('/profile/public/${p['id']}'),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: FxColors.darkCard,
-                              borderRadius: BorderRadius.circular(16),
-                              image: photoUrl.isNotEmpty
-                                  ? DecorationImage(
-                                      image: CachedNetworkImageProvider(photoUrl),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : null,
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                gradient: LinearGradient(
-                                  begin: Alignment.bottomCenter,
-                                  end: Alignment.topCenter,
-                                  colors: [Colors.black.withOpacity(0.8), Colors.transparent],
-                                ),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text("${p['first_name']}, ${p['age'] ?? 24}", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
-                                      if (p['is_verified'] == true) ...[
-                                        const SizedBox(width: 4),
-                                        const Icon(Icons.verified, size: 16, color: FxColors.info),
-                                      ],
-                                    ],
+                              return GestureDetector(
+                                onTap: () => context.push('/profile/public/${p['id']}'),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: FxColors.darkCard,
+                                    borderRadius: BorderRadius.circular(16),
+                                    image: (photoUrl != null && photoUrl.isNotEmpty)
+                                        ? DecorationImage(
+                                            image: CachedNetworkImageProvider(photoUrl),
+                                            fit: BoxFit.cover,
+                                          )
+                                        : null,
                                   ),
-                                  Text("${p['city']} • ${p['distance_km'] ?? 3}km", style: FxTypography.labelSmall.copyWith(color: Colors.white70)),
-                                ],
-                              ),
-                            ),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      gradient: LinearGradient(
+                                        begin: Alignment.bottomCenter,
+                                        end: Alignment.topCenter,
+                                        colors: [Colors.black.withOpacity(0.85), Colors.transparent],
+                                      ),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                "$displayName, ${p['age'] ?? 24}",
+                                                style: FxTypography.titleMedium.copyWith(color: Colors.white, fontSize: 15),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            if (p['is_verified'] == true) ...[
+                                              const SizedBox(width: 4),
+                                              const Icon(Icons.verified, size: 16, color: FxColors.info),
+                                            ],
+                                          ],
+                                        ),
+                                        Text("${p['city']} • ${p['distance_km'] ?? 3} km", style: FxTypography.labelSmall.copyWith(color: Colors.white70)),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
               ),
             ),
           ],

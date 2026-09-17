@@ -90,7 +90,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(_otherProfile?['first_name'] ?? 'Discussion', style: FxTypography.titleMedium),
+                Text(_otherProfile?['full_name'] ?? _otherProfile?['first_name'] ?? 'Discussion', style: FxTypography.titleMedium),
                 const Text("En ligne", style: TextStyle(fontSize: 11, color: FxColors.success)),
               ],
             ),

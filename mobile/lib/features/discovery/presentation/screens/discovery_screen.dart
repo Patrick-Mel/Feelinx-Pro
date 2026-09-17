@@ -20,6 +20,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
   List<dynamic> _profiles = [];
   bool _isLoading = true;
   Offset _dragOffset = Offset.zero;
+  final Map<String, int> _photoIndices = {};
 
   @override
   void initState() {
@@ -72,6 +73,39 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
     } catch (_) {}
   }
 
+  void _rewindLastSwipe() async {
+    try {
+      final dio = DioClient().dio;
+      final res = await dio.post('discovery/rewind/');
+      if (res.statusCode == 200 && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Dernier swipe annulé !")),
+        );
+        _fetchFeed();
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Le Rewind est une option Feelinx Premium.")),
+        );
+      }
+    }
+  }
+
+  void _activateBoost() async {
+    try {
+      final dio = DioClient().dio;
+      final res = await dio.post('discovery/boost/');
+      if (res.statusCode == 200 && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("⚡ Boost activé pour 30 minutes !")),
+        );
+      }
+    } catch (_) {
+      if (mounted) context.push('/premium');
+    }
+  }
+
   void _showMatchModal(dynamic target, dynamic matchData) {
     showDialog(
       context: context,
@@ -100,12 +134,11 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
                   final convId = matchData['conversation_id'];
                   if (convId != null) context.push('/chat/$convId');
                 },
-                child: const Text("Envoyer un message 💬"),
+                child: const Text("Envoyer un message"),
               ),
-              const SizedBox(height: 8),
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text("Continuer à swiper", style: TextStyle(color: FxColors.darkTextSecondary)),
+                child: const Text("Continuer à swiper", style: TextStyle(color: Colors.white70)),
               ),
             ],
           ),
@@ -169,11 +202,10 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
                                 final scale = 1.0 - (reverseIdx * 0.04);
                                 final topOffset = reverseIdx * 12.0;
 
-                                return Positioned.fill(
-                                  top: topOffset,
+                                return Transform.translate(
+                                  offset: Offset(0, topOffset),
                                   child: Transform.scale(
                                     scale: scale,
-                                    alignment: Alignment.topCenter,
                                     child: isTopCard
                                         ? GestureDetector(
                                             onPanUpdate: (details) {
@@ -182,9 +214,9 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
                                               });
                                             },
                                             onPanEnd: (details) {
-                                              if (_dragOffset.dx > 120) {
+                                              if (_dragOffset.dx > 100) {
                                                 _onSwipeAction('like');
-                                              } else if (_dragOffset.dx < -120) {
+                                              } else if (_dragOffset.dx < -100) {
                                                 _onSwipeAction('nope');
                                               } else if (_dragOffset.dy < -120) {
                                                 _onSwipeAction('superlike');
@@ -208,17 +240,17 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
                           ),
                         ),
                       ),
-                      // Swipe Action Buttons
+                      // Swipe Action Buttons (Tinder 5-Action Row)
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            _buildActionButton(Icons.replay, Colors.amber, () => context.push('/premium')),
+                            _buildActionButton(Icons.replay, Colors.amber, _rewindLastSwipe),
                             _buildActionButton(Icons.close, FxColors.nopeRed, () => _onSwipeAction('nope')),
                             _buildActionButton(Icons.star, FxColors.superlikeBlue, () => _onSwipeAction('superlike')),
                             _buildActionButton(Icons.favorite, FxColors.likeGreen, () => _onSwipeAction('like')),
-                            _buildActionButton(Icons.bolt, FxColors.accentGold, () => context.push('/premium')),
+                            _buildActionButton(Icons.bolt, FxColors.accentGold, _activateBoost),
                           ],
                         ),
                       ),
@@ -230,7 +262,9 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
 
   Widget _buildSwipeCard(dynamic profile, {required bool isTop}) {
     final photos = profile['photos'] as List? ?? [];
-    final photoUrl = photos.isNotEmpty ? photos.first['url'] : '';
+    final profileId = profile['id']?.toString() ?? '';
+    final activePhotoIdx = _photoIndices[profileId] ?? 0;
+    final photoUrl = (photos.isNotEmpty && activePhotoIdx < photos.length) ? photos[activePhotoIdx]['url'] : '';
 
     return Container(
       decoration: BoxDecoration(
@@ -242,7 +276,8 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
       child: Stack(
         fit: StackFit.expand,
         children: [
-          if (photoUrl.isNotEmpty)
+          // Photo Content
+          if (photoUrl != null && photoUrl.isNotEmpty)
             CachedNetworkImage(
               imageUrl: photoUrl,
               fit: BoxFit.cover,
@@ -250,7 +285,60 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
           else
             Container(color: FxColors.darkCard, child: const Icon(Icons.person, size: 100)),
 
-          // Top Overlay feedback indicators during drag
+          // Tap left / right side photo navigation detector
+          if (photos.length > 1)
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      if (activePhotoIdx > 0) {
+                        setState(() {
+                          _photoIndices[profileId] = activePhotoIdx - 1;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      if (activePhotoIdx < photos.length - 1) {
+                        setState(() {
+                          _photoIndices[profileId] = activePhotoIdx + 1;
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+
+          // Top Photo Progress Bar (Tinder Horizontal Dash Bar)
+          if (photos.length > 1)
+            Positioned(
+              top: 12,
+              left: 16,
+              right: 16,
+              child: Row(
+                children: List.generate(photos.length, (idx) {
+                  return Expanded(
+                    child: Container(
+                      height: 3.5,
+                      margin: const EdgeInsets.symmetric(horizontal: 2),
+                      decoration: BoxDecoration(
+                        color: idx == activePhotoIdx ? Colors.white : Colors.white.withOpacity(0.35),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ),
+
+          // Drag Overlays (LIKE / NOPE / SUPER LIKE)
           if (isTop && _dragOffset.dx > 40)
             Positioned(
               top: 40,
@@ -277,6 +365,19 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
                 ),
               ),
             ),
+          if (isTop && _dragOffset.dy < -50 && _dragOffset.dx.abs() < 50)
+            Positioned(
+              bottom: 120,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  decoration: BoxDecoration(border: Border.all(color: FxColors.superlikeBlue, width: 3.5), borderRadius: BorderRadius.circular(12)),
+                  child: const Text("SUPER LIKE", style: TextStyle(color: FxColors.superlikeBlue, fontSize: 30, fontWeight: FontWeight.w900)),
+                ),
+              ),
+            ),
 
           // Bottom Gradient & Profile Info
           Positioned(
@@ -291,7 +392,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
                   gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
-                    colors: [Colors.black.withOpacity(0.9), Colors.transparent],
+                    colors: [Colors.black.withOpacity(0.92), Colors.transparent],
                   ),
                 ),
                 child: Column(
@@ -304,7 +405,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
                         Expanded(
                           child: Row(
                             children: [
-                              Text("${profile['full_name'] ?? profile['first_name']}, ${profile['age'] ?? 24}", style: FxTypography.displayMedium.copyWith(color: Colors.white)),
+                              Text("${profile['full_name'] ?? profile['first_name']}, ${profile['age'] ?? 24}", style: FxTypography.displayMedium.copyWith(color: Colors.white, fontSize: 24)),
                               const SizedBox(width: 8),
                               if (profile['is_verified'] == true)
                                 const Icon(Icons.verified, color: FxColors.info, size: 22),
@@ -345,12 +446,14 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with SingleTickerProv
   Widget _buildActionButton(IconData icon, Color color, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(28),
       child: Container(
-        width: 54,
-        height: 54,
+        width: 56,
+        height: 56,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Theme.of(context).colorScheme.surface,
+          boxShadow: FxShadows.softShadow(Colors.black),
           border: Border.all(color: color.withOpacity(0.5), width: 1.5),
         ),
         child: Icon(icon, color: color, size: 26),

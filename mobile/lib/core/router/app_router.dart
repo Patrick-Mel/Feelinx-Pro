@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../branding/feelinx_logo.dart';
+import '../theme/colors.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/auth/presentation/screens/onboarding_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
@@ -24,6 +26,30 @@ import '../widgets/fx_nav_bar.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'shell');
+
+Widget _buildDesktopTab(BuildContext context, IconData icon, String label, bool isSelected, VoidCallback onTap) {
+  return InkWell(
+    onTap: onTap,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: isSelected ? FxColors.primaryCoral : Colors.grey, size: 22),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              color: isSelected ? FxColors.primaryCoral : Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
@@ -74,6 +100,94 @@ final GoRouter appRouter = GoRouter(
         else if (location.startsWith('/matches')) currentIndex = 2;
         else if (location.startsWith('/chat-list')) currentIndex = 3;
         else if (location.startsWith('/profile')) currentIndex = 4;
+
+        final isDesktopWeb = MediaQuery.of(context).size.width > 900;
+
+        if (isDesktopWeb) {
+          return Scaffold(
+            body: Row(
+              children: [
+                // Desktop Web Sidebar (Tinder Web Style)
+                Container(
+                  width: 380,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    border: Border(right: BorderSide(color: Theme.of(context).dividerColor, width: 1)),
+                  ),
+                  child: Column(
+                    children: [
+                      // Header: Profile & Brand Logo
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [FxColors.primaryCoral.withValues(alpha: 0.15), Colors.transparent],
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () => GoRouter.of(context).go('/profile'),
+                              child: const CircleAvatar(
+                                radius: 20,
+                                backgroundColor: FxColors.primaryCoral,
+                                child: Icon(Icons.person, color: Colors.white),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            const Expanded(
+                              child: FeelinxLogo(size: 24, variant: FeelinxLogoVariant.fullHorizontal),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.settings),
+                              onPressed: () => context.push('/settings'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Divider(height: 1),
+
+                      // Desktop Navigation Row
+                      Container(
+                        color: Theme.of(context).cardColor.withValues(alpha: 0.5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _buildDesktopTab(context, Icons.local_fire_department, "Swiper", currentIndex == 0, () => GoRouter.of(context).go('/discovery')),
+                            _buildDesktopTab(context, Icons.grid_view, "Explorer", currentIndex == 1, () => GoRouter.of(context).go('/explorer')),
+                            _buildDesktopTab(context, Icons.favorite, "Matchs", currentIndex == 2, () => GoRouter.of(context).go('/matches')),
+                            _buildDesktopTab(context, Icons.chat_bubble, "Chat", currentIndex == 3, () => GoRouter.of(context).go('/chat-list')),
+                          ],
+                        ),
+                      ),
+                      const Divider(height: 1),
+
+                      // Sidebar Content Area (Matches or Chat List depending on selection)
+                      Expanded(
+                        child: currentIndex == 3
+                            ? const ChatListScreen()
+                            : const MatchesScreen(),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Main Content View (Right Panel)
+                Expanded(
+                  child: Container(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: Center(
+                      child: SizedBox(
+                        width: currentIndex == 0 ? 520 : double.infinity,
+                        child: child,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
 
         return Scaffold(
           body: child,
