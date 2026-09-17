@@ -134,13 +134,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = isDark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+    final containerBg = theme.colorScheme.surface;
+    final borderBg = isDark ? FxColors.darkBorder : FxColors.lightBorder;
+
     return Scaffold(
-      backgroundColor: FxColors.darkBackground,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+          icon: Icon(Icons.arrow_back_ios_new, color: textPrimary, size: 20),
           onPressed: () => context.go('/onboarding'),
         ),
       ),
@@ -153,12 +160,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: FxSpacing.md12),
               Text(
                 "Créer un compte Feelinx",
-                style: FxTypography.displayMedium.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: FxSpacing.sm8),
               Text(
                 "Rejoignez la communauté de rencontres la plus exclusive et authentique.",
-                style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary),
+                style: FxTypography.bodyMedium.copyWith(color: textSecondary),
               ),
               const SizedBox(height: FxSpacing.xxxl32),
 
@@ -194,12 +201,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Prénom", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+                        Text("Prénom", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
                         const SizedBox(height: FxSpacing.sm8),
                         TextField(
                           controller: _firstNameController,
-                          style: FxTypography.bodyLarge.copyWith(color: Colors.white),
-                          decoration: const InputDecoration(hintText: "ex. Manuella"),
+                          style: FxTypography.bodyLarge.copyWith(color: textPrimary),
+                          decoration: InputDecoration(hintText: "ex. Manuella", hintStyle: TextStyle(color: textSecondary)),
                         ),
                       ],
                     ),
@@ -209,12 +216,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Nom", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+                        Text("Nom", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
                         const SizedBox(height: FxSpacing.sm8),
                         TextField(
                           controller: _lastNameController,
-                          style: FxTypography.bodyLarge.copyWith(color: Colors.white),
-                          decoration: const InputDecoration(hintText: "ex. Ndongo"),
+                          style: FxTypography.bodyLarge.copyWith(color: textPrimary),
+                          decoration: InputDecoration(hintText: "ex. Ndongo", hintStyle: TextStyle(color: textSecondary)),
                         ),
                       ],
                     ),
@@ -227,7 +234,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Numéro de téléphone", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+                  Text("Numéro de téléphone", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
                   Builder(
                     builder: (context) {
                       final detected = _getDetectedCountry(_countryCodeController.text);
@@ -256,9 +263,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: _countryCodeController,
                       keyboardType: TextInputType.phone,
                       onChanged: (_) => setState(() {}),
-                      style: FxTypography.bodyLarge.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-                      decoration: const InputDecoration(
+                      style: FxTypography.bodyLarge.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
+                      decoration: InputDecoration(
                         hintText: "+237",
+                        hintStyle: TextStyle(color: textSecondary),
                       ),
                     ),
                   ),
@@ -267,9 +275,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: TextField(
                       controller: _phoneController,
                       keyboardType: TextInputType.phone,
-                      style: FxTypography.bodyLarge.copyWith(color: Colors.white),
-                      decoration: const InputDecoration(
+                      style: FxTypography.bodyLarge.copyWith(color: textPrimary),
+                      decoration: InputDecoration(
                         hintText: "690000000",
+                        hintStyle: TextStyle(color: textSecondary),
                       ),
                     ),
                   ),
@@ -278,18 +287,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: FxSpacing.xl20),
 
               // Password Field
-              Text("Mot de passe", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+              Text("Mot de passe", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
               const SizedBox(height: FxSpacing.sm8),
               TextField(
                 controller: _passwordController,
                 obscureText: _isPasswordObscured,
-                style: FxTypography.bodyLarge.copyWith(color: Colors.white),
+                style: FxTypography.bodyLarge.copyWith(color: textPrimary),
                 decoration: InputDecoration(
                   hintText: "Au moins 6 caractères",
+                  hintStyle: TextStyle(color: textSecondary),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _isPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                      color: FxColors.darkTextSecondary,
+                      color: textSecondary,
                     ),
                     onPressed: () => setState(() => _isPasswordObscured = !_isPasswordObscured),
                   ),
@@ -298,18 +308,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: FxSpacing.xl20),
 
               // Confirm Password Field
-              Text("Confirmer le mot de passe", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+              Text("Confirmer le mot de passe", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
               const SizedBox(height: FxSpacing.sm8),
               TextField(
                 controller: _confirmPasswordController,
                 obscureText: _isConfirmPasswordObscured,
-                style: FxTypography.bodyLarge.copyWith(color: Colors.white),
+                style: FxTypography.bodyLarge.copyWith(color: textPrimary),
                 decoration: InputDecoration(
                   hintText: "Répétez le mot de passe",
+                  hintStyle: TextStyle(color: textSecondary),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _isConfirmPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                      color: FxColors.darkTextSecondary,
+                      color: textSecondary,
                     ),
                     onPressed: () => setState(() => _isConfirmPasswordObscured = !_isConfirmPasswordObscured),
                   ),
@@ -329,7 +340,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Vous avez déjà un compte ? ", style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary)),
+                  Text("Vous avez déjà un compte ? ", style: FxTypography.bodyMedium.copyWith(color: textSecondary)),
                   GestureDetector(
                     onTap: () => context.go('/auth/login'),
                     child: Text(

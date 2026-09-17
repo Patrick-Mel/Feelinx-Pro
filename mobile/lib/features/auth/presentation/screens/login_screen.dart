@@ -86,13 +86,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final textPrimary = theme.colorScheme.onSurface;
+    final textSecondary = isDark ? FxColors.darkTextSecondary : FxColors.lightTextSecondary;
+    final containerBg = theme.colorScheme.surface;
+    final borderBg = isDark ? FxColors.darkBorder : FxColors.lightBorder;
+
     return Scaffold(
-      backgroundColor: FxColors.darkBackground,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+          icon: Icon(Icons.arrow_back_ios_new, color: textPrimary, size: 20),
           onPressed: () => context.go('/onboarding'),
         ),
       ),
@@ -105,12 +112,12 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: FxSpacing.md12),
               Text(
                 "Bon retour parmi nous !",
-                style: FxTypography.displayMedium.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                style: FxTypography.displayMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: FxSpacing.sm8),
               Text(
                 "Connectez-vous pour retrouver vos matchs et vos messages.",
-                style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary),
+                style: FxTypography.bodyMedium.copyWith(color: textSecondary),
               ),
               const SizedBox(height: FxSpacing.xxxl32),
 
@@ -140,30 +147,30 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
 
               // Phone Field
-              Text("Numéro de téléphone", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+              Text("Numéro de téléphone", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
               const SizedBox(height: FxSpacing.sm8),
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
-                      color: FxColors.darkSurface,
+                      color: containerBg,
                       borderRadius: BorderRadius.circular(FxRadius.medium16),
-                      border: Border.all(color: FxColors.darkBorder),
+                      border: Border.all(color: borderBg),
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         value: _selectedCountryCode,
-                        dropdownColor: FxColors.darkSurface,
-                        style: FxTypography.bodyMedium.copyWith(color: Colors.white),
-                        icon: const Icon(Icons.keyboard_arrow_down, color: FxColors.darkTextSecondary, size: 18),
+                        dropdownColor: containerBg,
+                        style: FxTypography.bodyMedium.copyWith(color: textPrimary),
+                        icon: Icon(Icons.keyboard_arrow_down, color: textSecondary, size: 18),
                         onChanged: (val) {
                           if (val != null) setState(() => _selectedCountryCode = val);
                         },
                         items: _countries.map((c) {
                           return DropdownMenuItem<String>(
                             value: c["code"],
-                            child: Text("${c["flag"]} ${c["code"]}"),
+                            child: Text("${c["flag"]} ${c["code"]}", style: TextStyle(color: textPrimary)),
                           );
                         }).toList(),
                       ),
@@ -174,9 +181,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: TextField(
                       controller: _phoneController,
                       keyboardType: TextInputType.phone,
-                      style: FxTypography.bodyLarge.copyWith(color: Colors.white),
-                      decoration: const InputDecoration(
+                      style: FxTypography.bodyLarge.copyWith(color: textPrimary),
+                      decoration: InputDecoration(
                         hintText: "690000000",
+                        hintStyle: TextStyle(color: textSecondary),
                       ),
                     ),
                   ),
@@ -185,18 +193,19 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: FxSpacing.xl20),
 
               // Password Field
-              Text("Mot de passe", style: FxTypography.titleMedium.copyWith(color: Colors.white)),
+              Text("Mot de passe", style: FxTypography.titleMedium.copyWith(color: textPrimary, fontWeight: FontWeight.bold)),
               const SizedBox(height: FxSpacing.sm8),
               TextField(
                 controller: _passwordController,
                 obscureText: _isPasswordObscured,
-                style: FxTypography.bodyLarge.copyWith(color: Colors.white),
+                style: FxTypography.bodyLarge.copyWith(color: textPrimary),
                 decoration: InputDecoration(
                   hintText: "••••••••",
+                  hintStyle: TextStyle(color: textSecondary),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _isPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                      color: FxColors.darkTextSecondary,
+                      color: textSecondary,
                     ),
                     onPressed: () => setState(() => _isPasswordObscured = !_isPasswordObscured),
                   ),
@@ -234,9 +243,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.08),
+                  color: textPrimary.withOpacity(0.06),
                   borderRadius: BorderRadius.circular(FxRadius.medium16),
-                  border: Border.all(color: Colors.white.withOpacity(0.18)),
+                  border: Border.all(color: borderBg),
                 ),
                 child: Material(
                   color: Colors.transparent,
@@ -251,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           "Connexion rapide (via SMS)",
                           style: FxTypography.bodyMedium.copyWith(
-                            color: Colors.white,
+                            color: textPrimary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -266,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Nouveau sur Feelinx ? ", style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary)),
+                  Text("Nouveau sur Feelinx ? ", style: FxTypography.bodyMedium.copyWith(color: textSecondary)),
                   GestureDetector(
                     onTap: () => context.go('/auth/register'),
                     child: Text(
