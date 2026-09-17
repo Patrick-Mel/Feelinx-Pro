@@ -127,7 +127,9 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Comment t'appelles-tu ?", style: FxTypography.displayMedium),
+                        Text("Mon prénom est", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
+                        const SizedBox(height: FxSpacing.sm8),
+                        Text("C'est ainsi qu'il apparaîtra sur ton profil.", style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
                         const SizedBox(height: FxSpacing.xxxl32),
                         FxTextField(
                           label: "Ton prénom",
@@ -146,11 +148,16 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Quelle est ta date de naissance ?", style: FxTypography.displayMedium),
+                        Text("Ma date de naissance est", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.sm8),
-                        Text("Seules les personnes majeures (18 ans et plus) peuvent s'inscrire.", style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary)),
+                        Text("Ton âge sera public. Seules les personnes majeures peuvent s'inscrire.", style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
                         const SizedBox(height: FxSpacing.xxxl32),
                         OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(54),
+                            shape: const StadiumBorder(),
+                            side: BorderSide(color: FxColors.primaryCoral, width: 1.5),
+                          ),
                           onPressed: () async {
                             final picked = await showDatePicker(
                               context: context,
@@ -160,7 +167,10 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                             );
                             if (picked != null) setState(() => _birthDate = picked);
                           },
-                          child: Text(_birthDate == null ? "Sélectionner ma date" : "${_birthDate!.day}/${_birthDate!.month}/${_birthDate!.year}"),
+                          child: Text(
+                            _birthDate == null ? "Sélectionner ma date" : "${_birthDate!.day}/${_birthDate!.month}/${_birthDate!.year}",
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: FxColors.primaryCoral),
+                          ),
                         ),
                       ],
                     ),
@@ -168,17 +178,17 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Quel est ton genre ?", style: FxTypography.displayMedium),
+                        Text("Mon genre est", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.xxxl32),
                         RadioListTile<String>(
-                          title: const Text("Femme"),
+                          title: const Text("Femme", style: TextStyle(fontWeight: FontWeight.bold)),
                           value: 'female',
                           groupValue: _gender,
                           activeColor: FxColors.primaryCoral,
                           onChanged: (v) => setState(() => _gender = v!),
                         ),
                         RadioListTile<String>(
-                          title: const Text("Homme"),
+                          title: const Text("Homme", style: TextStyle(fontWeight: FontWeight.bold)),
                           value: 'male',
                           groupValue: _gender,
                           activeColor: FxColors.primaryCoral,
@@ -190,17 +200,17 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Tu recherches...", style: FxTypography.displayMedium),
+                        Text("Je cherche...", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.xxxl32),
                         RadioListTile<String>(
-                          title: const Text("Des hommes"),
+                          title: const Text("Des hommes", style: TextStyle(fontWeight: FontWeight.bold)),
                           value: 'male',
                           groupValue: _seeking,
                           activeColor: FxColors.primaryCoral,
                           onChanged: (v) => setState(() => _seeking = v!),
                         ),
                         RadioListTile<String>(
-                          title: const Text("Des femmes"),
+                          title: const Text("Des femmes", style: TextStyle(fontWeight: FontWeight.bold)),
                           value: 'female',
                           groupValue: _seeking,
                           activeColor: FxColors.primaryCoral,
@@ -212,7 +222,7 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Quelle est ton intention ?", style: FxTypography.displayMedium),
+                        Text("Mon intention est", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.lg16),
                         ..._intentionsList.map((item) {
                           final isSelected = _intention == item["code"];
@@ -231,9 +241,9 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Dans quelle ville vis-tu ?", style: FxTypography.displayMedium),
+                        Text("Ma ville est", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.sm8),
-                        Text("Sélectionne ta ville parmi les métropoles africaines.", style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary)),
+                        Text("Sélectionne ta ville de résidence au Cameroun ou en Afrique.", style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
                         const SizedBox(height: FxSpacing.xxxl32),
                         FxCityPickerTile(
                           selectedCity: _city,
@@ -245,9 +255,9 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Tes centres d'intérêt", style: FxTypography.displayMedium),
+                        Text("Mes centres d'intérêt", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.sm8),
-                        Text("Choisis au moins 3 centres d'intérêt", style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary)),
+                        Text("Choisis au moins 3 passions qui te définissent.", style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
                         const SizedBox(height: FxSpacing.lg16),
                         Wrap(
                           spacing: 8,
@@ -275,11 +285,11 @@ class _RegistrationWizardScreenState extends State<RegistrationWizardScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Écris ta biographie", style: FxTypography.displayMedium),
+                        Text("À propos de moi", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
                         const SizedBox(height: FxSpacing.xxxl32),
                         FxTextField(
-                          label: "À propos de toi",
-                          hint: "Parle de tes passions, de ce qui te caractérise...",
+                          label: "Ma biographie",
+                          hint: "Parle de tes passions, de ton style de vie...",
                           controller: _bioController,
                           maxLines: 4,
                           maxLength: 500,

@@ -125,11 +125,11 @@ class _OtpScreenState extends State<OtpScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Vérification SMS", style: FxTypography.displayMedium),
+              Text("Mon code est", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
               const SizedBox(height: FxSpacing.sm8),
               Text(
                 "Saisissez le code à 6 chiffres envoyé au ${widget.phoneNumber}",
-                style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary),
+                style: FxTypography.bodyMedium.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
               ),
               const SizedBox(height: FxSpacing.xxxl32),
               FxOtpInput(
@@ -153,16 +153,16 @@ class _OtpScreenState extends State<OtpScreen> {
                 child: _timerSeconds > 0
                     ? Text(
                         "Renvoyer le code dans ${_timerSeconds}s",
-                        style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary),
+                        style: FxTypography.bodyMedium.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
                       )
                     : TextButton(
                         onPressed: _resendOtp,
-                        child: const Text("Renvoyer le code maintenant", style: TextStyle(color: FxColors.primaryCoral)),
+                        child: const Text("Renvoyer le code maintenant", style: TextStyle(color: FxColors.primaryCoral, fontWeight: FontWeight.bold)),
                       ),
               ),
               const SizedBox(height: FxSpacing.lg16),
               FxButton(
-                text: "Vérifier et continuer",
+                text: "SUIVANT",
                 isLoading: _isLoading,
                 onPressed: _verifyOtp,
               ),

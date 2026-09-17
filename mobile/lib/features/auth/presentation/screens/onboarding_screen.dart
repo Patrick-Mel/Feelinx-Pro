@@ -208,28 +208,44 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                   const SizedBox(height: FxSpacing.xxxl32),
 
-                  // Action Buttons (Créer un compte & Se connecter)
+                  // Action Buttons (Tinder Welcome Stack)
                   FxButton(
-                    text: "Créer un compte",
+                    text: "CRÉER UN COMPTE",
                     onPressed: () => context.go('/auth/register'),
                   ),
-                  const SizedBox(height: FxSpacing.md12),
+                  const SizedBox(height: 12),
                   FxButton(
-                    text: "Se connecter",
+                    text: "CONNEXION AVEC LE NUMÉRO",
                     variant: FxButtonVariant.outline,
-                    onPressed: () => context.go('/auth/login'),
+                    onPressed: () => context.go('/auth/phone'),
                   ),
-                  const SizedBox(height: FxSpacing.md12),
+                  const SizedBox(height: 12),
+                  TextButton(
+                    onPressed: () => context.go('/auth/login'),
+                    child: const Text(
+                      "Se connecter avec un mot de passe",
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   Text(
-                    "En appuyant sur Connexion ou Inscription, vous acceptez nos Conditions générales d'utilisation.",
+                    "En appuyant sur Connexion ou Inscription, vous acceptez nos Conditions. Découvrez comment nous traitons vos données dans notre Politique de confidentialité et notre Politique relative aux cookies.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 11,
                       color: Colors.white.withOpacity(0.65),
-                      height: 1.3,
+                      height: 1.35,
                     ),
                   ),
-                  const SizedBox(height: FxSpacing.lg16),
+                  const SizedBox(height: 12),
+                  TextButton(
+                    onPressed: () => context.go('/auth/forgot-password'),
+                    child: Text(
+                      "Problèmes de connexion ?",
+                      style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12, decoration: TextDecoration.underline),
+                    ),
+                  ),
+                  const SizedBox(height: FxSpacing.sm8),
                 ],
               ),
             ),

@@ -80,11 +80,11 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Numéro de téléphone", style: FxTypography.displayMedium),
+              Text("Mon numéro est", style: FxTypography.displayMedium.copyWith(fontWeight: FontWeight.w900, fontSize: 32)),
               const SizedBox(height: FxSpacing.sm8),
               Text(
-                "Un code de vérification à 6 chiffres vous sera envoyé par SMS pour valider votre compte.",
-                style: FxTypography.bodyMedium.copyWith(color: FxColors.darkTextSecondary),
+                "Nous allons vous envoyer un SMS contenant un code de vérification à 6 chiffres.",
+                style: FxTypography.bodyMedium.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
               ),
               const SizedBox(height: FxSpacing.xxxl32),
               FxPhoneField(
@@ -98,7 +98,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
               ),
               const Spacer(),
               FxButton(
-                text: "Recevoir le code SMS",
+                text: "CONTINUER",
                 isLoading: _isLoading,
                 onPressed: _submitPhone,
               ),
