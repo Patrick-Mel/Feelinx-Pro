@@ -8,7 +8,7 @@
 <html lang="{{ LANGUAGE_CODE|default:"fr" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <!--  Prevent admin panel being crawled by search engines -->
     <meta name="robots" content="none, noarchive">
@@ -318,8 +318,28 @@
     }
 
     @media (max-width: 767.98px) {
+        body, html {
+            width: 100% !important;
+            overflow-x: hidden !important;
+        }
+
+        .table-responsive, #changelist-form, #changelist .results {
+            display: block !important;
+            width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+
+        .table th, .table td {
+            padding: 8px 6px !important;
+            font-size: 11px !important;
+            max-width: 160px !important;
+            word-break: break-word !important;
+            white-space: normal !important;
+        }
+
         .app-content-header h1, .app-content-header h3 {
-            font-size: 1.3rem !important;
+            font-size: 1.2rem !important;
         }
 
         /* Change form vertical stacking on mobile */

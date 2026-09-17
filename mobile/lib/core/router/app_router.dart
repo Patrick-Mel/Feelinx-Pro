@@ -106,12 +106,25 @@ final GoRouter appRouter = GoRouter(
           return Scaffold(
             body: Row(
               children: [
-                // Desktop Web Sidebar (Tinder Web Style)
+                // Main Content View (Left Panel - Feed, Explorer, etc.)
+                Expanded(
+                  child: Container(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: Center(
+                      child: SizedBox(
+                        width: currentIndex == 0 ? 560 : double.infinity,
+                        child: child,
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Desktop Web Sidebar (Right Panel - Options, Navigation & Matches)
                 Container(
                   width: 380,
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.surface,
-                    border: Border(right: BorderSide(color: Theme.of(context).dividerColor, width: 1)),
+                    border: Border(left: BorderSide(color: Theme.of(context).dividerColor, width: 1)),
                   ),
                   child: Column(
                     children: [
@@ -168,19 +181,6 @@ final GoRouter appRouter = GoRouter(
                             : const MatchesScreen(),
                       ),
                     ],
-                  ),
-                ),
-
-                // Main Content View (Right Panel)
-                Expanded(
-                  child: Container(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    child: Center(
-                      child: SizedBox(
-                        width: currentIndex == 0 ? 520 : double.infinity,
-                        child: child,
-                      ),
-                    ),
                   ),
                 ),
               ],
